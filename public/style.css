@@ -1,0 +1,54 @@
+body{
+	margin:0px;
+	background-color: #B5A69D;
+}
+
+#jeu{
+	margin:0;
+	position: relative;
+	transform-origin:0 0;
+	transform: scale(1);
+}
+
+.rooms{
+	position: absolute;
+	width:800px;
+	height:640px;
+	background-color: white;
+}
+
+#canvas{
+	position: absolute;
+}
+
+.informations{
+	position: absolute;
+	top:560px;
+	width:800px;
+	height:80px;
+	background-color: #212121;
+	color:white;
+}
+
+.tchat{
+	position: absolute;
+	left:800px;
+	width:250px;
+	height:640px;
+
+	background-color: #282828;
+	color:white;
+}
+
+.tchatInformation{
+	color:green;
+}
+
+#messages{
+	margin: 0;
+	height:600px;
+	overflow: auto;
+	list-style: none;
+	padding-left: 5px;
+	margin-bottom: 10px;
+}
