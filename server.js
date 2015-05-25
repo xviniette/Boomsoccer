@@ -37,7 +37,6 @@ setInterval(function(){
 	game.update();
 }, 1000/FPS);
 
-
 io.on('connection', function(socket){
 	//On demande le pseudo au joueur
 	socket.emit("login", true);

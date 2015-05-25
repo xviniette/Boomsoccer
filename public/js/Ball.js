@@ -22,6 +22,8 @@ var Ball = function(json){
 	this.friction = {x:0.95,y:0.9};
 	this.bounce = {x:0.8,y:0.8};
 
+	this.positions = [];
+
 	this.init(json);
 }
 
@@ -47,9 +49,11 @@ Ball.prototype.setCoordinate = function(x, y){
 
 Ball.prototype.update = function(){
 	this.physic();
-	var goal = this.hasGoalCollision(this.cx, this.cy);
-	if(goal){
-		this.room.goal(goal);
+	if(isServer){
+		var goal = this.hasGoalCollision(this.cx, this.cy);
+		if(goal){
+			this.room.goal(goal);
+		}
 	}
 }
 
@@ -109,6 +113,8 @@ Ball.prototype.getSnapshotInfo = function(){
 	return {
 		radius:this.radius,
 		x:this.x,
-		y:this.y
+		y:this.y,
+		dx:this.dx,
+		dy:this.dy
 	}
 }

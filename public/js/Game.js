@@ -11,6 +11,12 @@ Game.prototype.update = function(){
 	}
 }
 
+Game.prototype.updateSnapshot = function(){
+	for(var i in this.rooms){
+		this.rooms[i].sendSnapshot();
+	}
+}
+
 Game.prototype.addPlayer = function(player){
 	this.players[player.socket] = player;
 }

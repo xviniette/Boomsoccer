@@ -30,6 +30,8 @@ var Bomb = function(json){
 	this.friction = {x:0.95,y:0.9};
 	this.bounce = {x:0,y:0.8};
 
+	this.positions = [];
+
 	this.init(json);
 }
 

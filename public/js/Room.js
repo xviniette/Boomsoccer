@@ -12,9 +12,13 @@ var Room = function(json){
 	this.fps = FPS;
 	this.deltaTime = 1/this.fps;
 
+	this.networkfps = NETWORKFPS;
+	this.deltaNetwork = 1/this.networkfps;
+
 	this.iterateur = 0;
 	this.lastFrame = Date.now();
-	this.accumulator;
+	this.lastFrameNetwork = Date.now();
+
 
 	this.init(json);
 }
@@ -37,7 +41,12 @@ Room.prototype.update = function(){
 	while(now - this.lastFrame >= d){
 		this.physic();
 		this.lastFrame += d;
+	}
+
+	var dn = this.deltaNetwork * 1000;
+	while(now - this.lastFrameNetwork >= dn){
 		this.sendSnapshot();
+		this.lastFrameNetwork += dn;
 	}
 }
 

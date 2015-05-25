@@ -22,7 +22,7 @@ var Player = function(json){
 	this.bounce = {x:0,y:0};
 
 	this.stun = 0;
-	this.timestun = {min:1000, max:5000};
+	this.timestun = {min:Math.floor(1000/16), max:Math.floor(3000/16)};
 
 	this.speed = 10;
 	this.jump = 40;
@@ -32,6 +32,8 @@ var Player = function(json){
 
 	this.inputs = [];
 	this.lastInput = null;
+
+	this.positions = [];
 
 	this.init(json);
 }
@@ -57,7 +59,6 @@ Player.prototype.update = function(){
 		this.bounce = {x:0,y:0};
 	}
 
-
 	for(var i in this.inputs){
 		var inp = this.inputs[i];
 		if(!this.isStun()){
@@ -74,25 +75,36 @@ Player.prototype.update = function(){
 				this.dx = this.speed * delta;
 				this.direction = 1;
 			}
-			if(inp.k && this.lastInput != null && this.lastInput.k == false){
-				this.kick();
-			}
-			if(inp.d && this.lastInput != null && this.lastInput.d == false){
-				this.up();
+			if(isServer){
+				if(inp.k && this.lastInput != null && this.lastInput.k == false){
+					this.kick();
+				}
+				if(inp.d && this.lastInput != null && this.lastInput.d == false){
+					this.up();
+				}
 			}
 		}
 		this.lastInput = inp;
+		this.lowerStun();
 		this.physic();
 	}
-	this.inputs = [];
+	if(isServer){
+		this.inputs = [];
+	}
 }
 
 Player.prototype.isStun = function(){
-	return Date.now() < this.stun;
+	return this.stun > 0;
 }
 
 Player.prototype.toStun = function(ratio){
-	this.stun = Date.now() + (this.timestun.max - this.timestun.min) * ratio + this.timestun.min;
+	this.stun = Math.round((this.timestun.max - this.timestun.min) * ratio + this.timestun.min);
+}
+
+Player.prototype.lowerStun = function(){
+	if(this.stun > 0){
+		this.stun--;
+	}
 }
 
 
@@ -178,7 +190,9 @@ Player.prototype.getInitInfo = function(){
 		pseudo:this.pseudo,
 		radius:this.radius,
 		x:this.x,
-		y:this.y
+		y:this.y,
+		dx:this.dx,
+		dy:this.dy
 	};
 }
 
@@ -191,6 +205,9 @@ Player.prototype.getSnapshotInfo = function(){
 		id:this.id,
 		x:this.x,
 		y:this.y,
+		dx:this.dx,
+		dy:this.dy,
+		stun:this.stun,
 		seq:seq
 	};
 }

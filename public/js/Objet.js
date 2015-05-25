@@ -84,6 +84,21 @@ Objet.prototype.physic = function(){
 	this.y = Math.floor((this.cy + this.ry) * tilesize);
 }
 
+Objet.prototype.interpolate = function(tps){
+	var interptime = tps - INTERPOLATION;
+	for(var i = 0; i < this.positions.length - 1; i++){
+		if(this.positions[i].t <= interptime && this.positions[i + 1].t >= interptime){
+			var ratio = (interptime - this.positions[i].t)/(this.positions[i + 1].t - this.positions[i].t);
+			var x = Math.round(this.positions[i].x + ratio * (this.positions[i + 1].x - this.positions[i].x));
+			var y = Math.round(this.positions[i].y + ratio * (this.positions[i + 1].y - this.positions[i].y));
+			this.x = x;
+			this.y = y;
+			this.positions.splice(0, i - 1);
+			break;
+		}
+	}
+}
+
 Objet.prototype.hasWallCollision = function(cx, cy){
 	tiles = this.room.map.tiles;
 	if(cx < 0 || cx >= tiles.length || cy < 0 || cy >= tiles[cx].length){
