@@ -56,9 +56,17 @@ $(function(){
 	});
 
 	//Event
-	setInterval(function(){
-		client.update();
-	}, 1000/FPS);
+	var lastTs = Date.now();
+	function step() {
+		var ts = Date.now();
+		var delta = 1000/FPS;
+		while(ts - lastTs >= delta){
+			client.update();
+			lastTs += delta;
+		}
+		requestAnimationFrame(step);
+	}
+	requestAnimationFrame(step);
 
 	//Clavier
 	document.body.addEventListener("keydown", function(e) {

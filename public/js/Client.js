@@ -57,12 +57,32 @@ Client.prototype.snapshot = function(data){
 		}
 	}
 
-	this.room.bombs = [];
 	for(var i in data.bombs){
-		data.bombs[i].room = this.room;
-		var bomb = new Bomb(data.bombs[i]);
-		bomb.setCoordinate(data.bombs[i].x, data.bombs[i].y);
-		this.room.bombs.push(bomb);
+		var found = false;
+		for(var j in this.room.bombs){
+			if(this.room.bombs[j].id == data.bombs[i].id){
+				data.bombs[i].t = d;
+				this.room.bombs[j].positions.push(data.bombs[i]);
+				found = true;
+				break;
+			}
+		}
+		if(!found){
+			this.room.bombs.push(new Bomb(data.bombs[i]));
+		}
+	}
+
+	for(var i in this.room.bombs){
+		var found = false;
+		for(var j in data.bombs){
+			if(this.room.bombs[i].id == data.bombs[j].id){
+				found = true;
+				break;
+			}
+		}
+		if(!found){
+			this.room.bombs.splice(i, 1);
+		}
 	}
 
 	//Ball
@@ -100,9 +120,9 @@ Client.prototype.update = function(){
 			}
 		}
 
-		/*for(var i in this.room.bombs){
-			this.rooms.bombs[i].interpolate(d);
-		}*/
+		for(var i in this.room.bombs){
+			this.room.bombs[i].interpolate(d);
+		}
 
 		if(this.room.ball){
 			this.room.ball.interpolate(d);

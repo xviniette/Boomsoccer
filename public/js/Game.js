@@ -1,6 +1,8 @@
 var Game = function(){
 	this.players = {};
 	this.rooms = [];
+	this.maps = [];
+	this.matchmaking = new Matchmaking();
 
 	this.newRoom();
 }

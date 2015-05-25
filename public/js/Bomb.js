@@ -41,7 +41,6 @@ Bomb.prototype.init = function(json){
 	for(var i in json){
 		this[i] = json[i];
 	}
-	this.setCoordinate(50, 50);
 }
 
 Bomb.prototype.setCoordinate = function(x, y){
