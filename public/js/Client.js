@@ -12,7 +12,7 @@ var Client = function(){
 
 Client.prototype.initRoom = function(data){
 	this.room = new Room();
-	this.room.map = new Map();
+	this.room.map = new Map(data.map);
 	this.room.players = [];
 	for(var i in data.players){
 		data.players[i].room = this.room;

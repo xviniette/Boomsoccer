@@ -20,6 +20,8 @@ Display.prototype.draw = function(){
 	var ball = room.ball;
 	var bombs = room.bombs;
 
+	this.ctx.font = "10px Arial";
+
 	//MAP
 	var map = room.map;
 	if(map){
@@ -42,8 +44,15 @@ Display.prototype.draw = function(){
 	}
 
 	//PERSO
-	this.ctx.fillStyle = "red";
+	
+	var letterSpace = 5
 	for(var i in players){
+		this.ctx.fillStyle = "white";
+		if(players[i].id == this.client.pID){
+			this.ctx.fillStyle = "yellow";
+		}
+		this.ctx.fillText(players[i].pseudo, players[i].x - (players[i].pseudo.length / 2) * letterSpace, players[i].y - players[i].radius - letterSpace);
+		this.ctx.fillStyle = "red";
 		this.ctx.beginPath();
 		this.ctx.arc(players[i].x,players[i].y,players[i].radius,0,2*Math.PI);
 		this.ctx.fill();
@@ -65,6 +74,5 @@ Display.prototype.draw = function(){
 
 	//PING
 	this.ctx.fillStyle = "white";
-	this.ctx.font = "10px Arial";
 	this.ctx.fillText(this.client.ping, 0, 10);
 }

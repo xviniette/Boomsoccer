@@ -190,6 +190,7 @@ Player.prototype.getInitInfo = function(){
 	return {
 		id:this.id,
 		pseudo:this.pseudo,
+		elo:this.elo,
 		radius:this.radius,
 		x:this.x,
 		y:this.y,

@@ -3,6 +3,7 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var uuid = require('node-uuid');
 var fs = require('fs');
+var mysql = require('mysql');
 
 //Inclde files
 eval(fs.readFileSync('./public/js/config.js')+'');
@@ -18,6 +19,13 @@ eval(fs.readFileSync('./public/js/serverUtils.js')+'');
 
 server.listen(1321);
 
+var db = mysql.createConnection({
+  host     : 'localhost',
+  user     : 'root',
+  password : '',
+  database : 'soccerfest'
+});
+
 app.get('/',function(req, res){
 	res.sendFile(__dirname + '/public/index.html');
 });
@@ -29,9 +37,17 @@ app.get( '/*' , function( req, res, next ) {
 
 var isServer = true;
 //Ces deux variable servent à générer les valeurs pour id user/room
-var nbClients = 0;
 var nbRooms = 0;
 var game = new Game();
+
+db.query("SELECT * FROM maps", function(e, r, f){
+	for(var i in r){
+		var d = JSON.parse(r[i]["informations"]);
+		d.id = r[i]['id'];
+		game.maps.push(new Map(d));
+	}
+	game.newRoom();
+});
 
 //physic game
 setInterval(function(){
@@ -46,12 +62,16 @@ io.on('connection', function(socket){
 		Utils.onLogin(data, socket);
 	});
 
+	socket.on("signin", function(data){
+		Utils.onSignin(data, socket);
+	});
+
 	socket.on("keyboard", function(data){
 		Utils.onKeyboard(data, socket);
 	});
 
 	//ok
-	socket.on("tchat", function(){
+	socket.on("tchat", function(data){
 		Utils.onTchat(data, socket);
 	});
 	

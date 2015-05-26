@@ -4,7 +4,6 @@ var Game = function(){
 	this.maps = [];
 	this.matchmaking = new Matchmaking(this);
 
-	this.newRoom();
 }
 
 Game.prototype.update = function(){
@@ -29,6 +28,8 @@ Game.prototype.deletePlayer = function(socket){
 
 Game.prototype.newRoom = function(){
 	var room = new Room({id:nbRooms});
+	room.map = this.maps[0];
+	room.start();
 	nbRooms++;
 	this.rooms.push(room);
 	return room;

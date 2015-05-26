@@ -27,11 +27,9 @@ Room.prototype.init = function(json){
 	for(var i in json){
 		this[i] = json[i];
 	}
-	this.start();
 }
 
 Room.prototype.start = function(){
-	this.map = new Map();
 	this.newBall();
 }
 
@@ -135,6 +133,8 @@ Room.prototype.changeSide = function(){
 
 Room.prototype.getInitInfo = function(){
 	var data = {};
+	data.map = this.map.getInitInfos();
+	data.score = this.score;
 	data.players = [];
 	for(var i in this.players){
 		data.players.push(this.players[i].getInitInfo());

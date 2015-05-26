@@ -11,7 +11,9 @@ $(function(){
 	client = new Client();
 	socket = io();
 	socket.on("login", function(data){
-		socket.emit("login", "Joueur"+Math.round(Math.random() * 1000));
+		client.pID = null;
+		client.room = null;
+		console.log("connectez vous");
 	});
 
 	socket.on("playerID", function(data){
@@ -24,6 +26,10 @@ $(function(){
 
 	socket.on("snapshot", function(data){
 		client.snapshot(JSON.parse(data));
+	});
+
+	socket.on("tchat", function(data){
+		$("#messages").append("<li>"+data.pseudo+" : "+data.message+"</li>");
 	});
 
 	socket.on("newPlayer", function(data){
@@ -77,5 +83,24 @@ $(function(){
 		client.keys[e.keyCode] = false;
 	});
 
+	//Gestion des formulaire
+	$('#connectionPanel').submit(function(e){
+		e.preventDefault();
+		socket.emit("login", {login:$('#loginLoginForm').val(), password:$('#passwordLoginForm').val()});
+	});
 
+	$('#signinForm').submit(function(e){
+		e.preventDefault();
+		if($('#passwordSigninForm').val() == $('#passwordSigninFormConfirm').val()){
+			socket.emit("signin", {login:$('#loginSigninForm').val(), password:$('#passwordSigninForm').val()});
+		}
+	});
+
+	$('#tchatForm').submit(function(e){
+		e.preventDefault();
+		var text = $('#inputTchat').val();
+		if(text.length > 0){
+			socket.emit("tchat", text);
+		}
+	});
 });
