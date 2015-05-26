@@ -6,6 +6,7 @@ var fs = require('fs');
 
 //Inclde files
 eval(fs.readFileSync('./public/js/config.js')+'');
+eval(fs.readFileSync('./public/js/Matchmaking.js')+'');
 eval(fs.readFileSync('./public/js/Game.js')+'');
 eval(fs.readFileSync('./public/js/Map.js')+'');
 eval(fs.readFileSync('./public/js/Objet.js')+'');
@@ -47,6 +48,11 @@ io.on('connection', function(socket){
 
 	socket.on("keyboard", function(data){
 		Utils.onKeyboard(data, socket);
+	});
+
+	//ok
+	socket.on("tchat", function(){
+		Utils.onTchat(data, socket);
 	});
 	
 	//ok

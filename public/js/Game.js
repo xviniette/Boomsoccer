@@ -2,7 +2,7 @@ var Game = function(){
 	this.players = {};
 	this.rooms = [];
 	this.maps = [];
-	this.matchmaking = new Matchmaking();
+	this.matchmaking = new Matchmaking(this);
 
 	this.newRoom();
 }
@@ -40,6 +40,10 @@ Game.prototype.deleteRoom = function(roomId){
 			this.rooms.splice(i, 1);
 		}
 	}
+}
+
+Game.prototype.addMatch = function(p1, p2){
+	
 }
 
 Game.prototype.getPlayerBySocket = function(socket){

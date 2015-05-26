@@ -5,6 +5,8 @@ var Player = function(json){
 	this.pseudo;
 	this.socket;
 
+	this.elo;
+
 	this.x = 0;
 	this.y = 0;
 	this.cx = 0;

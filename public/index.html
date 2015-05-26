@@ -9,6 +9,15 @@
 <body>	
 	<div id="jeu">
 		<canvas id="canvas" width="400" height="500"></canvas>
+		<div class="tchat">
+			<div class="messages">
+				<ul id="messages"></ul>
+			</div>
+			<form id="tchatForm">
+				<input type="text" id="inputTchat">
+				<input type="submit" value="Envoyer">
+			</form>
+		</div>
 	</div>
 
 	<script src="public/js/socketio.js"></script>

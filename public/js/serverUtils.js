@@ -37,6 +37,16 @@ Utils.onKeyboard = function(data, socket){
 	}
 }
 
+Utils.onTchat = function(data, socket){
+	var p = game.getPlayerBySocket(socket.id);
+	if(!p){return;}
+	if(p.room){	
+		for(var i in p.room.players){
+			this.messageTo(p.room.players[i].socket, "tchat", {pID:p.id, pseudo:p.pseudo, message:data});
+		}
+	}
+}
+
 
 Utils.onDisconnect = function(socket){
 	var p = game.getPlayerBySocket(socket.id);
