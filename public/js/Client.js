@@ -13,6 +13,7 @@ var Client = function(){
 Client.prototype.initRoom = function(data){
 	this.room = new Room();
 	this.room.map = new Map(data.map);
+	delete data.map;
 	this.room.players = [];
 	for(var i in data.players){
 		data.players[i].room = this.room;
@@ -20,6 +21,9 @@ Client.prototype.initRoom = function(data){
 		p.setCoordinate(data.players[i].x, data.players[i].y);
 		this.room.addPlayer(p);
 	}
+	delete data.players;
+	this.room.init(data);
+	this.display.initRoom();
 }
 
 Client.prototype.snapshot = function(data){

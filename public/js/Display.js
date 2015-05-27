@@ -76,3 +76,10 @@ Display.prototype.draw = function(){
 	this.ctx.fillStyle = "white";
 	this.ctx.fillText(this.client.ping, 0, 10);
 }
+
+Display.prototype.initRoom = function(){
+	var room = this.client.room;
+	$("#score1").text(room.score["1"]);
+	$("#score2").text(room.score["2"]);
+	$("#roomName").text(room.name);
+}

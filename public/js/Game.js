@@ -56,8 +56,8 @@ Game.prototype.deleteRoom = function(roomId){
 }
 
 Game.prototype.addMatch = function(p1, p2, ranked){
-	var room = new Room({id:uuid.v1(), ranked:ranked});
-	room.map = new Map(this.maps[0].getInitInfos());
+	var room = new Room({id:uuid.v1(), ranked:ranked, name:p1.pseudo+" VS "+p2.pseudo});
+	room.map = new Map(this.maps[Math.floor(Math.random() * this.maps.length)].getInitInfos());
 	p1.team = 1;
 	p2.team = 2;
 	room.addPlayer(p1);

@@ -83,7 +83,7 @@ $(function(){
 		client.keys[e.keyCode] = false;
 	});
 
-	//Gestion des formulaire
+	//Gestion des formulaires
 	$('#connectionPanel').submit(function(e){
 		e.preventDefault();
 		socket.emit("login", {login:$('#loginLoginForm').val(), password:$('#passwordLoginForm').val()});

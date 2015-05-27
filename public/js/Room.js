@@ -1,5 +1,6 @@
 var Room = function(json){
 	this.id;
+	this.name;
 
 	this.map;
 	this.ball;
@@ -153,6 +154,7 @@ Room.prototype.changeSide = function(){
 Room.prototype.getInitInfo = function(){
 	var data = {};
 	data.map = this.map.getInitInfos();
+	data.name = this.name;
 	data.score = this.score;
 	data.players = [];
 	for(var i in this.players){
