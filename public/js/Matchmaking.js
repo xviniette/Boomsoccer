@@ -7,6 +7,10 @@ Matchmaking.prototype.addPlayer = function(player){
 	this.queue.push({player:player, time:Date.now(), found:false});
 }
 
+Matchmaking.prototype.isInQueue = function(player){
+
+}
+
 Matchmaking.prototype.removePlayer = function(player){
 	for(var i in this.queue){
 		if(this.queue[i].player.id == player.id){
@@ -25,7 +29,7 @@ Matchmaking.prototype.update = function(){
 					if(this.isMatching(this.queue[i], this.queue[j])){
 						this.queue[i].found = true;
 						this.queue[j].found = true;
-						this.game.addMatch(this.queue[i], this.queue[j]);
+						this.game.addMatch(this.queue[i].player, this.queue[j].player, true);
 					}
 				}
 			}

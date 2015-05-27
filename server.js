@@ -39,13 +39,7 @@ var isServer = true;
 //Ces deux variable servent à générer les valeurs pour id user/room
 var nbRooms = 0;
 var game = new Game();
-
-db.query("SELECT * FROM maps", function(e, r, f){
-	for(var i in r){
-		var d = JSON.parse(r[i]["informations"]);
-		d.id = r[i]['id'];
-		game.maps.push(new Map(d));
-	}
+game.loadMaps(function(){
 	game.newRoom();
 });
 
@@ -53,6 +47,10 @@ db.query("SELECT * FROM maps", function(e, r, f){
 setInterval(function(){
 	game.update();
 }, 1000/FPS);
+
+setInterval(function(){
+	game.matchmaking.update();
+}, 5000);
 
 io.on('connection', function(socket){
 	//On demande le pseudo au joueur

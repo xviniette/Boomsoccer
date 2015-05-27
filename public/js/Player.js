@@ -6,6 +6,7 @@ var Player = function(json){
 	this.socket;
 
 	this.elo;
+	this.team = 0;
 
 	this.x = 0;
 	this.y = 0;
@@ -183,8 +184,6 @@ Player.prototype.hasObjectCollision = function(obj){
 	}
 	return false;
 }
-
-
 
 Player.prototype.getInitInfo = function(){
 	return {

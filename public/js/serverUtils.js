@@ -39,18 +39,21 @@ Utils.onLogin = function(data, socket){
 				socket.emit("initRoom", p.room.getInitInfo());
 			}
 		});
-	}
+}
 }
 
 Utils.onSignin = function(data, socket){
 	//data = {login, password}
+	_this = this;
 	if(data.login && data.password && data.login.length > 0 && data.password.length > 0){
 		db.query("SELECT * FROM users WHERE login = ?;", [data.login], function(e, r, f){
+			//On vérifie pseudo non utilisé
 			if(r.length == 0){
 				//inscription ok
 				var d = {login:data.login, password:data.password, elo:1000};
 				db.query("INSERT INTO users SET ?", d, function(e, r, f){
-					console.log("ok");
+					//Insertion puis auto login
+					_this.onLogin(data, socket);
 				});
 			}
 		});
@@ -68,13 +71,50 @@ Utils.onKeyboard = function(data, socket){
 Utils.onTchat = function(data, socket){
 	var p = game.getPlayerBySocket(socket.id);
 	if(!p){return;}
-	if(p.room){	
-		for(var i in p.room.players){
-			this.messageTo(p.room.players[i].socket, "tchat", {pID:p.id, pseudo:p.pseudo, message:data});
+	if(data[0] && data[0] == "/"){
+		var split = data.split(" ");
+		switch(split[0]) {
+			case "/mm":
+			this.onMatchmaking(data, socket);
+			break;
+			case "/w":
+			//message privé
+			if(split.length >= 3){
+				var dest = null;
+				for(var i in game.players){
+					if(game.players[i].pseudo == split[1]){
+						dest = game.players[i];
+						break;
+					}
+				}
+				if(p){
+					var msg = data.slice(split[0].length+split[1].length+1);
+					this.messageTo(dest.socket, "tchat", {type:"private", from:true, pID:p.id, pseudo:p.pseudo, message:msg});
+					this.messageTo(p.socket, "tchat", {type:"private", from:false, pID:dest.id, pseudo:dest.pseudo, message:msg});
+				}
+			}
+			break;
+		}
+	}else{
+		if(p.room){	
+			for(var i in p.room.players){
+				this.messageTo(p.room.players[i].socket, "tchat", {type:"general", pID:p.id, pseudo:p.pseudo, message:data});
+			}
 		}
 	}
 }
 
+Utils.onMatchmaking = function(data, socket){
+	var p = game.getPlayerBySocket(socket.id);
+	if(!p){return;}
+	if(!(p.room && p.room.ranked == true)){
+		if(!game.matchmaking.isInQueue(p)){
+			game.matchmaking.addPlayer(p);
+		}else{
+			game.matchmaking.removePlayer(p);
+		}
+	}
+}
 
 Utils.onDisconnect = function(socket){
 	var p = game.getPlayerBySocket(socket.id);

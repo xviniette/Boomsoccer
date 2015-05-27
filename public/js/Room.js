@@ -1,13 +1,16 @@
 var Room = function(json){
 	this.id;
 
-	this.map = new Map();
+	this.map;
 	this.ball;
 	this.players = [];
 	this.idBomb = 1;
 	this.bombs = [];
 
+	this.ranked = false;
 	this.score = {"1":0, "2":0};
+
+	this.nbGoal = 10;
 
 	this.fps = FPS;
 	this.deltaTime = 1/this.fps;
@@ -18,7 +21,6 @@ var Room = function(json){
 	this.iterateur = 0;
 	this.lastFrame = Date.now();
 	this.lastFrameNetwork = Date.now();
-
 
 	this.init(json);
 }
@@ -93,9 +95,26 @@ Room.prototype.goal = function(team){
 		Utils.messageTo(this.players[i].socket, "goal", {team:team, score:this.score[team]});
 	}
 	var _this = this;
-	setTimeout(function(){
-		_this.newBall();
-	}, 3000);
+	if(this.score[team] == this.nbGoal){
+		//Fin de partie répartition gain elo etc
+		this.endMatch();
+	}else{
+		if(this.score["1"] + this.score["2"] == this.nbGoal - 1){
+			//changement de side
+			this.changeSide();
+			for(var i in this.players){
+				Utils.messageTo(this.players[i].socket, "changeSide", "");
+			}
+		}
+		//réapparition de la balle
+		setTimeout(function(){
+			_this.newBall();
+		}, 3000);
+	}
+}
+
+Room.prototype.endMatch = function(){
+
 }
 
 Room.prototype.newBomb = function(player){
