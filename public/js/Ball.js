@@ -24,6 +24,8 @@ var Ball = function(json){
 
 	this.positions = [];
 
+	this.sprite = null;
+
 	this.init(json);
 }
 

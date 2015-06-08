@@ -55,18 +55,17 @@ Game.prototype.deleteRoom = function(roomId){
 	}
 }
 
-Game.prototype.addMatch = function(p1, p2, ranked){
-	var room = new Room({id:uuid.v1(), ranked:ranked, name:p1.pseudo+" VS "+p2.pseudo});
+Game.prototype.addRanked = function(p1, p2){
+	p1.room.deletePlayer(p1);
+	p2.room.deletePlayer(p2);
+	var room = new Room({id:uuid.v1(), ranked:true, name:p1.pseudo+" VS "+p2.pseudo});
 	room.map = new Map(this.maps[Math.floor(Math.random() * this.maps.length)].getInitInfos());
-	p1.team = 1;
-	p2.team = 2;
-	room.addPlayer(p1);
-	room.addPlayer(p2);
+	room.addPlayer(p1, 1);
+	room.addPlayer(p2, 2);
+	room.start();
 	this.rooms.push(room);
-	for(var i in room.players){
-		Utils.messageTo(room.players[i].socket, "initRoom", room.getInitInfo());
-	}
 }
+
 
 Game.prototype.getPlayerBySocket = function(socket){
 	if(this.players[socket]){

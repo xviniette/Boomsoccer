@@ -32,6 +32,8 @@ var Bomb = function(json){
 
 	this.positions = [];
 
+	this.sprite = null;
+
 	this.init(json);
 }
 

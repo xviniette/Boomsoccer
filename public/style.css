@@ -5,7 +5,85 @@ body{
 
 #jeu{
 	margin:0;
-	position: relative;
+	position: absolute;
+	top:0px;
+	left:0px;
 	transform-origin:0 0;
 	transform: scale(1);
+}
+
+#loader{
+	position: absolute;
+	width:700px;
+	height:550px;
+	background-color: white;
+	z-index: 1000;
+}
+
+#homePanel{
+	position: absolute;
+	width:700px;
+	height:550px;
+	background-color: white;
+	z-index: 100;
+}
+
+#canvas{
+	position: absolute;
+	top:0px;
+	left:0px;
+}
+
+.roomInformation{
+	position: absolute;
+	top:500px;
+	left:0px;
+	width:400px;
+	height:50px;
+	background-color: blue;
+}
+
+.tchat{
+	position: absolute;
+	top:200px;
+	left:400px;
+	width:300px;
+	height:350px;
+	background-color: yellow;
+}
+
+#messages{
+	margin:0px;
+	padding:0px;
+	width:300px;
+	height:320px;
+	list-style: none;
+	background-color: red;
+	overflow-y:auto; 
+}
+
+
+.menu{
+	position: absolute;
+	top:0px;
+	left:400px;
+	width:300px;
+	height:50px;
+	background-color: green;
+}
+
+.roomPlayers{
+	position: absolute;
+	top:50px;
+	left:400px;
+	width:300px;
+	height:150px;
+	background-color: grey;
+	overflow-y:auto; 
+}
+
+#roomPlayers{
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
 }

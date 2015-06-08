@@ -6,6 +6,8 @@ var Player = function(json){
 	this.socket;
 
 	this.elo;
+	this.won = 0;
+	this.played = 0;
 	this.team = 0;
 
 	this.x = 0;
@@ -16,6 +18,7 @@ var Player = function(json){
 	this.ry = 0;
 	this.dx = 0;
 	this.dy = 0;
+
 
 	this.radius = 10;
 	this.rapport = this.radius/20;
@@ -38,6 +41,8 @@ var Player = function(json){
 
 	this.positions = [];
 
+	this.sprite = null;
+
 	this.init(json);
 }
 
@@ -46,6 +51,31 @@ Player.prototype = Object.create(Objet.prototype);
 Player.prototype.init = function(json){
 	for(var i in json){
 		this[i] = json[i];
+	}
+}
+
+Player.prototype.reset = function(){
+	this.dx = 0;
+	this.dy = 0;
+	this.stun = 0;
+}
+
+Player.prototype.calcNewElo = function(eloAdv, resultat){
+	var k = 50;
+	if(this.played <= 10){
+		k = 100;
+	}
+	var estimation = 1/(1+Math.pow(10, (eloAdv - this.elo)/400));
+	this.elo = Math.round(this.elo + k * (resultat - estimation));
+	if(this.elo < 500){
+		this.elo = 500;
+	}
+}
+
+Player.prototype.dbSave = function(){
+	if(isServer){
+		d = [{elo:this.elo, won:this.won, played:this.played}, this.id];
+		db.query("UPDATE users SET ? WHERE id = ?", d);
 	}
 }
 
@@ -189,6 +219,7 @@ Player.prototype.getInitInfo = function(){
 	return {
 		id:this.id,
 		pseudo:this.pseudo,
+		team:this.team,
 		elo:this.elo,
 		radius:this.radius,
 		x:this.x,

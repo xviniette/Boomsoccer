@@ -20,10 +20,17 @@ eval(fs.readFileSync('./public/js/serverUtils.js')+'');
 server.listen(1321);
 
 var db = mysql.createConnection({
-  host     : 'localhost',
-  user     : 'root',
-  password : '',
-  database : 'soccerfest'
+	host     : 'localhost',
+	user     : 'root',
+	password : '',
+	database : 'soccerfest'
+});
+
+db.connect(function(err){
+	if(err) {
+		console.log("Error connecting database \n\n");  
+		process.exit();
+	}
 });
 
 app.get('/',function(req, res){
@@ -40,8 +47,10 @@ var isServer = true;
 var nbRooms = 0;
 var game = new Game();
 game.loadMaps(function(){
-	var room = new Room({id:uuid.v1(), ranked:false, name:"Home"});
+	//Ajout de la room d'accueil
+	var room = new Room({id:uuid.v1(), ranked:false, name:"Home", spawningBall:false, spawningBomb:false});
 	room.map = new Map(game.maps[Math.floor(Math.random() * game.maps.length)].getInitInfos());
+	room.start();
 	game.rooms.push(room);
 });
 

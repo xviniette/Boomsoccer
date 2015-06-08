@@ -19,7 +19,7 @@ Client.prototype.initRoom = function(data){
 		data.players[i].room = this.room;
 		var p = new Player(data.players[i]);
 		p.setCoordinate(data.players[i].x, data.players[i].y);
-		this.room.addPlayer(p);
+		this.room.addPlayer(p, data.players[i].team);
 	}
 	delete data.players;
 	this.room.init(data);
@@ -154,4 +154,24 @@ Client.prototype.checkKeys = function(){
 		input.k = true;
 	}
 	return input;
+}
+
+Client.prototype.loadImages = function(sources, callback){
+	var _this = this;
+	var images = {};
+	var loadedImages = 0;
+	var numImages = 0;
+	for(var src in sources) {
+		numImages++;
+	}
+	for(var src in sources) {
+		images[src] = new Image();
+		images[src].onload = function() {
+			if(++loadedImages >= numImages) {
+				_this.display.images = images;
+				callback();
+			}
+		};
+		images[src].src = sources[src];
+	}
 }

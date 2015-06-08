@@ -3,25 +3,28 @@
 <head>
 	<meta charset='UTF-8' />
 	<title>BoomSoccer</title>
-	<link rel="shortcut icon" href="favicon.ico">
+	<link rel="shortcut icon" href="public/favicon.ico">
 	<link rel="stylesheet" href="public/style.css" />
 </head>
 <body>	
 	<div id="jeu">
-		Connection
-		<div id="connectionPanel">
-			<form id="loginForm">
-				<input type="text" placeholder="Login" id="loginLoginForm">
-				<input type="password" placeholder="Password" id="passwordLoginForm">
-				<input type="submit" value="Connection">
-			</form>
-			Sign in
-			<form id="signinForm">
-				<input type="text" placeholder="Login" id="loginSigninForm">
-				<input type="password" placeholder="Password" id="passwordSigninForm">
-				<input type="password" placeholder="Confirm" id="passwordSigninFormConfirm">
-				<input type="submit" value="Sign In">
-			</form>
+		<div id="loader">Chargement...</div>
+		<div id="homePanel">
+			Connection
+			<div id="connectionPanel">
+				<form id="loginForm">
+					<input type="text" placeholder="Login" id="loginLoginForm">
+					<input type="password" placeholder="Password" id="passwordLoginForm">
+					<input type="submit" value="Connection">
+				</form>
+				Sign in
+				<form id="signinForm">
+					<input type="text" placeholder="Login" id="loginSigninForm">
+					<input type="password" placeholder="Password" id="passwordSigninForm">
+					<input type="password" placeholder="Confirm" id="passwordSigninFormConfirm">
+					<input type="submit" value="Sign In">
+				</form>
+			</div>
 		</div>
 		<canvas id="canvas" width="400" height="500"></canvas>
 		<div class="roomInformation">
@@ -29,12 +32,16 @@
 			<div id="roomName"></div>
 			<div id="score2"></div>
 		</div>
+		<div class="menu">
+		</div>
+		<div class="roomPlayers">
+			<div id="nbRoomPlayer"></div>
+			<ul id="roomPlayers"></ul>
+		</div>
 		<div class="tchat">
-			<div class="messages">
-				<ul id="messages"></ul>
-			</div>
+			<ul id="messages"></ul>
 			<form id="tchatForm">
-				<input type="text" id="inputTchat">
+				<input type="text" id="inputTchat" autocomplete="off">
 				<input type="submit" value="Envoyer">
 			</form>
 		</div>
@@ -48,6 +55,7 @@
 	<script src="public/js/Player.js"></script>
 	<script src="public/js/Room.js"></script>
 	<script src="public/js/Display.js"></script>
+	<script src="public/js/Sprite.js"></script>
 	<script src="public/js/jeu.js"></script>
 	<script src="public/js/Map.js"></script>
 	<script src="public/js/Ball.js"></script>

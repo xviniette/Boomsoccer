@@ -8,7 +8,12 @@ Matchmaking.prototype.addPlayer = function(player){
 }
 
 Matchmaking.prototype.isInQueue = function(player){
-
+	for(var i in this.queue){
+		if(this.queue[i].player.id == player.id){
+			return true;
+		}
+	}
+	return false;
 }
 
 Matchmaking.prototype.removePlayer = function(player){
@@ -29,7 +34,7 @@ Matchmaking.prototype.update = function(){
 					if(this.isMatching(this.queue[i], this.queue[j])){
 						this.queue[i].found = true;
 						this.queue[j].found = true;
-						this.game.addMatch(this.queue[i].player, this.queue[j].player, true);
+						this.game.addRanked(this.queue[i].player, this.queue[j].player);
 					}
 				}
 			}

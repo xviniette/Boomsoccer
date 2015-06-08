@@ -91,6 +91,13 @@ Objet.prototype.interpolate = function(tps){
 			var ratio = (interptime - this.positions[i].t)/(this.positions[i + 1].t - this.positions[i].t);
 			var x = Math.round(this.positions[i].x + ratio * (this.positions[i + 1].x - this.positions[i].x));
 			var y = Math.round(this.positions[i].y + ratio * (this.positions[i + 1].y - this.positions[i].y));
+			if(this.direction){
+				if(this.x > x){
+					this.direction = -1;
+				}else if(this.x < x){
+					this.direction = 1;
+				}
+			}
 			this.x = x;
 			this.y = y;
 			this.positions.splice(0, i - 1);
