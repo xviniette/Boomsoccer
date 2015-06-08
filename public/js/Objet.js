@@ -61,10 +61,10 @@ Objet.prototype.physic = function(){
 		(this.hasWallCollision(this.cx - 1, this.cy + 1) && this.ry > 1 - this.rapport && this.rx < this.rapport/2)) //droite dessous
 		&& this.dy >= 0 && !this.hasWallCollision(this.cx, this.cy)){
 		//collision en dessous
-		this.dy *= this.bounce.y * -1;
-		this.ry = 1 - this.rapport;
-		this.onGround = true;
-	}
+	this.dy *= this.bounce.y * -1;
+	this.ry = 1 - this.rapport;
+	this.onGround = true;
+}
 
 	//On met les bonnes valeurs pour ry/cy
 	while(this.ry < 0){this.ry++;this.cy--;}
@@ -86,20 +86,24 @@ Objet.prototype.physic = function(){
 
 Objet.prototype.interpolate = function(tps){
 	var interptime = tps - INTERPOLATION;
+	var limitDistance = 200;
 	for(var i = 0; i < this.positions.length - 1; i++){
 		if(this.positions[i].t <= interptime && this.positions[i + 1].t >= interptime){
-			var ratio = (interptime - this.positions[i].t)/(this.positions[i + 1].t - this.positions[i].t);
-			var x = Math.round(this.positions[i].x + ratio * (this.positions[i + 1].x - this.positions[i].x));
-			var y = Math.round(this.positions[i].y + ratio * (this.positions[i + 1].y - this.positions[i].y));
-			if(this.direction){
-				if(this.x > x){
-					this.direction = -1;
-				}else if(this.x < x){
-					this.direction = 1;
+			var distance = Math.sqrt(Math.pow(this.positions[i + 1].x - this.positions[i].x, 2) + Math.pow(this.positions[i + 1].y - this.positions[i].y, 2));
+			if(distance <= limitDistance){
+				var ratio = (interptime - this.positions[i].t)/(this.positions[i + 1].t - this.positions[i].t);
+				var x = Math.round(this.positions[i].x + ratio * (this.positions[i + 1].x - this.positions[i].x));
+				var y = Math.round(this.positions[i].y + ratio * (this.positions[i + 1].y - this.positions[i].y));
+				if(this.direction){
+					if(this.x > x){
+						this.direction = -1;
+					}else if(this.x < x){
+						this.direction = 1;
+					}
 				}
+				this.x = x;
+				this.y = y;
 			}
-			this.x = x;
-			this.y = y;
 			this.positions.splice(0, i - 1);
 			break;
 		}

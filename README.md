@@ -4,10 +4,10 @@ Todo :
 
 Network :
 - Lag compensation => A corriger
-- Delta snapshot
+- Delta snapshot => Chiant
 - Gestion déconnexion/Reconnexion + Connexion sur un compte déjà connecté
 - Empecher triche en envoyant +/- d'inputs
-- Non-interpolation quand trop grande distance
+- |OK| Non-interpolation quand trop grande distance
 
 Graphisme :
 - Interface
@@ -35,8 +35,8 @@ Fonctionnalités :
 
 Corrections : 
 - Bonne physique (Vitesse, rebond, friction, up, kick, Grosses Bombes, ...)
-- Bon calcule elo
-- isMatching matchmaking
+- Bon calcule elo => OK peut être amélioré
+- isMatching matchmaking => OK
 
 
 

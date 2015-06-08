@@ -5,6 +5,8 @@ var Player = function(json){
 	this.pseudo;
 	this.socket;
 
+	this.isConnected = true;
+
 	this.elo;
 	this.won = 0;
 	this.played = 0;
@@ -60,11 +62,16 @@ Player.prototype.reset = function(){
 	this.stun = 0;
 }
 
-Player.prototype.calcNewElo = function(eloAdv, resultat){
-	var k = 50;
-	if(this.played <= 10){
-		k = 100;
+Player.prototype.calcNewElo = function(eloAdv, resultat, deltaScore){
+	var ratioScore = 2;
+	var k = 20;
+	if(this.elo > 2400){	
+		k = 10;
 	}
+	if(this.played <= 10){
+		ratioScore = 5;
+	}
+	k += deltaScore * ratioScore;
 	var estimation = 1/(1+Math.pow(10, (eloAdv - this.elo)/400));
 	this.elo = Math.round(this.elo + k * (resultat - estimation));
 	if(this.elo < 500){

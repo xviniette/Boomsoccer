@@ -160,7 +160,7 @@ Room.prototype.endMatch = function(team){
 			}else{
 				var resultat = 0;
 			}
-			this.players[i].calcNewElo(teamFacingElo[this.players[i].team], resultat);
+			this.players[i].calcNewElo(teamFacingElo[this.players[i].team], resultat, Math.abs(this.score["1"] - this.score["2"]));
 
 			this.players[i].dbSave();
 		}
