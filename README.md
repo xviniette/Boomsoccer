@@ -3,7 +3,7 @@
 Todo : 
 
 Network :
-- Lag compensation
+- Lag compensation => A corriger
 - Delta snapshot
 - Gestion déconnexion/Reconnexion + Connexion sur un compte déjà connecté
 - Empecher triche en envoyant +/- d'inputs
@@ -15,6 +15,7 @@ Graphisme :
 - Page accueil
 - Sprite teeworld like
 - Equipments
+- Affichage scale, pour meilleur résolution en plus grand
 
 Fonctionnalités : 
 - Match défier

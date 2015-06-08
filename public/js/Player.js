@@ -110,10 +110,10 @@ Player.prototype.update = function(){
 			}
 			if(isServer){
 				if(inp.k && this.lastInput != null && this.lastInput.k == false){
-					this.kick();
+					this.kick(inp.svTime);
 				}
 				if(inp.d && this.lastInput != null && this.lastInput.d == false){
-					this.up();
+					this.up(inp.svTime);
 				}
 			}
 		}
@@ -173,7 +173,7 @@ Player.prototype.kick = function(){
 	}
 }
 
-Player.prototype.up = function(){
+Player.prototype.up = function(tps){
 	if(this.room.ball && this.hasObjectCollision(this.room.ball)){
 		//collision ballon
 		this.room.ball.uped(this.direction);

@@ -54,13 +54,16 @@ Room.prototype.update = function(){
 }
 
 Room.prototype.physic = function(){
+	var now = Date.now();
 	for(var i in this.players){
 		this.players[i].update();
 	}
 	for(var i in this.bombs){
+		this.bombs[i].saveState(now, 200);
 		this.bombs[i].update();
 	}
 	if(this.ball != null){
+		this.ball.saveState(now, 200);
 		this.ball.update();
 	}
 }
@@ -220,6 +223,7 @@ Room.prototype.getInitInfo = function(){
 
 Room.prototype.getSnapshotInfo = function(){
 	var data = {};
+	data.time = Date.now();
 	data.players = [];
 	for(var i in this.players){
 		data.players.push(this.players[i].getSnapshotInfo());

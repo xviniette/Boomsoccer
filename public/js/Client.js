@@ -3,6 +3,9 @@ var Client = function(){
 	this.ping = 0;
 	this.display = new Display({client:this});
 
+	this.serverTime = 0;
+	this.svTimeSnapshots = [];
+
 	this.input_seq = 0;
 	this.keys = [];
 
@@ -29,6 +32,9 @@ Client.prototype.initRoom = function(data){
 Client.prototype.snapshot = function(data){
 	//Joueurs
 	var d = Date.now();
+	//Gestion temps serveur
+	this.svTimeSnapshots.push({t:d, svtime:data.time});
+	//Gestion des joueurs
 	for(var i in data.players){
 		for(var j in this.room.players){
 			if(this.room.players[j].id == data.players[i].id){
@@ -105,12 +111,14 @@ Client.prototype.snapshot = function(data){
 Client.prototype.update = function(){
 	if(this.room != null){
 		var d = Date.now();
+		var svTime = this.calcServerTime(d);
 		var input = this.checkKeys();
 		for(var i in this.room.players){
 			if(this.room.players[i].id == this.pID){
 				//Joueur local
 				this.input_seq++;
 				input.seq = this.input_seq;
+				input.svTime = svTime;
 				socket.emit("keyboard", JSON.stringify(input));
 				var inputs = this.room.players[i].inputs;
 				this.room.players[i].inputs = [input];
@@ -133,6 +141,18 @@ Client.prototype.update = function(){
 		}
 
 		this.display.draw();
+	}
+}
+
+Client.prototype.calcServerTime = function(tps){
+	var interptime = tps - INTERPOLATION;
+	for(var i = 0; i < this.svTimeSnapshots.length - 1; i++){
+		if(this.svTimeSnapshots[i].t <= interptime && this.svTimeSnapshots[i + 1].t >= interptime){
+			var ratio = (interptime - this.svTimeSnapshots[i].t)/(this.svTimeSnapshots[i + 1].t - this.svTimeSnapshots[i].t);
+			var svTime = Math.round(this.svTimeSnapshots[i].svtime + ratio * (this.svTimeSnapshots[i + 1].svtime - this.svTimeSnapshots[i].svtime));
+			this.svTimeSnapshots.splice(0, i - 1);
+			return svTime; 
+		}
 	}
 }
 

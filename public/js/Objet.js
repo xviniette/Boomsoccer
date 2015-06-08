@@ -139,3 +139,30 @@ Objet.prototype.hasObjectCollision = function(obj){
 	return false;
 }
 
+Objet.prototype.saveState = function(tps, limit){
+	//tps temps courrant, limit temps maximum (ms) dans le buffer
+	if(this.positions){
+		this.positions.push({t:tps, x:this.x, y:this.y, radius: this.radius});
+	}
+	if(this.positions[0] && this.positions[0].t < tps - limit){
+		this.positions.splice(0, 1);
+	}
+}
+
+Objet.prototype.getTimeState = function(tps){
+	var min = -1;
+	var minIndex = 0;
+	if(this.positions && this.positions.length > 0){
+		for(var i in this.positions){
+			var ecart = Math.abs(tps - this.positions[i].t);
+			if(min == -1 || ecart < min){
+				min = ecart;
+				minIndex = i;
+			}else{
+				return this.positions[minIndex];
+			}
+		}
+	}
+	//On retourne la position actuelle si pas de systeme de position
+	return {x:this.x, y:this.y, radius: this.radius};
+}
