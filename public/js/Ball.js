@@ -51,6 +51,7 @@ Ball.prototype.setCoordinate = function(x, y){
 
 Ball.prototype.update = function(){
 	this.physic();
+	this.saveState(Date.now(), 200);
 	if(isServer){
 		var goal = this.hasGoalCollision(this.cx, this.cy);
 		if(goal){

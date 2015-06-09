@@ -52,7 +52,7 @@ Matchmaking.prototype.update = function(){
 
 Matchmaking.prototype.isMatching = function(p1, p2){
 	var timeInterval = 10;
-	var intervalPerTime = 50;
+	var intervalPerTime = 1000;
 	var range = (Math.round((Date.now() - p1.time)/1000/timeInterval) + 1) * intervalPerTime;
 	if(Math.abs(p1.player.elo - p2.player.elo) <= range){
 		return true;

@@ -158,19 +158,19 @@ Client.prototype.calcServerTime = function(tps){
 
 Client.prototype.checkKeys = function(){
 	var input = {u:false,d:false,l:false,r:false,k:false};
-	if(this.keys[38]){
+	if(this.keys[inputsKeyCode.up]){
 		input.u = true;
 	}
-	if(this.keys[39]){
+	if(this.keys[inputsKeyCode.right]){
 		input.r = true;
 	}
-	if(this.keys[40]){
+	if(this.keys[inputsKeyCode.down]){
 		input.d = true;
 	}
-	if(this.keys[37]){
+	if(this.keys[inputsKeyCode.left]){
 		input.l = true;
 	}
-	if(this.keys[13]){
+	if(this.keys[inputsKeyCode.kick]){
 		input.k = true;
 	}
 	return input;

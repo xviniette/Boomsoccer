@@ -159,7 +159,7 @@ Objet.prototype.getTimeState = function(tps){
 	if(this.positions && this.positions.length > 0){
 		for(var i in this.positions){
 			var ecart = Math.abs(tps - this.positions[i].t);
-			if(min == -1 || ecart < min){
+			if(min == -1 || ecart <= min){
 				min = ecart;
 				minIndex = i;
 			}else{

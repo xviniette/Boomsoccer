@@ -59,11 +59,9 @@ Room.prototype.physic = function(){
 		this.players[i].update();
 	}
 	for(var i in this.bombs){
-		this.bombs[i].saveState(now, 200);
 		this.bombs[i].update();
 	}
 	if(this.ball != null){
-		this.ball.saveState(now, 200);
 		this.ball.update();
 	}
 }
@@ -167,7 +165,11 @@ Room.prototype.endMatch = function(team){
 	}
 	//On supprimes les joueurs de la room et ajoute à la room principale
 	for(var i in this.players){
-		game.rooms[0].addPlayer(this.players[i]);
+		if(this.players[i].isConnected){
+			game.rooms[0].addPlayer(this.players[i]);
+		}else{
+			game.deletePlayer(this.players[i].socket);
+		}
 	}
 	game.deleteRoom(this.id);
 	//On supprime la room

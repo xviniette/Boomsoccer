@@ -59,6 +59,7 @@ Bomb.prototype.setCoordinate = function(x, y){
 
 Bomb.prototype.update = function(){
 	this.physic();
+	this.saveState(Date.now(), 200);
 	if(Date.now() > this.creationTime + this.timeExplosion){
 		this.explosion();
 	}

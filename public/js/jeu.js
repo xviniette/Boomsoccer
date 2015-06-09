@@ -2,7 +2,25 @@ var client;
 var isServer = false;
 var socket;
 
+var inputsKeyCode = {
+	up:38, 
+	right:39,
+	left:37,
+	down:40,
+	kick:13
+};
+
 $(function(){
+
+	//Chargement des bonnes touches
+	var inputsConfig = JSON.parse(localStorage.getItem("inputsConfig"));
+	if(inputsConfig){
+		for(var i in inputsConfig){
+			inputsKeyCode[i] = inputsConfig[i];
+		}
+	}else{
+		localStorage.setItem("inputsConfig", JSON.stringify(inputsKeyCode));
+	}
 
 	var imgs = {
 		sprites:"public/img/sprites.png"

@@ -150,16 +150,16 @@ Player.prototype.lowerStun = function(){
 
 //effets
 
-Player.prototype.kick = function(){
+Player.prototype.kick = function(tps){
 	//appui taper : taper ball && || taper bombe XOR poser bombe
 	var tape = false;
-	if(this.room.ball && this.hasObjectCollision(this.room.ball)){
+	if(this.room.ball && this.hasObjectCollision(this.room.ball.getTimeState(tps))){
 		//collision ballon
 		this.room.ball.kicked(this.direction);
 		tape = true;
 	}
 	for(var i in this.room.bombs){
-		if(this.hasObjectCollision(this.room.bombs[i])){
+		if(this.hasObjectCollision(this.room.bombs[i].getTimeState(tps))){
 			//collision bombe -> on tape la bombe dans la direction
 			tape = true;
 			this.room.bombs[i].kicked(this.direction);
@@ -181,12 +181,12 @@ Player.prototype.kick = function(){
 }
 
 Player.prototype.up = function(tps){
-	if(this.room.ball && this.hasObjectCollision(this.room.ball)){
+	if(this.room.ball && this.hasObjectCollision(this.room.ball.getTimeState(tps))){
 		//collision ballon
 		this.room.ball.uped(this.direction);
 	}
 	for(var i in this.room.bombs){
-		if(this.hasObjectCollision(this.room.bombs[i])){
+		if(this.hasObjectCollision(this.room.bombs[i].getTimeState(tps))){
 			//collision bombe
 			this.room.bombs[i].uped(this.direction);
 		}
