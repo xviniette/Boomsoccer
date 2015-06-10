@@ -15,7 +15,7 @@ Graphisme :
 - Affichage scale, pour meilleur résolution en plus grand
 
 Fonctionnalités : 
-- Match défier
+- Match fun
 - Spectater un Match
 
 - Ignorer joueur
@@ -25,7 +25,7 @@ Fonctionnalités :
 - Systeme de skin + HDV skin + Monnaie via $$$$ => $$
 - Système de tournois automatique
 - Match X vs X ?!
-- Map + grande ? Scrolling ?
+- Map + grande ? Scrolling ? => Only affichage, important !
 
 Corrections : 
 - Bonne physique (Vitesse, rebond, friction, up, kick, Grosses Bombes, ...)
