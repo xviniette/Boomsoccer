@@ -7,16 +7,17 @@ Network :
 - Empecher triche en envoyant +/- d'inputs
 
 Graphisme :
-- Interface
-- Tileset Map
-- Page accueil
-- Sprite teeworld like
-- Equipments
 - Affichage scale, pour meilleur résolution en plus grand
+- Tileset Map
+- Sprite teeworld like
+- Interface
+- Page accueil
+- Prise en charge si scrolling
+- Equipments
 
 Fonctionnalités : 
-- Match fun
-- Spectater un Match
+- Match "fun"
+
 
 - Ignorer joueur
 - Systeme ami
@@ -25,12 +26,13 @@ Fonctionnalités :
 - Systeme de skin + HDV skin + Monnaie via $$$$ => $$
 - Système de tournois automatique
 - Match X vs X ?!
-- Map + grande ? Scrolling ? => Only affichage, important !
 
 Corrections : 
 - Bonne physique (Vitesse, rebond, friction, up, kick, Grosses Bombes, ...)
 - Empecher faille (XSS, limitation pseudo, ...)
 
+
+CLEAN LE CODE : FIN !
 
 Done :
 - Non-interpolation quand trop grande distance => OK
@@ -42,5 +44,7 @@ Done :
 - Configuration Touches => OK, manque plus que le pannel de configuration
 - Classement => Manque affichage
 - Profil joueurs => Manque affichage
+- Spectater un Match => Manque juste les boutons
+- Quitter une partie => Manque le give up en ranked
 
 

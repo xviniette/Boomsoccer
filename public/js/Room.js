@@ -8,6 +8,8 @@ var Room = function(json){
 	this.idBomb = 1;
 	this.bombs = [];
 
+	this.spectators = [];
+
 	this.ranked = false;
 	this.score = {"1":0, "2":0};
 
@@ -67,9 +69,12 @@ Room.prototype.physic = function(){
 }
 
 Room.prototype.sendSnapshot = function(){
-	var snap = this.getSnapshotInfo();
+	var snap = JSON.stringify(this.getSnapshotInfo());
 	for(var i in this.players){
-		Utils.messageTo(this.players[i].socket, "snapshot", JSON.stringify(snap));
+		Utils.messageTo(this.players[i].socket, "snapshot", snap);
+	}
+	for(var i in this.spectators){
+		Utils.messageTo(this.spectators[i].socket, "snapshot", snap);
 	}
 }
 
@@ -84,6 +89,9 @@ Room.prototype.addPlayer = function(p, team){
 		for(var i in this.players){
 			Utils.messageTo(this.players[i].socket, "newPlayer", p.getInitInfo());
 		}
+		for(var i in this.spectators){
+			Utils.messageTo(this.spectators[i].socket, "newPlayer", p.getInitInfo());
+		}
 		p.room = this;
 		p.reset();
 		p.setCoordinate(this.map.player.x, this.map.player.y);
@@ -95,14 +103,49 @@ Room.prototype.addPlayer = function(p, team){
 }
 
 Room.prototype.deletePlayer = function(p){
+	var del = false;
 	for(var i in this.players){
 		if(this.players[i].id == p.id){
 			this.players.splice(i, 1);
+			del = true;
 		}
 	}
 	if(isServer){
 		for(var i in this.players){
 			Utils.messageTo(this.players[i].socket, "deletePlayer", {id:p.id});
+		}
+		for(var i in this.spectators){
+			Utils.messageTo(this.spectators[i].socket, "deletePlayer", {id:p.id});
+		}
+	}
+	return del;
+}
+
+Room.prototype.isPlayer = function(p){
+	for(var i in this.players){
+		if(this.players[i].id == p.id){
+			return true;
+		}
+	}
+	return false;
+}
+
+Room.prototype.addSpectator = function(p){
+	if(isServer){
+		p.room = this;
+		this.spectators.push(p);
+		Utils.messageTo(p.socket, "initRoom", this.getInitInfo());
+	}else{
+		this.spectators.push(p);
+	}
+}
+
+Room.prototype.deleteSpectator = function(p){
+	if(isServer){
+		for(var i in this.spectators){
+			if(this.spectators[i].id == p.id){
+				this.spectators.splice(i, 1);
+			}
 		}
 	}
 }
@@ -122,6 +165,9 @@ Room.prototype.goal = function(team){
 	for(var i in this.players){
 		Utils.messageTo(this.players[i].socket, "goal", {team:team, score:this.score[team]});
 	}
+	for(var i in this.spectators){
+		Utils.messageTo(this.spectators[i].socket, "goal", {team:team, score:this.score[team]});
+	}
 	var _this = this;
 	if(this.score[team] == this.nbGoal){
 		//Fin de partie répartition gain elo etc
@@ -132,6 +178,9 @@ Room.prototype.goal = function(team){
 			this.changeSide();
 			for(var i in this.players){
 				Utils.messageTo(this.players[i].socket, "changeSide", "");
+			}
+			for(var i in this.spectators){
+				Utils.messageTo(this.spectators[i].socket, "changeSide", "");
 			}
 		}
 		//réapparition de la balle
@@ -170,6 +219,9 @@ Room.prototype.endMatch = function(team){
 		}else{
 			game.deletePlayer(this.players[i].socket);
 		}
+	}
+	for(var i in this.spectators){
+		game.rooms[0].addPlayer(this.spectators[i]);
 	}
 	game.deleteRoom(this.id);
 	//On supprime la room

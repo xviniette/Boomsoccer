@@ -90,6 +90,16 @@ Utils.onTchat = function(data, socket){
 				}
 			}
 			break;
+			case "/spec":
+			//message privé
+			if(split.length == 2){
+				this.onSpectate({id:split[1]}, socket);
+			}
+			break;
+			case "/leave":
+			//message privé
+			this.onLeaveGame({}, socket);
+			break;
 		}
 	}else{
 		if(p.room){	
@@ -111,6 +121,37 @@ Utils.onMatchmaking = function(data, socket){
 			game.matchmaking.removePlayer(p);
 		}
 	}
+}
+
+Utils.onSpectate = function(data, socket){
+	var p = game.getPlayerBySocket(socket.id);
+	if(!p){return;}
+	if(!(p.room && p.room.ranked == true)){
+		var room = game.getRoom(data.id);
+		if(room){
+			p.room.deletePlayer(p);
+			room.addSpectator(p);
+		}
+	}
+}
+
+Utils.onLeaveGame = function(data, socket){
+	var p = game.getPlayerBySocket(socket.id);
+	if(!p){return;}
+	if(p.room){
+		if(p.room.isPlayer(p)){
+			//Si joueur
+			if(p.room.ranked){
+				//si ranked
+			}else{
+				p.room.deletePlayer(p);
+			}
+		}else{
+			//Si spectateur
+			p.room.deleteSpectator(p);
+		}
+	}
+	game.rooms[0].addPlayer(p);
 }
 
 
@@ -139,13 +180,24 @@ Utils.onDisconnect = function(socket){
 	if(!p){return;}
 	//On l'enleve du matchmaking
 	game.matchmaking.removePlayer(p);
-	if(p.room && !p.room.ranked){
-		//Si la room n'est pas ranked on le supprime de la room
-		p.room.deletePlayer(p);
-		//On le supprime du jeu
-		game.deletePlayer(socket.id);
+	if(p.room){
+		if(p.room.isPlayer(p)){
+			//Joueur
+			if(p.room.ranked){
+				//partie classé, on n'enleve pas le joueur (pour reconnexion)
+				p.isConnected = false;
+			}else{
+				//partie fun
+				p.room.deletePlayer(p);
+				game.deletePlayer(socket.id);
+			}
+		}else{
+			//Spectateur
+			p.room.deleteSpectator(p);
+			game.deletePlayer(socket.id);
+		}
 	}else{
-		p.isConnected = false;
+		game.deletePlayer(socket.id);
 	}
 }
 

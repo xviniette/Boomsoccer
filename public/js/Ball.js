@@ -102,11 +102,13 @@ Ball.prototype.hasObjectCollision = function(obj){
 }
 
 Ball.prototype.hasGoalCollision = function(cx, cy){
-	if(this.room.map.tiles[cx][cy] == 3){
-		return 2;
-	}
-	if(this.room.map.tiles[cx][cy] == 2){
-		return 1;
+	if(this.room.map.tiles[cx] && this.room.map.tiles[cx][cy]){
+		if(this.room.map.tiles[cx][cy] == 3){
+			return 2;
+		}
+		if(this.room.map.tiles[cx][cy] == 2){
+			return 1;
+		}
 	}
 	return false;
 }	
