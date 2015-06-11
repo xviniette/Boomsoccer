@@ -60,6 +60,7 @@ Client.prototype.snapshot = function(data){
 					}
 				}else{
 					//Autres joueurs = interpolation
+					this.room.players[j].init({dx:data.players[i].dx, dy:data.players[i].dy, stun:data.players[i].stun});
 					data.players[i].t = d;
 					this.room.players[j].positions.push(data.players[i]);
 				}

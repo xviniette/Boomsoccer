@@ -70,9 +70,6 @@ Utils.onTchat = function(data, socket){
 	if(data[0] && data[0] == "/"){
 		var split = data.split(" ");
 		switch(split[0]) {
-			case "/mm":
-			this.onMatchmaking(data, socket);
-			break;
 			case "/w":
 			//message privé
 			if(split.length >= 3){
@@ -88,12 +85,6 @@ Utils.onTchat = function(data, socket){
 					this.messageTo(dest.socket, "tchat", {type:"private", from:true, pID:p.id, pseudo:p.pseudo, message:msg});
 					this.messageTo(p.socket, "tchat", {type:"private", from:false, pID:dest.id, pseudo:dest.pseudo, message:msg});
 				}
-			}
-			break;
-			case "/spec":
-			//message privé
-			if(split.length == 2){
-				this.onSpectate({id:split[1]}, socket);
 			}
 			break;
 			case "/leave":
@@ -155,6 +146,10 @@ Utils.onLeaveGame = function(data, socket){
 	}
 }
 
+//Get Match en cours
+Utils.onGetSpectableRooms = function(data, socket){
+	socket.emit("spectableRooms", game.getSpectableRooms());
+}
 
 //Get joueurs
 Utils.onGetPlayerProfil = function(data, socket){
@@ -170,7 +165,6 @@ Utils.onGetPlayerProfil = function(data, socket){
 Utils.onGetRanking = function(data, socket){
 	var _this = this;
 	db.query("SELECT id, pseudo, elo, won, played FROM users ORDER BY elo DESC;", [data], function(e, r, f){
-		console.log(r);
 		_this.messageTo(socket.id, "ranking", r);
 	});
 }

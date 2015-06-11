@@ -48,7 +48,7 @@ var nbRooms = 0;
 var game = new Game();
 game.loadMaps(function(){
 	//Ajout de la room d'accueil
-	var room = new Room({id:uuid.v1(), ranked:false, name:"Home", spawningBall:true, spawningBomb:true});
+	var room = new Room({id:uuid.v1(), ranked:false, name:"Home", spawningBall:true, spawningBomb:true, nbGoal:-1});
 	room.map = new Map(game.maps[Math.floor(Math.random() * game.maps.length)].getInitInfos());
 	room.start();
 	game.rooms.push(room);
@@ -82,6 +82,26 @@ io.on('connection', function(socket){
 	//ok
 	socket.on("tchat", function(data){
 		Utils.onTchat(data, socket);
+	});
+
+	//ok
+	socket.on("matchmaking", function(data){
+		Utils.onMatchmaking(data, socket);
+	});
+
+	//ok
+	socket.on("spectableRooms", function(data){
+		Utils.onGetSpectableRooms(data, socket);
+	});
+
+	//ok
+	socket.on("spectate", function(data){
+		Utils.onSpectate(data, socket);
+	});
+
+	//ok
+	socket.on("ranking", function(data){
+		Utils.onGetRanking(data, socket);
 	});
 	
 	//ok

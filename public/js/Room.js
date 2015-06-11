@@ -264,10 +264,13 @@ Room.prototype.changeSide = function(){
 }
 
 Room.prototype.getInitInfo = function(){
-	var data = {};
+	var data = {
+		id:this.id,
+		name:this.name,
+		score:this.score,
+		nbGoal:this.nbGoal
+	};
 	data.map = this.map.getInitInfos();
-	data.name = this.name;
-	data.score = this.score;
 	data.players = [];
 	for(var i in this.players){
 		data.players.push(this.players[i].getInitInfo());

@@ -128,7 +128,7 @@ Display.prototype.draw = function(){
 	}
 
 	this.ctx.fillStyle = "white";
-	this.ctx.fillText(this.client.ping, 0, 10);
+	this.ctx.fillText(this.client.ping+"ms", 0, 10);
 }
 
 Display.prototype.initRoom = function(){
@@ -144,7 +144,7 @@ Display.prototype.displayRoomPlayers = function(){
 	if(this.client.room){
 		var p = this.client.room.players;
 		for(var i in p){
-			html += "<tr><td>"+p[i].pseudo+"</td><td>"+p[i].elo+"</td><td>"+p[i].won+"</td><td>"+p[i].played+"</td><td>"+Math.round(p[i].won/p[i].played*100)+"%</td></tr>";
+			html += "<tr><td>"+p[i].pseudo+"</td><td>"+p[i].elo+"</td><td>"+p[i].won+"</td><td>"+p[i].played+"</td><td>"+(p[i].played == 0 ? 0 : Math.round(p[i].won/p[i].played*100))+"%</td></tr>";
 		}
 	}
 	html += "</table>";
@@ -154,19 +154,19 @@ Display.prototype.displayRoomPlayers = function(){
 
 Display.prototype.ranking = function(data){
 	var html = "<table>";
-	html += "<tr><th>Pseudo</th><th>ELo</th><th>Gagné</th><th>Joué</th><th>Ratio</th></tr>";
+	html += "<tr><th>n°</th><th>Pseudo</th><th>ELo</th><th>Gagné</th><th>Joué</th><th>Ratio</th></tr>";
 	for(var i in data){
-		html += "<tr><td>"+data[i].pseudo+"</td><td>"+data[i].elo+"</td><td>"+data[i].won+"</td><td>"+data[i].played+"</td><td>"+Math.round(data[i].won/data[i].played*100)+"%</td></tr>";
+		html += "<tr><td>"+(parseInt(i)+1)+"</td><td>"+data[i].pseudo+"</td><td>"+data[i].elo+"</td><td>"+data[i].won+"</td><td>"+data[i].played+"</td><td>"+(data[i].played == 0 ? 0 : Math.round(data[i].won/data[i].played*100))+"%</td></tr>";
 	}
 	html += "</table>";
 	this.showPopup(html);
 }
 
 Display.prototype.watching = function(data){
-	var html = "<table>";
-	html += "<tr><th>Partie</th><th>Scores</th><th>Elo</th><th>Map</th><th>Observer</th></tr>";
+	var html = "Partie en cours : "+data.length+"<table>";
+	html += "<tr><th>Partie</th><th>Scores</th><th>Elo</th><th>Map</th></tr>";
 	for(var i in data){
-		html += "<tr><td>"+data[i].name+"</td><td>"+data[i].score["1"]+" - "+data[i].score["2"]+"</td><td>"+data[i].elo+"</td><td>"+data[i].map.name+"</td><td><button>Lol</button></td></tr>";
+		html += "<tr><td>"+data[i].name+"</td><td>"+data[i].score["1"]+" - "+data[i].score["2"]+"</td><td>"+data[i].elo+"</td><td>"+data[i].map.name+"</td><td><button onclick='spectate(\""+data[i].id+"\")'>Regarder</button></td></tr>";
 	}
 	html += "</table>";
 	this.showPopup(html);
@@ -177,7 +177,20 @@ Display.prototype.options = function(){
 }
 
 Display.prototype.help = function(){
-	var html = "";
+	var html = "<h1>Aide BoomSoccer</h1>";;
+	html += "<h2>Les contrôles</h2>";
+	html += "<p><ul><li>Touches directionnelles pour se déplacer</li><li>Touche Haut pour sauter</li><li>Touche Bas pour lever le ballon</li><li>Entrer pour taper dans le ballon et les bombes. Sinon pas de contact avec le ballon ou un bombe, crée une bombe</li></ul>Ces touches sont modifiables dans les options.</p>";
+	html += "<h2>Jouer</h2>";
+	html += "<p>En cliquant sur Jouer, vous vous incrivez pour une partie classée. Vous serez mis en relation avec un joueur de votre niveau. Le gagnant est le joueur qui atteint en premier un certain nombre de but marqué. En fonction du résultat votre Elo est impacté. L'Elo représente le niveau d'un joueur.</p>";
+	html += "<h2>Observer</h2>";
+	html += "<p>Permet de regarder les parties en cours. Intéressant pour s'inspirer des meilleurs joueurs.</p>";
+	html += "<h2>Classement</h2>";
+	html += "<p>Classement des joueurs en fonction de leur Elo.</p>";
+	html += "<h2>Le Home</h2>";
+	html += "<p>Le Home est la salle principale où les joueurs se retrouvent entre les parties. Il n'y a ni ballon ni bombe dans cette salle.</p>";
+	html += "<h2>Commandes disponibles</h2>";
+	html += "<p>Différentes commande à faire dans le tchat existent : <ul><li>/w \<pseudo\> \<message\> : Permet d'envoyer un message privé.</li><li>/leave : Permet de quitter une partie (sauf si on est en ranked).</li></ul></p>";
+	this.showPopup(html);
 }
 
 Display.prototype.showPopup = function(data){

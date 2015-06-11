@@ -7,9 +7,6 @@ Network :
 - Empecher triche en envoyant +/- d'inputs
 
 Graphisme :
-- Affichage scale, pour meilleur résolution en plus grand
-- Tileset Map
-- Sprite teeworld like
 - Interface
 - Page accueil
 - Prise en charge scrolling
@@ -45,5 +42,7 @@ Done :
 - Profil joueurs => Manque affichage
 - Spectater un Match => Manque juste les boutons
 - Quitter une partie => Manque le give up en ranked
+- Affichage scale, pour meilleur résolution en plus grand
+
 
 

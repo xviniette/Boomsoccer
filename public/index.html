@@ -8,16 +8,16 @@
 </head>
 <body>	
 	<div id="jeu">
-		<div id="loader">Chargement...</div>
+		<div id="loader">Chargement du jeu...</div>
 		<div id="homePanel">
-			Connection
+			Connexion
 			<div id="connectionPanel">
 				<form id="loginForm">
 					<input type="text" placeholder="Login" id="loginLoginForm">
 					<input type="password" placeholder="Password" id="passwordLoginForm">
 					<input type="submit" value="Connection">
 				</form>
-				Sign in
+				Inscription
 				<form id="signinForm">
 					<input type="text" placeholder="Login" id="loginSigninForm">
 					<input type="password" placeholder="Password" id="passwordSigninForm">
@@ -27,8 +27,8 @@
 			</div>
 		</div>
 		<div id="popup">
+			<button id="closePopup">Fermer</button>
 			<div id="popupContent"></div>
-			<button>Close</button>
 		</div>
 		<canvas id="canvas" width="600" height="750"></canvas>
 		<div class="roomInformation">
@@ -38,11 +38,11 @@
 		</div>
 		<div class="menu">
 			<ul>
-				<li>Jouer</li>
-				<li>Observer</li>
-				<li>Classement</li>
-				<li>Options</li>
-				<li>Aide</li>
+				<li onclick="menuOptions(1);"><button>Jouer</button></li>
+				<li onclick="menuOptions(2);"><button>Observer</button></li>
+				<li onclick="menuOptions(3);"><button>Classement</button></li>
+				<li onclick="menuOptions(4);"><button>Options</button></li>
+				<li onclick="menuOptions(5);"><button>Aide</button></li>
 			</ul>
 		</div>
 		<div class="roomPlayers">
@@ -52,7 +52,7 @@
 		<div class="tchat">
 			<ul id="messages"></ul>
 			<form id="tchatForm">
-				<input type="text" id="inputTchat" autocomplete="off">
+				<input type="text" id="inputTchat" autocomplete="off" size="35">
 				<input type="submit" value="Envoyer">
 			</form>
 		</div>

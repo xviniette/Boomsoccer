@@ -5,6 +5,7 @@ var Matchmaking = function(game){
 
 Matchmaking.prototype.addPlayer = function(player){
 	this.queue.push({player:player, time:Date.now(), found:false});
+	Utils.messageTo(player.socket, "information", "Inscription Matchmaking.");
 }
 
 Matchmaking.prototype.isInQueue = function(player){
@@ -19,6 +20,7 @@ Matchmaking.prototype.isInQueue = function(player){
 Matchmaking.prototype.removePlayer = function(player){
 	for(var i in this.queue){
 		if(this.queue[i].player.id == player.id){
+			Utils.messageTo(player.socket, "information", "Désinscription Matchmaking.");
 			this.queue.splice(i, 1);
 			break;
 		}
@@ -52,7 +54,7 @@ Matchmaking.prototype.update = function(){
 
 Matchmaking.prototype.isMatching = function(p1, p2){
 	var timeInterval = 10;
-	var intervalPerTime = 1000;
+	var intervalPerTime = 50;
 	var range = (Math.round((Date.now() - p1.time)/1000/timeInterval) + 1) * intervalPerTime;
 	if(Math.abs(p1.player.elo - p2.player.elo) <= range){
 		return true;

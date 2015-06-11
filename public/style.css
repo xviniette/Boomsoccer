@@ -2,6 +2,8 @@ body{
 	margin:0px;
 	background-color: #B5A69D;
 	font-family: Arial;
+	font-size: 16px;
+	color:black;
 }
 
 #jeu{
@@ -15,16 +17,16 @@ body{
 
 #loader{
 	position: absolute;
-	width:700px;
-	height:550px;
+	width:1000px;
+	height:800px;
 	background-color: white;
 	z-index: 1000;
 }
 
 #homePanel{
 	position: absolute;
-	width:700px;
-	height:550px;
+	width:1000px;
+	height:800px;
 	background-color: white;
 	z-index: 100;
 }
@@ -41,16 +43,47 @@ body{
 	left:0px;
 	width:600px;
 	height:50px;
-	background-color: blue;
+	background-color: #EFEFEF;
+	font-weight: bold;
+}
+
+#roomName{
+	position: absolute;
+	top:10px;
+	left:200px;
+	width:200px;
+	text-align: center;
+	font-size: 20px;
+}
+
+#score1{
+	position: absolute;
+	top:10px;
+	left:550px;
+	width:50px;
+	text-align: center;
+	font-size: 20px;
+	color:blue;
+}
+
+#score2{
+	position: absolute;
+	top:10px;
+	left:0px;
+	width:50px;
+	text-align: center;
+	font-size: 20px;
+	color:red;
 }
 
 .tchat{
+	color:white;
 	position: absolute;
 	top:300px;
 	left:600px;
 	width:400px;
 	height:500px;
-	background-color: yellow;
+	background-color: #383838;
 }
 
 #messages{
@@ -59,7 +92,6 @@ body{
 	width:400px;
 	height:470px;
 	list-style: none;
-	background-color: red;
 	overflow-y:auto; 
 }
 
@@ -69,8 +101,8 @@ body{
 	top:0px;
 	left:600px;
 	width:400px;
-	height:100px;
-	background-color: green;
+	height:50px;
+	background-color: #383838;
 }
 
 .menu ul li{
@@ -79,11 +111,11 @@ body{
 
 .roomPlayers{
 	position: absolute;
-	top:100px;
+	top:50px;
 	left:600px;
 	width:400px;
-	height:200px;
-	background-color: grey;
+	height:250px;
+	background-color: #CCCCCC;
 	overflow-y:auto; 
 }
 
@@ -94,24 +126,24 @@ body{
 }
 
 #popup{
-     position: fixed;
-     display: none;
-     left: 50%;
-     top: 50%;
-     z-index: 2000;
-     padding: 20px;
-     width: 560px;
-     background-color: #EEEEEE;
-     font-size: 12px;
-     line-height: 16px;
-     color: #202020;
-     border : 3px outset #555555;
+	position: fixed;
+	display: none;
+	left: 100px;
+	top: 100px;
+	z-index: 2000;
+	padding: 20px;
+	width:800px;
+	max-height: 600px;
+	overflow-y:auto; 
+	background-color: #F7F7F7;
+	color: #202020;
+	border : 1px outset #555555;
 }
 
 table {
-    border-collapse: collapse;
+	border-collapse: collapse;
 }
 
 table, th, td {
-   border: 1px solid black;
+	border: 1px solid black;
 }

@@ -60,6 +60,12 @@ $(function(){
 		msgDiv.animate({scrollTop:$("#messages").prop('scrollHeight')}, 0);
 	});
 
+	socket.on("information", function(data){
+		var msgDiv = $("#messages");
+		msgDiv.append("<li class='information'>"+data+"</li>");
+		msgDiv.animate({scrollTop:$("#messages").prop('scrollHeight')}, 0);
+	});
+
 	socket.on("newPlayer", function(data){
 		client.room.addPlayer(new Player(data), data.team);
 		client.display.displayRoomPlayers();
@@ -80,6 +86,24 @@ $(function(){
 
 	socket.on("changeSide", function(data){
 		client.room.changeSide();
+	});
+
+	socket.on("spectableRooms", function(data){
+		if(client && client.display){
+			client.display.watching(data);
+		}
+	});
+
+	socket.on("ranking", function(data){
+		if(client && client.display){
+			client.display.ranking(data);
+		}
+	});
+
+	socket.on("ranking", function(data){
+		if(client && client.display){
+			client.display.ranking(data);
+		}
 	});
 
 	//PING
@@ -104,10 +128,9 @@ $(function(){
 
 	//Clavier
 	document.body.addEventListener("keydown", function(e) {
-		if((37 <= e.keyCode && e.keyCode <= 39)){
-			e.preventDefault();
+		if($('input:focus').length == 0 ){
+			client.keys[e.keyCode] = true;
 		}
-		client.keys[e.keyCode] = true;
 	});
 	document.body.addEventListener("keyup", function(e) {
 		client.keys[e.keyCode] = false;
@@ -135,6 +158,10 @@ $(function(){
 		$('#inputTchat').val("");
 	});
 
+	$("#closePopup").click(function(e){
+		$("#popup").hide();
+	});
+
 	setScreenSize();
 	$(window).resize(function(){
 		setScreenSize();
@@ -142,9 +169,9 @@ $(function(){
 });
 
 var setScreenSize = function(){
-	/*var jeu = $("#jeu");
-	var bW = 770;
-	var bH = 605;
+	var jeu = $("#jeu");
+	var bW = 1000;
+	var bH = 800;
 
 	var sW = $(window).width();
 	var sH = $(window).height();
@@ -177,5 +204,35 @@ var setScreenSize = function(){
 	jeu.css("top", (sH/2 - (bH/2)*scale)+"px");
 	jeu.css("left", (sW/2 - (bW/2)*scale)+"px");
 
-	client.scale = scale;*/
+	client.scale = scale;
 }
+
+var menuOptions = function(nb){
+	switch(nb) {
+		case 1:
+			//mm
+			socket.emit("matchmaking");
+			break;
+			case 2:
+			//observer
+			socket.emit("spectableRooms");
+			break;
+			case 3:
+			//Classement
+			socket.emit("ranking");
+			break;
+			case 4:
+			//Options
+			client.display.options();
+			break;
+			case 5:
+			//Aide
+			client.display.help();
+			break;
+		}
+	}
+
+	var spectate = function(id){
+		socket.emit("spectate", {id:id});
+		$("#popup").hide();
+	}
