@@ -7,8 +7,6 @@ Network :
 - Empecher triche en envoyant +/- d'inputs
 
 Graphisme :
-- Interface
-- Page accueil
 - Prise en charge scrolling
 - Equipments
 
@@ -43,6 +41,8 @@ Done :
 - Spectater un Match => Manque juste les boutons
 - Quitter une partie => Manque le give up en ranked
 - Affichage scale, pour meilleur résolution en plus grand
+- Interface
+- Page accueil
 
 
 

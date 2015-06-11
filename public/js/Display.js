@@ -173,7 +173,30 @@ Display.prototype.watching = function(data){
 }
 
 Display.prototype.options = function(){
-
+	var html = "<table>";
+	for(var i in inputsKeyCode){
+		var val = "";
+		switch(i) {
+			case "up":
+			val = "Saut";
+			break;
+			case "left":
+			val = "Gauche";
+			break;
+			case "right":
+			val = "Droite";
+			break;
+			case "down":
+			val = "Lever";
+			break;
+			case "kick":
+			val = "Frapper";
+			break;
+		}
+		html += "<tr><td>"+val+"</td><td><button onclick='changeInput(\""+i+"\");'>"+keyboardMap[inputsKeyCode[i]]+"</button></td></tr>";
+	}
+	html += "</table>";
+	this.showPopup(html);
 }
 
 Display.prototype.help = function(){
@@ -181,11 +204,7 @@ Display.prototype.help = function(){
 	html += "<h2>Les contrôles</h2>";
 	html += "<p><ul><li>Touches directionnelles pour se déplacer</li><li>Touche Haut pour sauter</li><li>Touche Bas pour lever le ballon</li><li>Entrer pour taper dans le ballon et les bombes. Sinon pas de contact avec le ballon ou un bombe, crée une bombe</li></ul>Ces touches sont modifiables dans les options.</p>";
 	html += "<h2>Jouer</h2>";
-	html += "<p>En cliquant sur Jouer, vous vous incrivez pour une partie classée. Vous serez mis en relation avec un joueur de votre niveau. Le gagnant est le joueur qui atteint en premier un certain nombre de but marqué. En fonction du résultat votre Elo est impacté. L'Elo représente le niveau d'un joueur.</p>";
-	html += "<h2>Observer</h2>";
-	html += "<p>Permet de regarder les parties en cours. Intéressant pour s'inspirer des meilleurs joueurs.</p>";
-	html += "<h2>Classement</h2>";
-	html += "<p>Classement des joueurs en fonction de leur Elo.</p>";
+	html += "<p>Inscription à une partie contre un joueur de votre niveau. Le gagnant est le joueur qui atteint en premier un certain nombre de but marqué.</p>";
 	html += "<h2>Le Home</h2>";
 	html += "<p>Le Home est la salle principale où les joueurs se retrouvent entre les parties. Il n'y a ni ballon ni bombe dans cette salle.</p>";
 	html += "<h2>Commandes disponibles</h2>";

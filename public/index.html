@@ -10,20 +10,24 @@
 	<div id="jeu">
 		<div id="loader">Chargement du jeu...</div>
 		<div id="homePanel">
-			Connexion
 			<div id="connectionPanel">
-				<form id="loginForm">
-					<input type="text" placeholder="Login" id="loginLoginForm">
-					<input type="password" placeholder="Password" id="passwordLoginForm">
-					<input type="submit" value="Connection">
-				</form>
-				Inscription
+				<h1>Connexion</h1>
+				<table>
+					<form id="loginForm">
+						<tr><td>Pseudonyme</td><td><input type="text" id="loginLoginForm"></td></tr>
+						<tr><td>Mot de passe</td><td><input type="password" id="passwordLoginForm"></td></tr>
+						<tr><td><input type="submit" value="Connexion"></td></tr>
+					</form>
+				</table>
+				<h1>Inscription</h1>
+				<table>
 				<form id="signinForm">
-					<input type="text" placeholder="Login" id="loginSigninForm">
-					<input type="password" placeholder="Password" id="passwordSigninForm">
-					<input type="password" placeholder="Confirm" id="passwordSigninFormConfirm">
-					<input type="submit" value="Sign In">
+					<tr><td>Pseudonyme</td><td><input type="text" id="loginSigninForm"></td></tr>
+					<tr><td>Mot de passe</td><td><input type="password"  id="passwordSigninForm"></td></tr>
+					<tr><td>Confirmer</td><td><input type="password" id="passwordSigninFormConfirm"></td></tr>
+					<tr><td><input type="submit" value="Inscription"></td></tr>
 				</form>
+				</table>
 			</div>
 		</div>
 		<div id="popup">
