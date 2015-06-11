@@ -97,7 +97,7 @@ Game.prototype.getSpectableRooms = function(){
 	for(var i in this.rooms){
 		var r = this.rooms[i];
 		if(r.ranked){
-			var avgElo = 0;for(var j = 0; j < r.players; j++){avgElo+=r.players[j].elo;}avgElo = Math.round(avgElo/(j+1));
+			var avgElo = 0;for(var j = 0; j < r.players.length; j++){avgElo+=r.players[j].elo;}avgElo = Math.round(avgElo/j);
 			d.push({id:r.id, name:r.name, score:r.score, elo:avgElo, map:{id:r.map.id, name:r.map.name}});
 		}
 	}

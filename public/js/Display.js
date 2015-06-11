@@ -2,10 +2,12 @@ var Display = function(json){
 	this.client;
 	this.canvas = document.getElementById('canvas');
 	this.ctx = this.canvas.getContext('2d');
-	this.background = "black";
+	this.background = "#0094FF";
 
 	this.images = {};
 	this.sprites = {};
+
+	this.scale = 1.5;
 
 	this.init(json);
 }
@@ -19,6 +21,7 @@ Display.prototype.init = function(json){
 Display.prototype.initSprites = function(){
 	this.sprites = {
 		"ball":{img:this.images["sprites"],name:"ball", x:0, y:40, w:40, h:40, animation:[0], fps:1},
+		"bomb":{img:this.images["sprites"],name:"bomb", x:200, y:0, w:40, h:60, animation:[0], fps:1},
 		"dirt":{img:this.images["sprites"],name:"dirt", x:0, y:0, w:40, h:40, animation:[0], fps:1},
 		"grass":{img:this.images["sprites"],name:"grass", x:40, y:0, w:40, h:40, animation:[0], fps:1},
 		"goal2":{img:this.images["sprites"],name:"goal2", x:80, y:0, w:40, h:40, animation:[0], fps:1},
@@ -37,39 +40,37 @@ Display.prototype.draw = function(){
 	var ball = room.ball;
 	var bombs = room.bombs;
 	var map = room.map;
-	var tilesize = map.tilesize;
+	var tilesize = map.tilesize * this.scale;
 
 	this.ctx.font = "10px Arial";
-	//MAP
 	if(map){
 		for(var i in map.tiles){
 			for(var j in map.tiles[i]){
-				this.ctx.fillStyle = "#0094FF";
-				this.ctx.fillRect(i * tilesize, j * tilesize, tilesize, tilesize);
+				var s = null;
 				if(map.tiles[i][j] == 1){
 					if(map.tiles[i][j - 1] != undefined && map.tiles[i][j - 1] != 1){
-						var s = new Sprite(this.sprites["grass"]);
+						var s = this.sprites["grass"];
 					}else{
-						var s = new Sprite(this.sprites["dirt"]);
+						var s = this.sprites["dirt"];
 					}
-					s.draw(this.ctx, i * tilesize, j * tilesize, tilesize, tilesize);
+					this.ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
+					this.ctx.fillRect(i * tilesize + tilesize/10, j * tilesize + tilesize/10, tilesize, tilesize);
 				}else if(map.tiles[i][j] == 2){
-					var s = new Sprite(this.sprites["goal1"]);
-					s.draw(this.ctx, i * tilesize, j * tilesize, tilesize, tilesize);
+					var s = this.sprites["goal1"];
 				}else if(map.tiles[i][j] == 3){
-					var s = new Sprite(this.sprites["goal2"]);
-					s.draw(this.ctx, i * tilesize, j * tilesize, tilesize, tilesize);
+					var s = this.sprites["goal2"];
 				}else if(map.tiles[i][j][0] == "w"){
-					var s = new Sprite(this.sprites["warp"]);
-					s.draw(this.ctx, i * tilesize, j * tilesize, tilesize, tilesize);
+					var s = this.sprites["warp"];
+				}
+				if(s){
+					this.ctx.drawImage(s.img, s.x, s.y, s.w, s.h, tilesize * i, tilesize * j, tilesize, tilesize);
 				}
 			}
 		}
 	}
 
-	//PERSO
 	
-	var letterSpace = 5
+	var letterSpace = 5;
 	for(var i in players){
 		this.ctx.fillStyle = "white";
 		if(players[i].team == 0){
@@ -83,51 +84,49 @@ Display.prototype.draw = function(){
 				this.ctx.fillStyle = "red";
 			}
 		}
-		this.ctx.fillText(players[i].pseudo, players[i].x - (players[i].pseudo.length / 2) * letterSpace, players[i].y - players[i].radius - letterSpace);
+		this.ctx.fillText(players[i].pseudo, players[i].x * this.scale - (players[i].pseudo.length / 2) * letterSpace, players[i].y * this.scale - players[i].radius * this.scale - letterSpace);
 		if(players[i].sprite == null){
-			players[i].sprite = new Sprite(this.sprites["running"]);
+			players[i].sprite = new Sprite(this.sprites["player"]);
 		}
-		/*this.ctx.fillStyle = "red";
-		this.ctx.beginPath();
-		this.ctx.arc(players[i].x,players[i].y,players[i].radius,0,2*Math.PI);
-		this.ctx.fill();*/
+		if(Math.abs(players[i].dx) > 0.001 && players[i].sprite.name == "player"){
+			players[i].sprite = new Sprite(this.sprites["running"]);
+		}else if(Math.abs(players[i].dx) < 0.001 && players[i].sprite.name == "running"){
+			players[i].sprite = new Sprite(this.sprites["player"]);
+		}
 
 		this.ctx.save();
 		if(players[i].direction == -1){
 			this.ctx.translate(canvas.width, 0);
 			this.ctx.scale(-1, 1);
-		players[i].sprite.draw(this.ctx, canvas.width -players[i].x - players[i].radius, players[i].y - players[i].radius, players[i].radius * 2, players[i].radius * 2);
+			players[i].sprite.draw(this.ctx, canvas.width - players[i].x * this.scale - players[i].radius * this.scale, players[i].y * this.scale - players[i].radius * this.scale, players[i].radius * 2 * this.scale, players[i].radius * 2 * this.scale);
 
 		}else{
-		players[i].sprite.draw(this.ctx, players[i].x - players[i].radius, players[i].y - players[i].radius, players[i].radius * 2, players[i].radius * 2);
+			players[i].sprite.draw(this.ctx, players[i].x * this.scale - players[i].radius * this.scale, players[i].y * this.scale - players[i].radius * this.scale, players[i].radius * 2 * this.scale, players[i].radius * 2 * this.scale);
 
 		}
 		this.ctx.restore();
 	}
 
-	this.ctx.fillStyle = "yellow";
 	for(var i in bombs){
-		this.ctx.beginPath();
-		this.ctx.arc(bombs[i].x,bombs[i].y,bombs[i].radius,0,2*Math.PI);
-		this.ctx.fill();
+		if(!bombs[i].sprite){
+			bombs[i].sprite = new Sprite(this.sprites["bomb"]);
+		}
+
+		bombs[i].sprite.draw(this.ctx, bombs[i].x * this.scale - bombs[i].radius * this.scale, bombs[i].y * this.scale - bombs[i].radius * 2 * this.scale, bombs[i].radius*2*this.scale, bombs[i].radius*3*this.scale);
 	}
 
 	if(ball){
-		this.ctx.fillStyle = "green";
-		this.ctx.beginPath();
-		this.ctx.arc(ball.x,ball.y,ball.radius,0,2*Math.PI);
-		this.ctx.fill();
-
 		this.ctx.save(); 
-		this.ctx.translate(ball.x, ball.y); 
+		this.ctx.translate(ball.x * this.scale, ball.y * this.scale); 
 		var deg = ball.x * Math.round(360 / (2 * Math.PI * ball.radius));
 		this.ctx.rotate(deg * Math.PI/180); 
-		var s = new Sprite(this.sprites["ball"]);
-		s.draw(this.ctx, -ball.radius, -ball.radius, ball.radius*2, ball.radius*2);
+		if(!ball.sprite){
+			ball.sprite = new Sprite(this.sprites["ball"]);
+		}
+		ball.sprite.draw(this.ctx, -ball.radius * this.scale, -ball.radius * this.scale, ball.radius*2 * this.scale, ball.radius*2 * this.scale);
 		this.ctx.restore();
 	}
 
-	//PING
 	this.ctx.fillStyle = "white";
 	this.ctx.fillText(this.client.ping, 0, 10);
 }
@@ -140,13 +139,49 @@ Display.prototype.initRoom = function(){
 }
 
 Display.prototype.displayRoomPlayers = function(){
-	var html = "";
+	var html = "<table>";
+	html += "<tr><th>Pseudo</th><th>ELo</th><th>Gagné</th><th>Joué</th><th>Ratio</th></tr>";
 	if(this.client.room){
 		var p = this.client.room.players;
 		for(var i in p){
-			html += "<li>"+p[i].pseudo+" ("+p[i].elo+")"+"</li>";
+			html += "<tr><td>"+p[i].pseudo+"</td><td>"+p[i].elo+"</td><td>"+p[i].won+"</td><td>"+p[i].played+"</td><td>"+Math.round(p[i].won/p[i].played*100)+"%</td></tr>";
 		}
 	}
+	html += "</table>";
 	$("#roomPlayers").html(html);
-	$("#nbRoomPlayer").html(this.client.room.players.length);
+	$("#nbRoomPlayer").html("Nombre de joueur : "+this.client.room.players.length);
 }
+
+Display.prototype.ranking = function(data){
+	var html = "<table>";
+	html += "<tr><th>Pseudo</th><th>ELo</th><th>Gagné</th><th>Joué</th><th>Ratio</th></tr>";
+	for(var i in data){
+		html += "<tr><td>"+data[i].pseudo+"</td><td>"+data[i].elo+"</td><td>"+data[i].won+"</td><td>"+data[i].played+"</td><td>"+Math.round(data[i].won/data[i].played*100)+"%</td></tr>";
+	}
+	html += "</table>";
+	this.showPopup(html);
+}
+
+Display.prototype.watching = function(data){
+	var html = "<table>";
+	html += "<tr><th>Partie</th><th>Scores</th><th>Elo</th><th>Map</th><th>Observer</th></tr>";
+	for(var i in data){
+		html += "<tr><td>"+data[i].name+"</td><td>"+data[i].score["1"]+" - "+data[i].score["2"]+"</td><td>"+data[i].elo+"</td><td>"+data[i].map.name+"</td><td><button>Lol</button></td></tr>";
+	}
+	html += "</table>";
+	this.showPopup(html);
+}
+
+Display.prototype.options = function(){
+
+}
+
+Display.prototype.help = function(){
+	var html = "";
+}
+
+Display.prototype.showPopup = function(data){
+	$("#popupContent").html(data);
+	$("#popup").show();
+}
+

@@ -12,12 +12,11 @@ Graphisme :
 - Sprite teeworld like
 - Interface
 - Page accueil
-- Prise en charge si scrolling
+- Prise en charge scrolling
 - Equipments
 
 Fonctionnalités : 
 - Match "fun"
-
 
 - Ignorer joueur
 - Systeme ami

@@ -1,6 +1,7 @@
 body{
 	margin:0px;
 	background-color: #B5A69D;
+	font-family: Arial;
 }
 
 #jeu{
@@ -36,27 +37,27 @@ body{
 
 .roomInformation{
 	position: absolute;
-	top:500px;
+	top:750px;
 	left:0px;
-	width:400px;
+	width:600px;
 	height:50px;
 	background-color: blue;
 }
 
 .tchat{
 	position: absolute;
-	top:200px;
-	left:400px;
-	width:300px;
-	height:350px;
+	top:300px;
+	left:600px;
+	width:400px;
+	height:500px;
 	background-color: yellow;
 }
 
 #messages{
 	margin:0px;
 	padding:0px;
-	width:300px;
-	height:320px;
+	width:400px;
+	height:470px;
 	list-style: none;
 	background-color: red;
 	overflow-y:auto; 
@@ -66,18 +67,22 @@ body{
 .menu{
 	position: absolute;
 	top:0px;
-	left:400px;
-	width:300px;
-	height:50px;
+	left:600px;
+	width:400px;
+	height:100px;
 	background-color: green;
+}
+
+.menu ul li{
+	display: inline-block;
 }
 
 .roomPlayers{
 	position: absolute;
-	top:50px;
-	left:400px;
-	width:300px;
-	height:150px;
+	top:100px;
+	left:600px;
+	width:400px;
+	height:200px;
 	background-color: grey;
 	overflow-y:auto; 
 }
@@ -86,4 +91,27 @@ body{
 	margin: 0px;
 	padding: 0px;
 	list-style: none;
+}
+
+#popup{
+     position: fixed;
+     display: none;
+     left: 50%;
+     top: 50%;
+     z-index: 2000;
+     padding: 20px;
+     width: 560px;
+     background-color: #EEEEEE;
+     font-size: 12px;
+     line-height: 16px;
+     color: #202020;
+     border : 3px outset #555555;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+table, th, td {
+   border: 1px solid black;
 }

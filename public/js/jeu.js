@@ -142,7 +142,7 @@ $(function(){
 });
 
 var setScreenSize = function(){
-	var jeu = $("#jeu");
+	/*var jeu = $("#jeu");
 	var bW = 770;
 	var bH = 605;
 
@@ -177,5 +177,5 @@ var setScreenSize = function(){
 	jeu.css("top", (sH/2 - (bH/2)*scale)+"px");
 	jeu.css("left", (sW/2 - (bW/2)*scale)+"px");
 
-	client.scale = scale;
+	client.scale = scale;*/
 }

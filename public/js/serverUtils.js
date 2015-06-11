@@ -142,16 +142,17 @@ Utils.onLeaveGame = function(data, socket){
 		if(p.room.isPlayer(p)){
 			//Si joueur
 			if(p.room.ranked){
-				//si ranked
+				//si ranked pour l'instant on peut pas leave
 			}else{
 				p.room.deletePlayer(p);
+				game.rooms[0].addPlayer(p);
 			}
 		}else{
 			//Si spectateur
 			p.room.deleteSpectator(p);
+			game.rooms[0].addPlayer(p);
 		}
 	}
-	game.rooms[0].addPlayer(p);
 }
 
 

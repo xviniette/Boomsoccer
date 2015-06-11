@@ -228,6 +228,8 @@ Player.prototype.getInitInfo = function(){
 		pseudo:this.pseudo,
 		team:this.team,
 		elo:this.elo,
+		won:this.won,
+		played:this.played,
 		radius:this.radius,
 		x:this.x,
 		y:this.y,
