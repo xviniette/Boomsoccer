@@ -25,15 +25,15 @@ var Player = function(json){
 	this.radius = 10;
 	this.rapport = this.radius/20;
 
-	this.gravity = 1.2;
-	this.friction = {x:0.3,y:0.9};
-	this.bounce = {x:0,y:0};
+	this.gravity = 1.1;
+	this.friction = null;
+	this.bounce = null;
 
 	this.stun = 0;
 	this.timestun = {min:Math.floor(1000/16), max:Math.floor(3000/16)};
 
-	this.speed = 10;
-	this.jump = 40;
+	this.speed = 8;
+	this.jump = 37;
 
 	this.direction = -1 //-1 left; 1 right;
 	this.onGround = false; //sur le sol

@@ -13,8 +13,8 @@ Graphisme :
 Fonctionnalités : 
 - Match "fun"
 
-- Ignorer joueur
 - Systeme ami
+- Ignorer joueur
 - Tutoriel
 - Editeur de Map
 - Systeme de skin + HDV skin + Monnaie via $$$$ => $$
@@ -23,6 +23,7 @@ Fonctionnalités :
 
 Corrections : 
 - Bonne physique (Vitesse, rebond, friction, up, kick, Grosses Bombes, ...)
+- Client prediction reconciliation chelou ?! Voir soucis
 
 
 CLEAN LE CODE : FIN !

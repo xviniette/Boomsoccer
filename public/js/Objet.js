@@ -31,6 +31,7 @@ Objet.prototype.physic = function(){
 	//gestion du X
 	this.rx += this.dx;
 	this.dx *= this.friction.x;
+	this.dx = Math.round(this.dx * 10000)/10000;
 
 	if(!(this.hasWallCollision(this.cx, this.cy) && this.cx > 0 && this.cx < tiles.length - 1)){
 		//si pas bloqué
@@ -55,6 +56,7 @@ Objet.prototype.physic = function(){
 	this.dy += this.gravity * delta;
 	this.ry += this.dy;
 	this.dy *= this.friction.y;
+	this.dy = Math.round(this.dy * 10000)/10000;
 
 	if(((this.hasWallCollision(this.cx, this.cy + 1) && this.ry > 1 - this.rapport) || //dessous
 		(this.hasWallCollision(this.cx + 1, this.cy + 1) && this.ry > 1 - this.rapport && this.rx > 1 - this.rapport/2) || //gauche dessous
