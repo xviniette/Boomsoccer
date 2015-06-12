@@ -40,6 +40,7 @@ var Player = function(json){
 
 	this.inputs = [];
 	this.lastInput = null;
+	this.lastAction = 0;
 
 	this.positions = [];
 
@@ -116,10 +117,14 @@ Player.prototype.update = function(){
 				this.direction = 1;
 			}
 			if(isServer){
-				if(inp.k && this.lastInput != null && this.lastInput.k == false){
+				var datenow = Date.now();
+				var timeLastAction = 100;//Pour pas pouvoir enchainer trop vite les actions taper/lever
+				if(inp.k && this.lastInput != null && this.lastInput.k == false && datenow - this.lastAction > timeLastAction){
+					this.lastAction = datenow;
 					this.kick(inp.svTime);
 				}
-				if(inp.d && this.lastInput != null && this.lastInput.d == false){
+				if(inp.d && this.lastInput != null && this.lastInput.d == false && datenow - this.lastAction > timeLastAction){
+					this.lastAction = datenow;
 					this.up(inp.svTime);
 				}
 			}

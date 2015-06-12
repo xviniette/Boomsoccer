@@ -61,13 +61,13 @@ $(function(){
 
 	socket.on("tchat", function(data){
 		var msgDiv = $("#messages");
-		msgDiv.append("<li>"+data.pseudo+" : "+data.message+"</li>");
+		msgDiv.append("<li>"+data.pseudo+" : "+htmlEntities(data.message)+"</li>");
 		msgDiv.animate({scrollTop:$("#messages").prop('scrollHeight')}, 0);
 	});
 
 	socket.on("information", function(data){
 		var msgDiv = $("#messages");
-		msgDiv.append("<li class='information'>"+data+"</li>");
+		msgDiv.append("<li class='information'>"+htmlEntities(data)+"</li>");
 		msgDiv.animate({scrollTop:$("#messages").prop('scrollHeight')}, 0);
 	});
 
@@ -182,6 +182,7 @@ $(function(){
 });
 
 var setScreenSize = function(){
+	//return;
 	var jeu = $("#jeu");
 	var bW = 1000;
 	var bH = 800;

@@ -121,15 +121,9 @@ Objet.prototype.hasWallCollision = function(cx, cy){
 Objet.prototype.hasWarpCollision = function(cx, cy){
 	//test collision warp, si c'est le cas, on donne position nouveau warp
 	tiles = this.room.map.tiles;
-	if(tiles[cx] && tiles[cx][cy] && typeof tiles[cx][cy] == "string" && tiles[cx][cy].substr(0, 1) == "w"){
-		for(var i in tiles){
-			for(var j in tiles[i]){
-				if(tiles[i][j] == tiles[cx][cy] && (i != cx || j != cy)){
-					//autre warp
-					return {cx:parseInt(i),cy:parseInt(j)};
-				}
-			}
-		}
+	if(tiles[cx] && tiles[cx][cy] && typeof tiles[cx][cy] == "string" && tiles[cx][cy].substr(0, 1) == "w" && tiles[cx][cy].length > 1){
+		var vals = tiles[cx][cy].split(";");
+		return {cx:parseInt(vals[1]),cy:parseInt(vals[2])};
 	}
 	return false;
 }
@@ -139,6 +133,15 @@ Objet.prototype.hasObjectCollision = function(obj){
 	if(distance <= this.radius + obj.radius){
 		var d = Math.round(distance * 100)/100;
 		return d > 0 ? d : 1
+	}
+	return false;
+}
+
+Objet.prototype.isOutsideMap = function(){
+	var tilesize = this.room.map.tilesize;
+	var tiles = this.room.map.tiles;
+	if(this.x < 0 || this.x > tiles.length * tilesize || this.y > tiles[0].length * tilesize){
+		return true;
 	}
 	return false;
 }

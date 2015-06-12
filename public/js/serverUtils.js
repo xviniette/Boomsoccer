@@ -7,7 +7,8 @@ Utils.onLogin = function(data, socket){
 	//data = {login, password}
 	var _this = this;
 	if(data.login && data.password && data.login.length > 0 && data.password.length > 0){
-		db.query("SELECT * FROM users WHERE pseudo = ? AND password = ?", [data.login, data.password], function(e, r, f){
+		var pwd = crypto.createHash('sha256').update(data.password).digest("hex");
+		db.query("SELECT * FROM users WHERE pseudo = ? AND password = ?", [data.login, pwd], function(e, r, f){
 			if(r.length > 0){
 				var res = r[0];
 
@@ -39,12 +40,13 @@ Utils.onLogin = function(data, socket){
 Utils.onSignin = function(data, socket){
 	//data = {login, password}
 	_this = this;
-	if(data.login && data.password && data.login.length > 0 && data.password.length > 0){
+	if(data.login && data.password && data.login.length > 0 && data.password.length > 0 && isValidPseudo(data.login)){
 		db.query("SELECT * FROM users WHERE pseudo = ?;", [data.login], function(e, r, f){
 			//On vérifie pseudo non utilisé
 			if(r.length == 0){
 				//inscription ok
-				var d = {pseudo:data.login, password:data.password, elo:1200, won:0, played:0};
+				var pwd = crypto.createHash('sha256').update(data.password).digest("hex");
+				var d = {pseudo:data.login, password:pwd, elo:1200, won:0, played:0};
 				db.query("INSERT INTO users SET ?", d, function(e, r, f){
 					//Insertion puis auto login
 					_this.onLogin(data, socket);
@@ -90,6 +92,20 @@ Utils.onTchat = function(data, socket){
 			case "/leave":
 			//message privé
 			this.onLeaveGame({}, socket);
+			break;
+			case "/ball":
+			//vote ball
+			if(p.room){
+				p.room.pollNewBall(p);
+			}
+			break;
+			case "/respawn":
+			//réapparition
+			if(p.room){
+				setTimeout(function(){
+					p.setCoordinate(p.room.map.player.x, p.room.map.player.y);
+				}, 5000);
+			}
 			break;
 		}
 	}else{

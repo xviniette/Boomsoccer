@@ -4,6 +4,7 @@ var io = require('socket.io')(server);
 var uuid = require('node-uuid');
 var fs = require('fs');
 var mysql = require('mysql');
+var crypto = require('crypto');
 
 //Inclde files
 eval(fs.readFileSync('./public/js/config.js')+'');

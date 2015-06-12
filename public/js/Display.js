@@ -7,7 +7,7 @@ var Display = function(json){
 	this.images = {};
 	this.sprites = {};
 
-	this.scale = 1.5;
+	this.scale = this.canvas.width/400;
 
 	this.init(json);
 }
@@ -208,7 +208,11 @@ Display.prototype.help = function(){
 	html += "<h2>Le Home</h2>";
 	html += "<p>Le Home est la salle principale où les joueurs se retrouvent entre les parties. Il n'y a ni ballon ni bombe dans cette salle.</p>";
 	html += "<h2>Commandes disponibles</h2>";
-	html += "<p>Différentes commande à faire dans le tchat existent : <ul><li>/w \<pseudo\> \<message\> : Permet d'envoyer un message privé.</li><li>/leave : Permet de quitter une partie (sauf si on est en ranked).</li></ul></p>";
+	html += "<p>Différentes commande à faire dans le tchat existent : ";
+	html += "<ul><li>/w \<pseudo\> \<message\> : Permet d'envoyer un message privé.</li>";
+	html += "<li>/leave : Permet de quitter une partie (sauf si on est en ranked).</li>";
+	html += "<li>/ball : Lance un vote pour faire renaître la balle.</li>";
+	html += "<li>/respawn : Nous fait réapparaitre à la position d'origine.</li></ul></p>";
 	this.showPopup(html);
 }
 

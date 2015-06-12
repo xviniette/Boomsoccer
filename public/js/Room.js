@@ -13,6 +13,8 @@ var Room = function(json){
 	this.ranked = false;
 	this.score = {"1":0, "2":0};
 
+	this.pollBall = [];
+
 	this.nbGoal = 5;
 	this.spawningBall = true;
 	this.spawningBomb = true;
@@ -37,7 +39,10 @@ Room.prototype.init = function(json){
 }
 
 Room.prototype.start = function(){
-	this.newBall();
+	var _this = this;
+	setTimeout(function(){
+		_this.newBall();
+	}, 10000);
 }
 
 Room.prototype.update = function(){
@@ -157,6 +162,53 @@ Room.prototype.newBall = function(){
 	this.ball = new Ball({room:this});
 	var coord = this.map.balls[Math.round(Math.random() * (this.map.balls.length - 1))];
 	this.ball.setCoordinate(coord.x, coord.y);
+}
+
+Room.prototype.pollNewBall = function(p){
+	var _this = this;
+	var nBall = false;
+	if(this.ball.isOutsideMap()){
+		//Si ball hors map on autorise la demande de recréation balle
+		nBall = true;
+	}else{
+		//Sinon on peut respawn la ball
+		var present = false;
+		for(var i in this.pollBall){
+			if(this.pollBall[i] == p.id){
+				present = true;
+				break;
+			}
+		}
+		if(!present){
+			this.pollBall.push(p.id);
+			//On averti les autres
+			for(var i in this.players){
+				Utils.messageTo(this.players[i].socket, "information", p.pseudo+" vote /ball.");
+			}
+		}
+
+		if(this.pollBall.length >= Math.ceil((this.players.length + 1)/2)){
+			//si assez de joueur
+			nBall = true;
+		}else{
+			//Sinon on regarde sur le nombre de joueurs encore co (si ya du déco)
+			var nbPlayerConnected = 0;
+			for(var i in this.players){
+				if(this.players[i].isConnected){
+					nbPlayerConnected++;
+				}
+			}
+			if(this.pollBall.length >= Math.ceil((nbPlayerConnected + 1)/2)){
+				nBall = true;
+			}
+		}
+	}
+
+	if(nBall){
+		setTimeout(function(){
+			_this.newBall();
+		}, 5000);
+	}
 }
 
 Room.prototype.goal = function(team){

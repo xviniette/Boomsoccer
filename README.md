@@ -23,7 +23,6 @@ Fonctionnalités :
 
 Corrections : 
 - Bonne physique (Vitesse, rebond, friction, up, kick, Grosses Bombes, ...)
-- Empecher faille (XSS, limitation pseudo, ...)
 
 
 CLEAN LE CODE : FIN !
@@ -43,6 +42,11 @@ Done :
 - Affichage scale, pour meilleur résolution en plus grand
 - Interface
 - Page accueil
+- Empecher faille (XSS, limitation pseudo, ...)
+- Commandes : /newball /respawn
+- Délai entre frappes/lever (100ms)
+
+
 
 
 
