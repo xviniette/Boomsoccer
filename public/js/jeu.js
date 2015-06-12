@@ -140,8 +140,9 @@ $(function(){
 				localStorage.setItem("inputsConfig", JSON.stringify(inputsKeyCode));
 				client.display.options();
 				nextInput = null;
+			}else{
+				client.keys[e.keyCode] = true;
 			}
-			client.keys[e.keyCode] = true;
 		}
 	});
 	document.body.addEventListener("keyup", function(e) {
