@@ -30,7 +30,7 @@ var Player = function(json){
 	this.bounce = null;
 
 	this.stun = 0;
-	this.timestun = {min:Math.floor(1000/16), max:Math.floor(3000/16)};
+	this.timestun = {min:Math.floor(1000/16), max:Math.floor(2000/16)};
 
 	this.speed = 8;
 	this.jump = 37;

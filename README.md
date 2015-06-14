@@ -21,7 +21,6 @@ Fonctionnalités :
 - Système de tournois automatique
 
 Corrections : 
-- Bonne physique (Vitesse, rebond, friction, up, kick, Grosses Bombes, ...)
 - Client prediction reconciliation chelou ?! Voir soucis
 
 
@@ -45,6 +44,8 @@ Done :
 - Empecher faille (XSS, limitation pseudo, ...)
 - Commandes : /newball /respawn
 - Délai entre frappes/lever (100ms)
+- Bonne physique (Vitesse, rebond, friction, up, kick, Grosses Bombes, ...) => toujours améliorable
+
 
 
 
