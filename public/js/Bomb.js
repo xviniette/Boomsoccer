@@ -17,17 +17,18 @@ var Bomb = function(json){
 
 	this.player;
 
-	this.kick = {x:20,y:-10};
-	this.up = {x:5,y:40};
-	this.jumpCreation = {x:15,y:-5};
+	this.kick = {x:17,y:-12};
+	this.up = {x:5,y:35};
+	this.jumpCreation = {x:17,y:-12};
 
 	this.creationTime = Date.now(); 
 	this.timeExplosion = 1200;
-	this.radiusExplosion = 50;
-	this.powerExplosion = {min:5, max:20};
+	this.radiusExplosion = 55;
+	this.powerBallExplosion = {min:5, max:80};
+	this.powerPlayerExplosion = {min:5, max:40};
 
 	this.gravity = 1.1;
-	this.friction = {x:0.95,y:0.9};
+	this.friction = {x:0.955,y:0.9};
 	this.bounce = {x:0,y:0.8};
 
 	this.positions = [];
@@ -77,7 +78,7 @@ Bomb.prototype.kicked = function(direction){
 
 Bomb.prototype.uped = function(direction){
 	var delta = this.room.deltaTime;
-	this.dx = (this.dx + (direction * delta)) * this.up.x;
+	this.dx = (this.dx) * this.up.x;
 	this.dy = - delta * this.up.y;
 }
 
@@ -87,8 +88,9 @@ Bomb.prototype.explosion = function(){
 		var d = this.getDistance(this.room.ball);
 		if(d <= this.radiusExplosion){
 			var dir = this.getDirection(this.room.ball);
-			this.room.ball.dx += this.powerExplosion.max * dir.x * delta;
-			this.room.ball.dy += this.powerExplosion.max * dir.y * delta;
+			var ratio = (this.powerBallExplosion.max-this.powerBallExplosion.min) *  (1 - d/this.radiusExplosion) + this.powerBallExplosion.min;
+			this.room.ball.dx += ratio * dir.x * delta;
+			this.room.ball.dy += ratio * dir.y * delta;
 		}
 	}
 
@@ -97,8 +99,9 @@ Bomb.prototype.explosion = function(){
 		var d = this.getDistance(p);
 		if(d <= this.radiusExplosion){
 			var dir = this.getDirection(p);
-			p.dx += this.powerExplosion.max * dir.x * delta;
-			p.dy += this.powerExplosion.max * dir.y * delta;
+			var ratio = (this.powerPlayerExplosion.max-this.powerPlayerExplosion.min) *  (1 - d/this.radiusExplosion) + this.powerPlayerExplosion.min;
+			p.dx += ratio * dir.x * delta;
+			p.dy += ratio * dir.y * delta;
 			p.toStun(1 - d/this.radiusExplosion);
 		}
 	}

@@ -42,7 +42,7 @@ Room.prototype.start = function(){
 	var _this = this;
 	setTimeout(function(){
 		_this.newBall();
-	}, 10000);
+	}, 0);
 }
 
 Room.prototype.update = function(){

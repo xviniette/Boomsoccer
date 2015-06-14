@@ -15,12 +15,12 @@ var Ball = function(json){
 	this.radius = 10;
 	this.rapport = this.radius/20;
 
-	this.kick = {x:20,y:-10};
-	this.up = {x:5,y:40};
+	this.kick = {x:20,y:-13};
+	this.up = {x:5,y:38};
 
 	this.gravity = 1.1;
-	this.friction = {x:0.95,y:0.9};
-	this.bounce = {x:0.8,y:0.8};
+	this.friction = {x:0.955,y:0.9};
+	this.bounce = {x:0.9,y:0.9};
 
 	this.positions = [];
 
@@ -69,7 +69,7 @@ Ball.prototype.kicked = function(direction){
 
 Ball.prototype.uped = function(direction){
 	var delta = this.room.deltaTime;
-	this.dx = (this.dx + (direction * delta)) * this.up.x;
+	this.dx = (this.dx + (direction * 0.5 * delta)) * this.up.x;
 	this.dy = - delta * this.up.y;
 }
 

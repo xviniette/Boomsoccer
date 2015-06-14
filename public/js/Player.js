@@ -94,7 +94,7 @@ Player.prototype.update = function(){
 
 	if(this.isStun()){
 		this.friction = {x:0.95,y:0.9};
-		this.bounce = {x:0.5,y:0.5};
+		this.bounce = {x:0.9,y:0.9};
 	}else{
 		this.friction = {x:0.3,y:0.9};
 		this.bounce = {x:0,y:0};
@@ -117,14 +117,10 @@ Player.prototype.update = function(){
 				this.direction = 1;
 			}
 			if(isServer){
-				var datenow = Date.now();
-				var timeLastAction = 100;//Pour pas pouvoir enchainer trop vite les actions taper/lever
-				if(inp.k && this.lastInput != null && this.lastInput.k == false && datenow - this.lastAction > timeLastAction){
-					this.lastAction = datenow;
+				if(inp.k && this.lastInput != null && this.lastInput.k == false){
 					this.kick(inp.svTime);
 				}
-				if(inp.d && this.lastInput != null && this.lastInput.d == false && datenow - this.lastAction > timeLastAction){
-					this.lastAction = datenow;
+				if(inp.d && this.lastInput != null && this.lastInput.d == false){
 					this.up(inp.svTime);
 				}
 			}
@@ -156,18 +152,20 @@ Player.prototype.lowerStun = function(){
 //effets
 
 Player.prototype.kick = function(tps){
+	var timeLastAction = 100;
+	var datenow = Date.now();
 	//appui taper : taper ball && || taper bombe XOR poser bombe
 	var tape = false;
-	if(this.room.ball && this.hasObjectCollision(this.room.ball.getTimeState(tps))){
+	if(datenow - this.lastAction > timeLastAction && this.room.ball && this.hasObjectCollision(this.room.ball.getTimeState(tps))){
 		//collision ballon
 		this.room.ball.kicked(this.direction);
 		tape = true;
 	}
 	for(var i in this.room.bombs){
-		if(this.hasObjectCollision(this.room.bombs[i].getTimeState(tps))){
+		if(datenow - this.lastAction > timeLastAction && this.hasObjectCollision(this.room.bombs[i].getTimeState(tps))){
 			//collision bombe -> on tape la bombe dans la direction
-			tape = true;
 			this.room.bombs[i].kicked(this.direction);
+			tape = true;
 		}
 	}
 	if(!tape){
@@ -182,19 +180,29 @@ Player.prototype.kick = function(tps){
 		if(!abombe){
 			this.room.newBomb(this);
 		}
+	}else{
+		this.lastAction = datenow;
 	}
 }
 
 Player.prototype.up = function(tps){
-	if(this.room.ball && this.hasObjectCollision(this.room.ball.getTimeState(tps))){
+	var datenow = Date.now();
+	var timeLastAction = 100;
+	var up = false;
+	if(datenow - this.lastAction > timeLastAction && this.room.ball && this.hasObjectCollision(this.room.ball.getTimeState(tps))){
 		//collision ballon
 		this.room.ball.uped(this.direction);
+		up = true;
 	}
 	for(var i in this.room.bombs){
-		if(this.hasObjectCollision(this.room.bombs[i].getTimeState(tps))){
+		if(datenow - this.lastAction > timeLastAction && this.hasObjectCollision(this.room.bombs[i].getTimeState(tps))){
 			//collision bombe
 			this.room.bombs[i].uped(this.direction);
+			up = true;
 		}
+	}
+	if(up){
+		this.lastAction = datenow;
 	}
 }
 
