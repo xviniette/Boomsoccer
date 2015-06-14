@@ -182,7 +182,7 @@ $(function(){
 });
 
 var setScreenSize = function(){
-	//return;
+	return;
 	var jeu = $("#jeu");
 	var bW = 1000;
 	var bH = 800;

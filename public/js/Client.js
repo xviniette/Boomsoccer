@@ -44,7 +44,7 @@ Client.prototype.snapshot = function(data){
 						var input = this.room.players[j].inputs[k];
 						if(input.seq == data.players[i].seq){
 							//on supprime toutes les inputs avant et compris
-							this.room.players[j].inputs.splice(0, k);
+							this.room.players[j].inputs.splice(0, k + 1);
 							if(input.pos.x != data.players[i].x || input.pos.y != data.players[i].y){
 								console.log("soucis");
 								//probleme dans coordonnées
