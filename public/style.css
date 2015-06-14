@@ -50,8 +50,8 @@ body{
 #roomName{
 	position: absolute;
 	top:10px;
-	left:200px;
-	width:200px;
+	left:100px;
+	width:400px;
 	text-align: center;
 	font-size: 20px;
 }
@@ -59,7 +59,7 @@ body{
 #score1{
 	position: absolute;
 	top:10px;
-	left:550px;
+	left:0px;
 	width:50px;
 	text-align: center;
 	font-size: 20px;
@@ -69,7 +69,7 @@ body{
 #score2{
 	position: absolute;
 	top:10px;
-	left:0px;
+	left:550px;
 	width:50px;
 	text-align: center;
 	font-size: 20px;

@@ -12,14 +12,13 @@ Graphisme :
 
 Fonctionnalités : 
 - Match "fun"
-
+- Editeur de Map
+- Tutoriel
+- Match X vs X ?!
 - Systeme ami
 - Ignorer joueur
-- Tutoriel
-- Editeur de Map
 - Systeme de skin + HDV skin + Monnaie via $$$$ => $$
 - Système de tournois automatique
-- Match X vs X ?!
 
 Corrections : 
 - Bonne physique (Vitesse, rebond, friction, up, kick, Grosses Bombes, ...)

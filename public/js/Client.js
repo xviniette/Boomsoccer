@@ -46,14 +46,22 @@ Client.prototype.snapshot = function(data){
 							//on supprime toutes les inputs avant et compris
 							this.room.players[j].inputs.splice(0, k);
 							if(input.pos.x != data.players[i].x || input.pos.y != data.players[i].y){
+								console.log("soucis");
 								//probleme dans coordonnées
 								this.room.players[j].setCoordinate(data.players[i].x, data.players[i].y);
 								this.room.players[j].stun = data.players[i].stun;
 								this.room.players[j].dx = data.players[i].dx;
 								this.room.players[j].dy = data.players[i].dy;
-								this.room.players[j].lastInput = input;
-								this.room.players[j].update();
-								//on le remet dans l'état et on execute tout ce qui c'est passé
+								var inputs = this.room.players[j].inputs;
+								this.room.players[j].inputs = [];
+								var resInputs = [];
+								for(var i in inputs){
+									this.room.players[j].inputs = [inputs[i]];
+									this.room.players[j].update();
+									inputs[i].pos = {x:this.room.players[j].x, y:this.room.players[j].y};
+									resInputs.push(inputs[i]);
+								}
+								this.room.players[j].inputs = resInputs;
 							}
 							break;
 						}
