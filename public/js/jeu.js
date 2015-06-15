@@ -92,9 +92,6 @@ $(function(){
 
 	socket.on("changeSide", function(data){
 		client.room.changeSide();
-		var msgDiv = $("#messages");
-		msgDiv.append("<li class='information'>Les cages changent de côté !</li>");
-		msgDiv.animate({scrollTop:$("#messages").prop('scrollHeight')}, 0);
 	});
 
 	socket.on("spectableRooms", function(data){

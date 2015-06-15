@@ -23,7 +23,7 @@ server.listen(1321);
 var db = mysql.createConnection({
 	host     : 'localhost',
 	user     : 'root',
-	password : '',
+	password : 'angelets',
 	database : 'soccerfest'
 });
 
@@ -44,15 +44,9 @@ app.get( '/*' , function( req, res, next ) {
 });
 
 var isServer = true;
-//Ces deux variable servent à générer les valeurs pour id user/room
-var nbRooms = 0;
 var game = new Game();
 game.loadMaps(function(){
-	//Ajout de la room d'accueil
-	var room = new Room({id:uuid.v1(), ranked:false, name:"Accueil", spawningBall:true, spawningBomb:true, nbGoal:-1});
-	room.map = new Map(JSON.parse(game.maps[Math.floor(Math.random() * game.maps.length)]));
-	room.start();
-	game.rooms.push(room);
+	game.initialRoom();
 });
 
 //physic game

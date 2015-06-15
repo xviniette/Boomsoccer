@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='UTF-8' />
+	<title>BoomSoccer</title>
+	<style>
+	canvas{
+		border:1px solid black;
+	}
+	</style>
+</head>
+<body>	
+	<canvas id="canvas" width="400" height="500"></canvas>
+	<textarea id="infos" rows="40" cols="100"></textarea>
+	<div id="res"></div>
+	<script src="js/jquery.js"></script>
+	<script src="js/Map.js"></script>
+	<script>
+	
+
+	$("#infos").change(function(e){
+		map.init(JSON.parse($(this).val()));
+		displayMap();
+	});
+
+	$("#canvas").click(function(e){
+		var x = Math.floor((e.pageX - this.offsetLeft)/map.tilesize);
+		var y = Math.floor((e.pageY - this.offsetTop)/map.tilesize);
+		console.log(x+"/"+y);
+		if(map.tiles[x][y] == 1){
+			map.tiles[x][y] = 0;
+		}else{
+			map.tiles[x][y] = 1;
+		}
+		displayMap();
+	});
+
+	var initMap = function(){
+		map.tiles = [];
+		for(var i = 0; i < 20; i++){
+			map.tiles[i] = [];
+			for(var j = 0; j < 25; j++){
+				map.tiles[i][j] = 0;
+			}
+		} 
+	}
+
+	var displayMap = function(){
+		var canvas = document.getElementById('canvas');
+		var ctx = canvas.getContext('2d');
+		ctx.fillStyle = "white";
+		ctx.fillRect(0, 0, canvas.width,canvas.height);
+		for(var i in map.tiles){
+			for(var j in map.tiles[i]){
+				var tile = map.tiles[i][j];
+				if(tile == 0){
+					ctx.fillStyle = "white";
+					ctx.fillRect(i * map.tilesize, j * map.tilesize, map.tilesize, map.tilesize);
+				}else if(tile == 1){
+					ctx.fillStyle = "black";
+					ctx.fillRect(i * map.tilesize, j * map.tilesize, map.tilesize, map.tilesize);
+				}else if(tile == 2){
+					ctx.fillStyle = "blue";
+					ctx.fillRect(i * map.tilesize, j * map.tilesize, map.tilesize, map.tilesize);
+				}else if(tile == 3){
+					ctx.fillStyle = "red";
+					ctx.fillRect(i * map.tilesize, j * map.tilesize, map.tilesize, map.tilesize);
+				}else{
+					var t = tile.split(";");
+					if(t[0] == "w"){
+						ctx.fillStyle = "#CF23FF";
+						ctx.fillRect(i * map.tilesize, j * map.tilesize, map.tilesize, map.tilesize);
+						if(t[1] && t[2]){
+							ctx.beginPath();
+							ctx.moveTo(i * map.tilesize + map.tilesize/2, j * map.tilesize + map.tilesize/2);
+							ctx.lineTo(parseInt(t[1]) * map.tilesize + map.tilesize/2, parseInt(t[2]) * map.tilesize + map.tilesize/2);
+							ctx.stroke();
+						}
+					}
+				}
+			}
+		}
+
+		if(map.player){
+			if(map.player.x && map.player.y){
+				ctx.fillStyle = "blue";
+				ctx.beginPath();
+				ctx.arc(map.player.x,map.player.y,10,0, 2*Math.PI);
+				ctx.fill();
+			}
+		}
+
+		for(var i in map.balls){
+			if(map.balls[i].x && map.balls[i].y){
+				ctx.fillStyle = "red";
+				ctx.beginPath();
+				ctx.arc(map.balls[i].x,map.balls[i].y,10,0, 2*Math.PI);
+				ctx.fill();
+			}
+		}
+
+		$("#infos").val(JSON.stringify(map.getInitInfos()));
+		$("#res").text(JSON.stringify(map.getInitInfos()));
+	}
+
+	var map = new Map({"name":"Temple","tilesize":20,"balls":[{"x":200,"y":40},{"x":200,"y":400}],"player":{"x":200,"y":280}});
+	initMap();
+	</script>
+</body>
+</html>

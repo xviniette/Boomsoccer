@@ -18,6 +18,8 @@ var Ball = function(json){
 	this.kick = {x:20,y:-13};
 	this.up = {x:5,y:38};
 
+	this.maxSpeed = 100;
+
 	this.gravity = 1.1;
 	this.friction = {x:0.955,y:0.9};
 	this.bounce = {x:0.9,y:0.9};
@@ -70,6 +72,13 @@ Ball.prototype.kicked = function(direction){
 Ball.prototype.uped = function(direction){
 	var delta = this.room.deltaTime;
 	this.dx = (this.dx + (direction * 0.5 * delta)) * this.up.x;
+	if(Math.abs(this.dx) > this.maxSpeed * delta){
+		if(this.dx < 0){
+			this.dx = - this.maxSpeed * delta;
+		}else{
+			this.dx = this.maxSpeed * delta;
+		}
+	}
 	this.dy = - delta * this.up.y;
 }
 

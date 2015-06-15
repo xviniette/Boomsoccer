@@ -235,6 +235,7 @@ Room.prototype.goal = function(team){
 			this.changeSide();
 			for(var i in this.players){
 				Utils.messageTo(this.players[i].socket, "changeSide", "");
+				Utils.messageTo(this.players[i].socket, "information", "LES CAGES CHANGENT DE CÔTE !");
 			}
 			for(var i in this.spectators){
 				Utils.messageTo(this.spectators[i].socket, "changeSide", "");

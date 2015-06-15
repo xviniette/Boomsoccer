@@ -18,7 +18,17 @@ Utils.onLogin = function(data, socket){
 					p = new Player({id:res.id,socket:socket.id,pseudo:res.pseudo,elo:res.elo,won:res.won,played:res.played});
 					_this.messageTo(p.socket, "playerID", p.id);
 					game.addPlayer(p);
-					game.rooms[0].addPlayer(p);
+					if(data.first){
+						var tutomap = '{"name":"Tutoriel","tiles":[[1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,1,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,"w","w",1],[1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,1,1,1,1,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,1,0,0,1,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,1,0,0,1,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,0,0,0,1,1,1,1,1,0,0,1,0,0,0,1,"w;1;22","w;1;23",1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,1,1,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,2,2,1,0,0,1],[1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1]],"tilesize":20,"balls":[{"x":50,"y":330}],"player":{"x":40,"y":60}}';
+						var room = new Room({id:uuid.v1(), ranked:false, name:"Tutoriel - Lisez l'aide", spawningBall:true, spawningBomb:true, nbGoal:1});
+						room.map = new Map(JSON.parse(tutomap));
+						room.addPlayer(p, 1);
+						_this.messageTo(p.socket, "information", "Voici une map Tutoriel qui vous fait découvrir les différentes fonctionnalitées de BoomSoccer. N'hésitez pas à lire l'aide. Amenez le Ballon dans les cages ! Vous pouvez quitter cette Map en écrivant /leave dans le tchat.");
+						room.start();
+						game.rooms.push(room);
+					}else{
+						game.rooms[0].addPlayer(p);
+					}
 				}else{
 					//déjà en ligne --> on déco l'autre et on le remplace
 					_this.messageTo(p.socket, "login", true);
@@ -33,7 +43,7 @@ Utils.onLogin = function(data, socket){
 				}	
 			}
 		});
-	}
+}
 }
 
 //OK
@@ -49,6 +59,7 @@ Utils.onSignin = function(data, socket){
 				var d = {pseudo:data.login, password:pwd, elo:1200, won:0, played:0};
 				db.query("INSERT INTO users SET ?", d, function(e, r, f){
 					//Insertion puis auto login
+					data.first = true;
 					_this.onLogin(data, socket);
 				});
 			}

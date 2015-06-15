@@ -13,7 +13,6 @@ Graphisme :
 Fonctionnalités : 
 - Match "fun"
 - Editeur de Map
-- Tutoriel
 - Match X vs X ?!
 - Systeme ami
 - Ignorer joueur
@@ -22,8 +21,8 @@ Fonctionnalités :
 
 Corrections : 
 - Les deux joueurs sont décos
-- Bug double connexion
-- Balle qui part trop vite, vitesse maximale
+- Bug double connexion ?!
+- Touche focus tchat
 
 
 CLEAN LE CODE : FIN !
@@ -49,6 +48,9 @@ Done :
 - Bonne physique (Vitesse, rebond, friction, up, kick, Grosses Bombes, ...) => toujours améliorable
 - Client prediction reconciliation chelou ?! Voir soucis => Vraiment corrigé ?
 - Correction bug matchmaking
+- Balle qui part trop vite, vitesse maximale
+- Tutoriel
+
 
 
 
