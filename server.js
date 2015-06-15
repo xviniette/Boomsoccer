@@ -50,7 +50,7 @@ var game = new Game();
 game.loadMaps(function(){
 	//Ajout de la room d'accueil
 	var room = new Room({id:uuid.v1(), ranked:false, name:"Accueil", spawningBall:true, spawningBomb:true, nbGoal:-1});
-	room.map = new Map(game.maps[Math.floor(Math.random() * game.maps.length)].getInitInfos());
+	room.map = new Map(JSON.parse(game.maps[Math.floor(Math.random() * game.maps.length)]));
 	room.start();
 	game.rooms.push(room);
 });

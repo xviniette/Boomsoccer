@@ -33,10 +33,11 @@ Matchmaking.prototype.update = function(){
 			//pas trouvé
 			for(var j in this.queue){
 				if(this.queue[i].player.id != this.queue[j].player.id){
-					if(this.isMatching(this.queue[i], this.queue[j])){
+					if(!this.queue[j].found && this.isMatching(this.queue[i], this.queue[j])){
 						this.queue[i].found = true;
 						this.queue[j].found = true;
 						this.game.addRanked(this.queue[i].player, this.queue[j].player);
+						break;
 					}
 				}
 			}

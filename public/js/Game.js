@@ -24,7 +24,8 @@ Game.prototype.loadMaps = function(callback){
 		for(var i in r){
 			var d = JSON.parse(r[i]["informations"]);
 			d.id = r[i]['id'];
-			_this.maps.push(new Map(d));
+			d = JSON.stringify(d);
+			_this.maps.push(d);
 		}
 		callback();
 	});
@@ -59,7 +60,7 @@ Game.prototype.addRanked = function(p1, p2){
 	p1.room.deletePlayer(p1);
 	p2.room.deletePlayer(p2);
 	var room = new Room({id:uuid.v1(), ranked:true, name:p1.pseudo+" VS "+p2.pseudo});
-	room.map = new Map(this.maps[Math.floor(Math.random() * this.maps.length)].getInitInfos());
+	room.map = new Map(JSON.parse(this.maps[Math.floor(Math.random() * this.maps.length)]));
 	room.addPlayer(p1, 1);
 	room.addPlayer(p2, 2);
 	room.start();

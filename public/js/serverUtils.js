@@ -113,6 +113,9 @@ Utils.onTchat = function(data, socket){
 			for(var i in p.room.players){
 				this.messageTo(p.room.players[i].socket, "tchat", {type:"general", pID:p.id, pseudo:p.pseudo, message:data});
 			}
+			for(var i in p.room.spectators){
+				this.messageTo(p.room.spectators[i].socket, "tchat", {type:"general", pID:p.id, pseudo:p.pseudo, message:data});
+			}
 		}
 	}
 }

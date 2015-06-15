@@ -21,6 +21,9 @@ Fonctionnalités :
 - Système de tournois automatique
 
 Corrections : 
+- Les deux joueurs sont décos
+- Bug double connexion
+- Balle qui part trop vite, vitesse maximale
 
 
 CLEAN LE CODE : FIN !
@@ -45,6 +48,7 @@ Done :
 - Délai entre frappes/lever (100ms)
 - Bonne physique (Vitesse, rebond, friction, up, kick, Grosses Bombes, ...) => toujours améliorable
 - Client prediction reconciliation chelou ?! Voir soucis => Vraiment corrigé ?
+- Correction bug matchmaking
 
 
 

@@ -210,6 +210,7 @@ Room.prototype.pollNewBall = function(p){
 
 	if(nBall){
 		setTimeout(function(){
+			_this.pollBall = [];
 			_this.newBall();
 		}, 5000);
 	}
