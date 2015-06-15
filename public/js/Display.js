@@ -6,6 +6,7 @@ var Display = function(json){
 
 	this.images = {};
 	this.sprites = {};
+	this.particles = [];
 
 	this.scale = this.canvas.width/400;
 
@@ -22,6 +23,7 @@ Display.prototype.initSprites = function(){
 	this.sprites = {
 		"ball":{img:this.images["sprites"],name:"ball", x:0, y:40, w:40, h:40, animation:[0], fps:1},
 		"bomb":{img:this.images["sprites"],name:"bomb", x:200, y:0, w:40, h:60, animation:[0], fps:1},
+		"explosion":{img:this.images["sprites"],name:"explosion", x:240, y:0, w:110, h:110, animation:[0], fps:1},
 		"dirt":{img:this.images["sprites"],name:"dirt", x:0, y:0, w:40, h:40, animation:[0], fps:1},
 		"grass":{img:this.images["sprites"],name:"grass", x:40, y:0, w:40, h:40, animation:[0], fps:1},
 		"goal2":{img:this.images["sprites"],name:"goal2", x:80, y:0, w:40, h:40, animation:[0], fps:1},
@@ -127,6 +129,14 @@ Display.prototype.draw = function(){
 		this.ctx.restore();
 	}
 
+	for(var i in this.particles){
+		if(this.particles[i].life == 0){
+			delete this.particles[i];
+		}else{
+			this.particles[i].draw(this.ctx);
+		}
+	}
+
 	this.ctx.fillStyle = "white";
 	this.ctx.fillText(this.client.ping+"ms", 0, 10);
 }
@@ -205,8 +215,8 @@ Display.prototype.help = function(){
 	html += "<p><ul><li>Touches directionnelles pour se déplacer</li><li>Touche Haut pour sauter</li><li>Touche Bas pour lever le ballon</li><li>Entrer pour taper dans le ballon et les bombes. Sinon pas de contact avec le ballon ou un bombe, crée une bombe</li></ul>Ces touches sont modifiables dans les options.</p>";
 	html += "<h2>Jouer</h2>";
 	html += "<p>Inscription à une partie contre un joueur de votre niveau. Le gagnant est le joueur qui atteint en premier un certain nombre de but marqué.</p>";
-	html += "<h2>Le Home</h2>";
-	html += "<p>Le Home est la salle principale où les joueurs se retrouvent entre les parties. Il n'y a ni ballon ni bombe dans cette salle.</p>";
+	html += "<h2>L'accueil</h2>";
+	html += "<p>L'accueil est la salle principale où les joueurs se retrouvent entre les parties. Il n'y a ni ballon ni bombe dans cette salle.</p>";
 	html += "<h2>Commandes disponibles</h2>";
 	html += "<p>Différentes commande à faire dans le tchat existent : ";
 	html += "<ul><li>/w \<pseudo\> \<message\> : Permet d'envoyer un message privé.</li>";

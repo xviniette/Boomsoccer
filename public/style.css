@@ -95,6 +95,10 @@ body{
 	overflow-y:auto; 
 }
 
+#messages .information{
+	color:green;
+}
+
 
 .menu{
 	position: absolute;

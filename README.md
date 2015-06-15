@@ -21,7 +21,6 @@ Fonctionnalités :
 - Système de tournois automatique
 
 Corrections : 
-- Client prediction reconciliation chelou ?! Voir soucis
 
 
 CLEAN LE CODE : FIN !
@@ -45,6 +44,7 @@ Done :
 - Commandes : /newball /respawn
 - Délai entre frappes/lever (100ms)
 - Bonne physique (Vitesse, rebond, friction, up, kick, Grosses Bombes, ...) => toujours améliorable
+- Client prediction reconciliation chelou ?! Voir soucis => Vraiment corrigé ?
 
 
 

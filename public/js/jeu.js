@@ -48,6 +48,7 @@ $(function(){
 	socket.on("playerID", function(data){
 		$("#homePanel").hide();
 		client.pID = data;
+		client.display.help();
 	});
 
 	socket.on("initRoom", function(data){

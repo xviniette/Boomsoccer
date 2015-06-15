@@ -42,7 +42,7 @@ Room.prototype.start = function(){
 	var _this = this;
 	setTimeout(function(){
 		_this.newBall();
-	}, 0);
+	}, 5000);
 }
 
 Room.prototype.update = function(){
@@ -102,6 +102,10 @@ Room.prototype.addPlayer = function(p, team){
 		p.setCoordinate(this.map.player.x, this.map.player.y);
 		this.players.push(p);
 		Utils.messageTo(p.socket, "initRoom", this.getInitInfo());
+		if(this.ranked){
+			Utils.messageTo(p.socket, "information", "Le premier à "+this.nbGoal+" gagne le match !");
+			Utils.messageTo(p.socket, "information", "Lorsque que "+(this.nbGoal - 1)+" buts seront marqué, les cages changent de côté.");
+		}
 	}else{
 		this.players.push(p);
 	}
@@ -260,8 +264,9 @@ Room.prototype.endMatch = function(team){
 				var resultat = 0;
 			}
 			this.players[i].calcNewElo(teamFacingElo[this.players[i].team], resultat, Math.abs(this.score["1"] - this.score["2"]));
-
 			this.players[i].dbSave();
+
+			Utils.messageTo(this.players[i].socket, "information", (resultat == 1 ? "Victoire !" : "Défaite !")+" "+this.score["1"]+" - "+this.score["2"]+".");
 		}
 	}
 	//On supprimes les joueurs de la room et ajoute à la room principale
