@@ -36,7 +36,13 @@ Game.prototype.addPlayer = function(player){
 }
 
 Game.prototype.deletePlayer = function(socket){
+	var id = this.players[socket].id;
 	delete this.players[socket];
+	var p = this.getPlayerById(id);
+	while(p != null){
+		delete this.players[p.socket];
+		p = this.getPlayerById(id);
+	}
 }
 
 Game.prototype.initialRoom = function(){

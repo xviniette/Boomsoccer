@@ -3,8 +3,9 @@
 Todo : 
 
 Network :
-- Delta snapshot => Plus tard , Etape de passage à chaque tick
+- Delta snapshot => Plus tard
 - Empecher triche en envoyant +/- d'inputs
+- Mettre dans les snapshots, les étapes de déplacement d'un perso à chaque tick -> fluidifier !
 
 
 Graphisme :
@@ -20,9 +21,7 @@ Fonctionnalités :
 - Système de tournois automatique
 
 Corrections : 
-- Les deux joueurs sont décos
-- Bug double connexion ?!
-- Terminer la game si les deux sont déco
+- Bug double connexion ?! => multiple suppression sur la déco
 
 CLEAN LE CODE : FIN !
 
@@ -53,6 +52,9 @@ Done :
 - Bug physique descendre sous map ! => corrigé respawn
 - Prise en charge scrolling
 - Leave une game en ranked
+- Terminer la game si les deux sont déco
+
+
 
 
 

@@ -63,22 +63,30 @@ Room.prototype.update = function(){
 Room.prototype.physic = function(){
 	var _this = this;
 	var now = Date.now();
+	//nombre de joueur déco
+	var nbDisconnectedPlayers = 0;
 	for(var i in this.players){
 		this.players[i].update();
 		if(this.players[i].isOutsideMap()){
 			this.players[i].setCoordinate(_this.map.player.x, _this.map.player.y);
 		}
+		if(!this.players[i].isConnected){
+			nbDisconnectedPlayers++;
+		}
+	}
+	//Si tous le joueurs déco
+	if(nbDisconnectedPlayers > 0 && nbDisconnectedPlayers == this.players.length){
+		this.endMatch(999); // On clos la game et tous les joueurs sont perdants
+		return;
 	}
 	for(var i in this.bombs){
 		this.bombs[i].update();
 	}
 	if(this.ball != null){
 		this.ball.update();
-		if(this.ball.isOutsideMap()){
+		if(this.ball && this.ball.isOutsideMap()){
 			//Si balle bloqué
-			setTimeout(function(){
-				_this.newBall();
-			}, 5000);
+			_this.newBall();
 		}
 	}
 }

@@ -171,7 +171,7 @@ Display.prototype.draw = function(){
 		if(this.particles[i].life == 0){
 			delete this.particles[i];
 		}else{
-			this.particles[i].draw(this.ctx, center, middleScreen);
+			this.particles[i].draw(this.ctx, center, middleScreen, this);
 		}
 	}
 

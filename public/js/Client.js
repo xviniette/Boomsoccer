@@ -102,7 +102,6 @@ Client.prototype.snapshot = function(data){
 		if(!found){
 			var scale = this.display.scale;
 			var p = new Particle({sprite:new Sprite(this.display.sprites["explosion"]), x:(this.room.bombs[i].x - this.room.bombs[i].radiusExplosion)*scale, y:(this.room.bombs[i].y - this.room.bombs[i].radiusExplosion)*scale, w:this.room.bombs[i].radiusExplosion*2 * scale, h:this.room.bombs[i].radiusExplosion*2 * scale, life:30});
-			console.log(p);
 			this.display.particles.push(p);
 			this.room.bombs.splice(i, 1);
 		}
