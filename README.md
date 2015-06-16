@@ -53,6 +53,8 @@ Done :
 - Prise en charge scrolling
 - Leave une game en ranked
 - Terminer la game si les deux sont déco
+- Tchat visible par les specs, et tchat entre spectateur
+
 
 
 

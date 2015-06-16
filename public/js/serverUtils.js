@@ -121,8 +121,12 @@ Utils.onTchat = function(data, socket){
 		}
 	}else{
 		if(p.room){	
+			var isPlayer = p.room.isPlayer(p);
+			//Les spectateurs ne peuvent pas parler aux joueurs
 			for(var i in p.room.players){
-				this.messageTo(p.room.players[i].socket, "tchat", {type:"general", pID:p.id, pseudo:p.pseudo, message:data});
+				if(isPlayer){
+					this.messageTo(p.room.players[i].socket, "tchat", {type:"general", pID:p.id, pseudo:p.pseudo, message:data});
+				}
 			}
 			for(var i in p.room.spectators){
 				this.messageTo(p.room.spectators[i].socket, "tchat", {type:"general", pID:p.id, pseudo:p.pseudo, message:data});
