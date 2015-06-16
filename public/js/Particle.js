@@ -8,9 +8,13 @@ var Particle = function(data){
 	this.life = data.life || 0;
 }
 
-Particle.prototype.draw = function(ctx){
+Particle.prototype.draw = function(ctx, center, middleScreen){
 	if(this.life > 0){
-		this.sprite.draw(ctx, this.x, this.y, this.width, this.height);
+		var getRelativePosition = function(x, y){
+			return {x:x+(middleScreen.x - center.x), y:y+(middleScreen.y - center.y)};
+		}
+		var position = getRelativePosition(this.x, this.y);
+		this.sprite.draw(ctx, position.x, position.y, this.width, this.height);
 		this.life--;
 	}
 }

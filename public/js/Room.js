@@ -61,15 +61,25 @@ Room.prototype.update = function(){
 }
 
 Room.prototype.physic = function(){
+	var _this = this;
 	var now = Date.now();
 	for(var i in this.players){
 		this.players[i].update();
+		if(this.players[i].isOutsideMap()){
+			this.players[i].setCoordinate(_this.map.player.x, _this.map.player.y);
+		}
 	}
 	for(var i in this.bombs){
 		this.bombs[i].update();
 	}
 	if(this.ball != null){
 		this.ball.update();
+		if(this.ball.isOutsideMap()){
+			//Si balle bloqué
+			setTimeout(function(){
+				_this.newBall();
+			}, 5000);
+		}
 	}
 }
 
@@ -171,7 +181,7 @@ Room.prototype.newBall = function(){
 Room.prototype.pollNewBall = function(p){
 	var _this = this;
 	var nBall = false;
-	if(this.ball.isOutsideMap()){
+	if(this.ball && this.ball.isOutsideMap()){
 		//Si ball hors map on autorise la demande de recréation balle
 		nBall = true;
 	}else{
@@ -246,6 +256,14 @@ Room.prototype.goal = function(team){
 			_this.newBall();
 		}, 3000);
 	}
+}
+
+Room.prototype.giveUp = function(p){
+	if(p.team == 1){
+		this.endMatch(2);
+	}else{
+		this.endMatch(1);
+	}	
 }
 
 Room.prototype.endMatch = function(team){

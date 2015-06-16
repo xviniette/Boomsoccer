@@ -3,16 +3,16 @@
 Todo : 
 
 Network :
-- Delta snapshot => Plus tard
+- Delta snapshot => Plus tard , Etape de passage à chaque tick
 - Empecher triche en envoyant +/- d'inputs
 
+
 Graphisme :
-- Prise en charge scrolling
 - Equipments
 
 Fonctionnalités : 
 - Match "fun"
-- Editeur de Map
+
 - Match X vs X ?!
 - Systeme ami
 - Ignorer joueur
@@ -22,8 +22,7 @@ Fonctionnalités :
 Corrections : 
 - Les deux joueurs sont décos
 - Bug double connexion ?!
-- Touche focus tchat
-
+- Terminer la game si les deux sont déco
 
 CLEAN LE CODE : FIN !
 
@@ -46,11 +45,14 @@ Done :
 - Commandes : /newball /respawn
 - Délai entre frappes/lever (100ms)
 - Bonne physique (Vitesse, rebond, friction, up, kick, Grosses Bombes, ...) => toujours améliorable
-- Client prediction reconciliation chelou ?! Voir soucis => Vraiment corrigé ?
+- Client prediction reconciliation chelou ?! Voir soucis => Vraiment corrigé ? !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 - Correction bug matchmaking
 - Balle qui part trop vite, vitesse maximale
 - Tutoriel
-
+- Editeur de Map => Online ?
+- Bug physique descendre sous map ! => corrigé respawn
+- Prise en charge scrolling
+- Leave une game en ranked
 
 
 
