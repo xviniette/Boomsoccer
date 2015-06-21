@@ -42,13 +42,11 @@ $(function(){
 		$("#homePanel").show();
 		client.pID = null;
 		client.room = null;
-		console.log("connectez vous");
 	});
 
 	socket.on("playerID", function(data){
 		$("#homePanel").hide();
 		client.pID = data;
-		client.display.help();
 	});
 
 	socket.on("initRoom", function(data){
@@ -62,7 +60,18 @@ $(function(){
 
 	socket.on("tchat", function(data){
 		var msgDiv = $("#messages");
-		msgDiv.append("<li>"+data.pseudo+" : "+htmlEntities(data.message)+"</li>");
+		var html = "";
+		if(data.type == "private"){
+			if(data.from){
+				console.log("pd");
+				html = "<li> De "+data.pseudo+" : "+htmlEntities(data.message)+"</li>";
+			}else{
+				html = "<li> A "+data.pseudo+" : "+htmlEntities(data.message)+"</li>";
+			}
+		}else{
+			html = "<li>"+data.pseudo+" : "+htmlEntities(data.message)+"</li>";
+		}
+		msgDiv.append(html);
 		msgDiv.animate({scrollTop:$("#messages").prop('scrollHeight')}, 0);
 	});
 
@@ -176,6 +185,19 @@ $(function(){
 		$("#popup").hide();
 	});
 
+	$("#leave").click(function(e){
+		socket.emit("leave");
+		console.log("pd");
+	});
+
+	$('#canvas').on('mousewheel', function(event) {
+		if(event.deltaY > 0){
+			client.display.scale += 0.1;
+		}else if(event.deltaY < 0 && client.display.scale > 0){
+			client.display.scale -= 0.1;
+		}
+	});
+
 	setScreenSize();
 	$(window).resize(function(){
 		setScreenSize();
@@ -183,10 +205,9 @@ $(function(){
 });
 
 var setScreenSize = function(){
-	//return;
 	var jeu = $("#jeu");
-	var bW = 1000;
-	var bH = 800;
+	var bW = 1024;
+	var bH = 768;
 
 	var sW = $(window).width();
 	var sH = $(window).height();
@@ -215,7 +236,6 @@ var setScreenSize = function(){
 			'transform'         : 'scale(' + scale + ')'
 		});
 	}
-
 	jeu.css("top", (sH/2 - (bH/2)*scale)+"px");
 	jeu.css("left", (sW/2 - (bW/2)*scale)+"px");
 

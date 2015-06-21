@@ -1,6 +1,6 @@
 body{
 	margin:0px;
-	background-color: #B5A69D;
+	background-color: #9E9E9E;
 	font-family: Arial;
 	font-size: 16px;
 	color:black;
@@ -16,51 +16,51 @@ body{
 }
 
 #loader{
-	position: absolute;
-	width:1000px;
-	height:800px;
+	position:absolute;
+	width:1024px;
+	height:768px;
 	background-color: white;
 	z-index: 1000;
 }
 
-#homePanel{
-	position: absolute;
-	width:1000px;
-	height:800px;
-	background-color: white;
-	z-index: 100;
-}
-
 #canvas{
-	position: absolute;
+	position:absolute;
 	top:0px;
 	left:0px;
 }
 
 .roomInformation{
 	position: absolute;
-	top:750px;
+	top:700px;
 	left:0px;
-	width:600px;
-	height:50px;
-	background-color: #EFEFEF;
+	width:700px;
+	height:68px;
+	background-color: #CFCFCF;
 	font-weight: bold;
 }
 
 #roomName{
 	position: absolute;
 	top:10px;
-	left:100px;
-	width:400px;
+	left:0px;
+	width:700px;
 	text-align: center;
 	font-size: 20px;
 }
 
+#leave{
+	position: absolute;
+	top:40px;
+	left:300px;
+	width:100px;
+	text-align: center;
+}
+
 #score1{
 	position: absolute;
-	top:10px;
+	top:25px;
 	left:0px;
-	width:50px;
+	width:100px;
 	text-align: center;
 	font-size: 20px;
 	color:blue;
@@ -68,9 +68,9 @@ body{
 
 #score2{
 	position: absolute;
-	top:10px;
-	left:550px;
-	width:50px;
+	top:25px;
+	left:600px;
+	width:100px;
 	text-align: center;
 	font-size: 20px;
 	color:red;
@@ -79,20 +79,25 @@ body{
 .tchat{
 	color:white;
 	position: absolute;
-	top:300px;
-	left:600px;
-	width:400px;
-	height:500px;
-	background-color: #383838;
+	top:350px;
+	left:700px;
+	width:324px;
+	height:418px;
+	background-color: #353535;
 }
 
 #messages{
 	margin:0px;
 	padding:0px;
-	width:400px;
-	height:470px;
+	width:324px;
+	height:390px;
 	list-style: none;
 	overflow-y:auto; 
+	overflow-x:hidden; 
+}
+
+.tchat input{
+	width:90%;
 }
 
 #messages .information{
@@ -103,23 +108,66 @@ body{
 .menu{
 	position: absolute;
 	top:0px;
-	left:600px;
-	width:400px;
-	height:75px;
+	left:700px;
+	width:324px;
+	height:150px;
 	background-color: #383838;
+	padding: 0px;
+	margin: 0px;
+}
+
+.menu ul{
+	margin: 0px;
 	padding: 0px;
 }
 
 .menu ul li{
 	display: inline-block;
+	padding: 0px;
+	margin: 0px;
+}
+
+.menu button{
+	-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
+	width: 145px;
+	cursor: pointer;
+	padding: 4px 0;
+	overflow: hidden;
+	border: 1px solid #018dc4;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	font: normal 16px/normal Arial, Helvetica, sans-serif;
+	color: rgba(255,255,255,1);
+	text-align: center;
+	-o-text-overflow: clip;
+	text-overflow: clip;
+	background: rgba(86,156,191,1);
+	-webkit-box-shadow: 1px 1px 4px 0 rgba(0,0,0,0.2) ;
+	box-shadow: 1px 1px 4px 0 rgba(0,0,0,0.2) ;
+	text-shadow: 1px 1px 2px rgba(0,0,0,0.5) ;
+	-webkit-transition: all 300ms cubic-bezier(0.42, 0, 0.58, 1);
+	-moz-transition: all 300ms cubic-bezier(0.42, 0, 0.58, 1);
+	-o-transition: all 300ms cubic-bezier(0.42, 0, 0.58, 1);
+	transition: all 300ms cubic-bezier(0.42, 0, 0.58, 1);
+	margin: 5px;
+}
+
+.menu .full{
+	width: 308px;
+}
+
+.menu button:hover{
+	background: rgba(136,190,216,1);
 }
 
 .roomPlayers{
 	position: absolute;
-	top:75px;
-	left:600px;
-	width:400px;
-	height:225px;
+	top:150px;
+	left:700px;
+	width:324px;
+	height:200px;
 	background-color: #CCCCCC;
 	overflow-y:auto; 
 }
@@ -131,18 +179,21 @@ body{
 }
 
 #popup{
-	position: fixed;
+	position: absolute;
 	display: none;
-	left: 100px;
-	top: 100px;
+	left:100px;
+	top:100px;
 	z-index: 2000;
-	padding: 20px;
-	width:800px;
-	max-height: 600px;
+	width:824px;
+	max-height: 500px;
 	overflow-y:auto; 
 	background-color: #F7F7F7;
 	color: #202020;
 	border : 1px outset #555555;
+}
+
+#popup #closePopup{
+	float: right;
 }
 
 table {
@@ -151,4 +202,130 @@ table {
 
 table, th, td {
 	border: 1px solid black;
+}
+
+#informationPanel{
+	position: absolute;
+	left:150px;
+	top:0px;
+	width:400px;
+	background-color: #544034;
+	color:white;
+	text-align: center;
+}
+
+/*PAGE DE CONNEXION*/
+
+#homePanel{
+	position: absolute;
+	width:1024px;
+	height:768px;
+	background-color: #4389B7;
+	z-index: 100;
+}
+
+
+#loginForm, #signinForm{
+	width:200px;
+	text-align:center;
+	margin: 20px;
+}
+
+.presentation{
+	width: 600px;
+	margin: 20px;
+	text-align: left;
+}
+
+.connectionPanel, .presentation{
+	display:inline-block;
+	vertical-align:top;
+}
+
+.loginPanel{
+	display: inline-block;
+	-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
+	padding: 10px 0;
+	border: 0px solid #b7b7b7;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	color: #FFE251;
+	text-align: center;
+	-o-text-overflow: clip;
+	text-overflow: clip;
+	background: #826C3D;
+	font: normal 16px/1 Arial, Helvetica, sans-serif;
+	-webkit-box-shadow: 3px 3px 3px 0 rgba(0,0,0,0.2) inset;
+	box-shadow: 3px 3px 3px 0 rgba(0,0,0,0.2) inset;
+	text-shadow: 1px 1px 0 rgba(0,0,0,0.25) ;
+	-webkit-transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+	-moz-transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+	-o-transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+	transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+	margin-bottom: 10px;
+
+}
+
+
+input:-moz-placeholder, textarea:-moz-placeholder {
+	color: #E0E0E0;
+}
+
+input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
+	color: #E0E0E0;
+}
+
+input.placeholder, textarea.placeholder {
+	color: #E0E0E0;
+}
+#homePanel .bloc {
+	-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
+	padding: 20px;
+	overflow: hidden;
+	border: none;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	font: normal 16px/1 Arial, Helvetica, sans-serif;
+	color: #ffffff;
+	-o-text-overflow: ellipsis;
+	text-overflow: ellipsis;
+	background: #544627;
+	-webkit-box-shadow: 2px 2px 9px 0 rgba(0,0,0,0.3) ;
+	box-shadow: 2px 2px 9px 0 rgba(0,0,0,0.3) ;
+}
+
+
+.submitButton {
+	display: inline-block;
+	-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
+	cursor: pointer;
+	padding: 10px 20px;
+	border: none;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	font: normal 16px/normal Arial, Helvetica, sans-serif;
+	color: rgba(255,255,255,0.9);
+	-o-text-overflow: clip;
+	text-overflow: clip;
+	background: #3C7224;
+	-webkit-box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2) ;
+	box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2) ;
+	text-shadow: -1px -1px 0 rgba(15,73,168,0.66) ;
+}
+
+.submitButton:hover{
+	background:#529E32;
+}
+
+.logo{
+	height: 180px;
+	background: url(img/logo.png) no-repeat;
+	background-size: Auto 180px;
+	margin-left: 20px;
 }

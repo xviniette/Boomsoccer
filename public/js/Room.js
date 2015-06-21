@@ -275,7 +275,7 @@ Room.prototype.giveUp = function(p){
 }
 
 Room.prototype.endMatch = function(team){
-	if(this.ranked){
+	if(this.ranked && this.players[1] && this.players[0]){
 		var now = new Date();
 		var date = now.getFullYear()+"-"+parseInt(now.getMonth() + 1)+"-"+now.getDate()+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
 		var d = {name:this.name, user1:this.players[0].id, user2:this.players[1].id, map:this.map.id, score1:this.score["1"], score2:this.score["2"], date:date};

@@ -13,6 +13,7 @@
 	<canvas id="canvas" width="400" height="500"></canvas>
 	<textarea id="infos" rows="40" cols="100"></textarea>
 	<div id="res"></div>
+	<div id="textes"></div>
 	<script src="js/jquery.js"></script>
 	<script src="js/Map.js"></script>
 	<script>
@@ -46,10 +47,12 @@
 	}
 
 	var displayMap = function(){
+		var textes = "";
 		var canvas = document.getElementById('canvas');
 		var ctx = canvas.getContext('2d');
 		ctx.fillStyle = "white";
 		ctx.fillRect(0, 0, canvas.width,canvas.height);
+		var traits = [];
 		for(var i in map.tiles){
 			for(var j in map.tiles[i]){
 				var tile = map.tiles[i][j];
@@ -71,13 +74,15 @@
 						ctx.fillStyle = "#CF23FF";
 						ctx.fillRect(i * map.tilesize, j * map.tilesize, map.tilesize, map.tilesize);
 						if(t[1] && t[2]){
-							ctx.beginPath();
-							ctx.moveTo(i * map.tilesize + map.tilesize/2, j * map.tilesize + map.tilesize/2);
-							ctx.lineTo(parseInt(t[1]) * map.tilesize + map.tilesize/2, parseInt(t[2]) * map.tilesize + map.tilesize/2);
-							ctx.stroke();
+							traits.push({x1:i * map.tilesize + map.tilesize/2, y1:j * map.tilesize + map.tilesize/2,x2:parseInt(t[1]) * map.tilesize + map.tilesize/2, y2:parseInt(t[2]) * map.tilesize + map.tilesize/2});
 						}
+					}else if(t[0] == "p"){
+						ctx.fillStyle = "brown";
+						ctx.fillRect(i * map.tilesize, j * map.tilesize, map.tilesize, map.tilesize);
+						textes += t[1]+"<br/>";
 					}
 				}
+				ctx.strokeRect(i * map.tilesize, j * map.tilesize, map.tilesize, map.tilesize);
 			}
 		}
 
@@ -99,8 +104,17 @@
 			}
 		}
 
+		for(var i in traits){
+			ctx.beginPath();
+			ctx.moveTo(traits[i].x1, traits[i].y1);
+			ctx.lineTo(traits[i].x2, traits[i].y2);
+			ctx.stroke();
+		}
+
 		$("#infos").val(JSON.stringify(map.getInitInfos()));
 		$("#res").text(JSON.stringify(map.getInitInfos()));
+		$("#textes").html(textes);
+
 	}
 
 	var map = new Map({"name":"Temple","tilesize":20,"balls":[{"x":200,"y":40},{"x":200,"y":400}],"player":{"x":200,"y":280}});

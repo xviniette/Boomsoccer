@@ -23,7 +23,7 @@ server.listen(1321);
 var db = mysql.createConnection({
 	host     : 'localhost',
 	user     : 'root',
-	password : '',
+	password : 'angelets',
 	database : 'soccerfest'
 });
 
@@ -92,6 +92,11 @@ io.on('connection', function(socket){
 	//ok
 	socket.on("spectate", function(data){
 		Utils.onSpectate(data, socket);
+	});
+
+	//ok
+	socket.on("leave", function(data){
+		Utils.onLeaveGame(data, socket);
 	});
 
 	//ok

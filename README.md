@@ -22,6 +22,8 @@ Fonctionnalités :
 
 Corrections : 
 - Bug double connexion ?! => multiple suppression sur la déco
+- Nombre de joueur en ligne
+
 
 CLEAN LE CODE : FIN !
 
@@ -50,10 +52,13 @@ Done :
 - Tutoriel
 - Editeur de Map => Online ?
 - Bug physique descendre sous map ! => corrigé respawn
-- Prise en charge scrolling
 - Leave une game en ranked
 - Terminer la game si les deux sont déco
 - Tchat visible par les specs, et tchat entre spectateur
+- Prise en charge scrolling non bugué => quand map plus petite et les séparations quans scrolling entre tiles
+- "Panneau" sur map qui donne indications (pour tutoriel, Pour les news, ...)
+
+
 
 
 

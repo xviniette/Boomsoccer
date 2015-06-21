@@ -11,38 +11,39 @@
 		<div id="loader">Chargement du jeu...</div>
 		<div id="homePanel">
 			<div id="connectionPanel">
-				<h1>Connexion</h1>
-				<table>
-					<form id="loginForm">
-						<tr><td>Pseudonyme</td><td><input type="text" id="loginLoginForm"></td></tr>
-						<tr><td>Mot de passe</td><td><input type="password" id="passwordLoginForm"></td></tr>
-						<tr><td><input type="submit" value="Connexion"></td></tr>
+				<div class="logo"></div>
+				<div class="connectionPanel">
+					<form class="bloc" id="loginForm">
+						<input type="text" id="loginLoginForm" placeholder="Pseudo" class="loginPanel">
+						<input type="password" id="passwordLoginForm" placeholder="Mot de passe" class="loginPanel">
+						<input type="submit" value="Connexion" class="submitButton">
 					</form>
-				</table>
-				<h1>Inscription</h1>
-				<table>
-				<form id="signinForm">
-					<tr><td>Pseudonyme</td><td><input type="text" id="loginSigninForm" pattern="[a-zA-Z0-9]+" maxlength="20"></td></tr>
-					<tr><td>Mot de passe</td><td><input type="password"  id="passwordSigninForm"></td></tr>
-					<tr><td>Confirmer</td><td><input type="password" id="passwordSigninFormConfirm"></td></tr>
-					<tr><td><input type="submit" value="Inscription"></td></tr>
-				</form>
-				</table>
+					<form class="bloc" id="signinForm">
+						<input type="text" id="loginSigninForm" pattern="[a-zA-Z0-9]+" maxlength="20" placeholder="Pseudo" class="loginPanel">
+						<input type="password"  id="passwordSigninForm" placeholder="Mot de passe" class="loginPanel">
+						<input type="password" id="passwordSigninFormConfirm" placeholder="Confirmation" class="loginPanel">
+						<input type="submit" value="Inscription" class="submitButton">
+					</form>
+				</div>
+				<p class="presentation bloc">BoomSoccer est un jeu multijoueur en temps réel par navigateur. <br/>Il mélange jeu de plateforme en 2D, foot-ball et bomberman. </br>Marquez plus de buts que vos adversaires et grimpez dans le classement général !
+				<br/><br/><br/><b>Le jeu est actuellement en Alpha (si ce n'est moins ?!). Il ce peut qu'il y ai des changements radicaux (Suppressions comptes, remise à zéro des statistiques, ...). <br/>Merci beaucoup pour tout vos retours !</b></p>
 			</div>
 		</div>
 		<div id="popup">
 			<button id="closePopup">Fermer</button>
 			<div id="popupContent"></div>
 		</div>
-		<canvas id="canvas" width="600" height="750"></canvas>
+		<canvas id="canvas" width="700" height="700"></canvas>
+		<div id="informationPanel"></div>
 		<div class="roomInformation">
 			<div id="score1"></div>
 			<div id="roomName"></div>
+			<button id="leave">Quitter partie</button>
 			<div id="score2"></div>
 		</div>
 		<div class="menu">
 			<ul>
-				<li onclick="menuOptions(1);"><button style="color:red;">Jouer un match !</button></li>
+				<li onclick="menuOptions(1);"><button class="full" style="color:#FFBA00;">Chercher une partie</button></li>
 				<li onclick="menuOptions(2);"><button>Observer</button></li>
 				<li onclick="menuOptions(3);"><button>Classement</button></li>
 				<li onclick="menuOptions(4);"><button>Options</button></li>
@@ -56,8 +57,7 @@
 		<div class="tchat">
 			<ul id="messages"></ul>
 			<form id="tchatForm">
-				<input type="text" id="inputTchat" autocomplete="off" size="35">
-				<input type="submit" value="Envoyer">
+				<input type="text" id="inputTchat" autocomplete="off" size="20">
 			</form>
 		</div>
 	</div>
