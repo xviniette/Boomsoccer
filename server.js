@@ -23,7 +23,7 @@ server.listen(1321);
 var db = mysql.createConnection({
 	host     : 'localhost',
 	user     : 'root',
-	password : 'angelets',
+	password : '',
 	database : 'soccerfest'
 });
 

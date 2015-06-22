@@ -111,9 +111,11 @@ Room.prototype.addPlayer = function(p, team){
 		//Si serveur on envoi le nouveau joueur à tout le monde
 		for(var i in this.players){
 			Utils.messageTo(this.players[i].socket, "newPlayer", p.getInitInfo());
+			Utils.messageTo(this.players[i].socket, "information", p.pseudo+" a rejoint la partie.");
 		}
 		for(var i in this.spectators){
 			Utils.messageTo(this.spectators[i].socket, "newPlayer", p.getInitInfo());
+			Utils.messageTo(this.spectators[i].socket, "information", p.pseudo+" a rejoint la partie.");
 		}
 		p.room = this;
 		p.reset();
@@ -140,9 +142,11 @@ Room.prototype.deletePlayer = function(p){
 	if(isServer){
 		for(var i in this.players){
 			Utils.messageTo(this.players[i].socket, "deletePlayer", {id:p.id});
+			Utils.messageTo(this.players[i].socket, "information", p.pseudo+" quitte la partie.");
 		}
 		for(var i in this.spectators){
 			Utils.messageTo(this.spectators[i].socket, "deletePlayer", {id:p.id});
+			Utils.messageTo(this.spectators[i].socket, "information", p.pseudo+" quitte la partie.");
 		}
 	}
 	return del;
@@ -162,6 +166,12 @@ Room.prototype.addSpectator = function(p){
 		p.room = this;
 		this.spectators.push(p);
 		Utils.messageTo(p.socket, "initRoom", this.getInitInfo());
+		for(var i in this.players){
+			Utils.messageTo(this.players[i].socket, "information", p.pseudo+" observe la partie.");
+		}
+		for(var i in this.spectators){
+			Utils.messageTo(this.spectators[i].socket, "information", p.pseudo+" observe la partie.");
+		}
 	}else{
 		this.spectators.push(p);
 	}
@@ -169,6 +179,12 @@ Room.prototype.addSpectator = function(p){
 
 Room.prototype.deleteSpectator = function(p){
 	if(isServer){
+		for(var i in this.players){
+			Utils.messageTo(this.players[i].socket, "information", p.pseudo+" n'observe plus la partie.");
+		}
+		for(var i in this.spectators){
+			Utils.messageTo(this.spectators[i].socket, "information", p.pseudo+" n'observe plus la partie.");
+		}
 		for(var i in this.spectators){
 			if(this.spectators[i].id == p.id){
 				this.spectators.splice(i, 1);

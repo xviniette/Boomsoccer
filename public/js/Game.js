@@ -93,6 +93,10 @@ Game.prototype.getRoom = function(id){
 	return null;
 }
 
+Game.prototype.getInitRoom = function(){
+	return this.rooms[0];
+}
+
 Game.prototype.getSpectableRooms = function(){
 	var d = [];
 	for(var i in this.rooms){

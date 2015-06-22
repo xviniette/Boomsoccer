@@ -28,45 +28,41 @@ Objet.prototype.physic = function(){
 	var delta = this.room.deltaTime;
 	var tilesize = this.room.map.tilesize;
 	var tiles = this.room.map.tiles;
-	//gestion du X
 	this.rx += this.dx;
 	this.dx *= this.friction.x;
 	this.dx = Math.round(this.dx * 10000)/10000;
 
 	if(!(this.hasWallCollision(this.cx, this.cy) && this.cx > 0 && this.cx < tiles.length - 1)){
-		//si pas bloqué
 		if(this.hasWallCollision(this.cx - 1, this.cy) && this.rx < this.rapport && this.dx < 0){
-			//collision gauche
 			this.dx *= this.bounce.x * -1;
 			this.rx = this.rapport;
 		}
 		if(this.hasWallCollision(this.cx + 1, this.cy) && this.rx > 1 - this.rapport && this.dx > 0){
-			//collision droite
 			this.dx *= this.bounce.x * -1;
 			this.rx = 1 - this.rapport;
 		}
 	}
 
-	//On met les bonnes valeurs pour rx/cx
 	while(this.rx < 0){this.rx++;this.cx--;}
 	while(this.rx > 1){this.rx--;this.cx++;}
 
-	//gestion du Y
 	this.onGround = false;
 	this.dy += this.gravity * delta;
 	this.ry += this.dy;
 	this.dy *= this.friction.y;
 	this.dy = Math.round(this.dy * 10000)/10000;
 
-	if(((this.hasWallCollision(this.cx, this.cy + 1) && this.ry > 1 - this.rapport) || //dessous
-		(this.hasWallCollision(this.cx + 1, this.cy + 1) && this.ry > 1 - this.rapport && this.rx > 1 - this.rapport/2) || //gauche dessous
-		(this.hasWallCollision(this.cx - 1, this.cy + 1) && this.ry > 1 - this.rapport && this.rx < this.rapport/2)) //droite dessous
-		&& this.dy >= 0 && !this.hasWallCollision(this.cx, this.cy)){
-		//collision en dessous
-	this.dy *= this.bounce.y * -1;
-	this.ry = 1 - this.rapport;
-	this.onGround = true;
-}
+	if(((this.hasWallCollision(this.cx, this.cy + 1) && this.ry > 1 - this.rapport) || (this.hasWallCollision(this.cx + 1, this.cy + 1) && this.ry > 1 - this.rapport && this.rx > 1 - this.rapport/2) || (this.hasWallCollision(this.cx - 1, this.cy + 1) && this.ry > 1 - this.rapport && this.rx < this.rapport/2)) && this.dy >= 0 && !this.hasWallCollision(this.cx, this.cy)){
+		this.dy *= this.bounce.y * -1;
+		this.ry = 1 - this.rapport;
+		this.onGround = true;
+	}else if(this.hasWallCollision(this.cx, this.cy) && this.dy >= 0 && this.hasWallCollision(this.cx, this.cy + 1)){
+		if(!this.hasWallCollision(this.cx + 1, this.cy) && this.cx + 1 < tiles.length - 1){
+			this.cx += 1;
+		}else if(!this.hasWallCollision(this.cx - 1, this.cy) && this.cx - 1 > 0){
+			this.cx -= 1;
+		}
+	}
 
 	//On met les bonnes valeurs pour ry/cy
 	while(this.ry < 0){this.ry++;this.cy--;}

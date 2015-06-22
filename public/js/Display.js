@@ -35,6 +35,9 @@ Display.prototype.initSprites = function(){
 		"warp":{img:this.images["sprites"],name:"warp", x:160, y:0, w:40, h:40, animation:[0], fps:1},
 		"player":{img:this.images["sprites"],name:"player", x:0, y:80, w:54, h:60, animation:[0], fps:1},
 		"running":{img:this.images["sprites"],name:"running", x:0, y:80, w:54, h:60, animation:[0, 1, 0, 2], fps:10},
+		"marqueurgoal1":{img:this.images["sprites"],name:"marqueurgoal1", x:250, y:150, w:250, h:100, animation:[0], fps:1},
+		"marqueurgoal2":{img:this.images["sprites"],name:"marqueurgoal2", x:0, y:150, w:250, h:100, animation:[0], fps:1},
+		"mitemps":{img:this.images["sprites"],name:"mitemps", x:0, y:250, w:300, h:65, animation:[0], fps:1},
 	};
 }
 
@@ -50,6 +53,7 @@ Display.prototype.draw = function(){
 	var tilesize = map.tilesize * this.scale;
 
 	var spectator = true;
+	this.helpPopup.text("");
 	for(var i in players){
 		if(players[i].id == this.client.pID){
 			this.center.x = players[i].x * this.scale;
@@ -58,8 +62,6 @@ Display.prototype.draw = function(){
 			if(map.tiles[players[i].cx] && map.tiles[players[i].cx][players[i].cy] && map.tiles[players[i].cx][players[i].cy][0] == "p"){
 				var infos = map.tiles[players[i].cx][players[i].cy].split(";");
 				this.helpPopup.text(infos[1]);
-			}else{
-				this.helpPopup.text("");
 			}
 			break;
 		}

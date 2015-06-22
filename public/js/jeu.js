@@ -97,10 +97,12 @@ $(function(){
 
 	socket.on("goal", function(data){
 		$("#score"+data.team).text(data.score);
+		client.display.particles.push(new Particle({sprite:new Sprite(client.display.sprites["marqueurgoal"+data.team]), x:125, y:225, w:300, h:100, life:60}));
 	});
 
 	socket.on("changeSide", function(data){
 		client.room.changeSide();
+		client.display.particles.push(new Particle({sprite:new Sprite(client.display.sprites["mitemps"]), x:125, y:350, w:300, h:100, life:120}));
 	});
 
 	socket.on("spectableRooms", function(data){

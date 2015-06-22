@@ -150,8 +150,12 @@ Utils.onSpectate = function(data, socket){
 	if(!(p.room && p.room.ranked == true)){
 		var room = game.getRoom(data.id);
 		if(room){
+			var initRoom = game.getInitRoom();
 			p.room.deletePlayer(p);
 			room.addSpectator(p);
+			for(var i in initRoom.players){
+				this.messageTo(initRoom.players[i].socket, "information", p.pseudo+" observe "+room.name);
+			}
 		}
 	}
 }
