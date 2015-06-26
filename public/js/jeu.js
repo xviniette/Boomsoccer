@@ -63,13 +63,12 @@ $(function(){
 		var html = "";
 		if(data.type == "private"){
 			if(data.from){
-				console.log("pd");
-				html = "<li> De "+data.pseudo+" : "+htmlEntities(data.message)+"</li>";
+				html = "<li class='private'> De "+data.pseudo+" : "+htmlEntities(data.message)+"</li>";
 			}else{
-				html = "<li> A "+data.pseudo+" : "+htmlEntities(data.message)+"</li>";
+				html = "<li class='private'> A "+data.pseudo+" : "+htmlEntities(data.message)+"</li>";
 			}
 		}else{
-			html = "<li>"+data.pseudo+" : "+htmlEntities(data.message)+"</li>";
+			html = "<li class='"+data.type+"'>"+data.pseudo+" : "+htmlEntities(data.message)+"</li>";
 		}
 		msgDiv.append(html);
 		msgDiv.animate({scrollTop:$("#messages").prop('scrollHeight')}, 0);
@@ -92,7 +91,7 @@ $(function(){
 	});
 
 	socket.on("nbPlayers", function(data){
-		console.log(data+" Joueurs");
+		$("#nbPlayers").text(data);
 	});
 
 	socket.on("goal", function(data){
@@ -111,6 +110,12 @@ $(function(){
 		}
 	});
 
+	socket.on("funGames", function(data){
+		if(client && client.display){
+			client.display.funGames(data);
+		}
+	});
+
 	socket.on("ranking", function(data){
 		if(client && client.display){
 			client.display.ranking(data);
@@ -120,6 +125,12 @@ $(function(){
 	socket.on("ranking", function(data){
 		if(client && client.display){
 			client.display.ranking(data);
+		}
+	});
+
+	socket.on("scoreboard", function(data){
+		if(client && client.display){
+			client.display.scoreboard(data);
 		}
 	});
 
@@ -189,7 +200,6 @@ $(function(){
 
 	$("#leave").click(function(e){
 		socket.emit("leave");
-		console.log("pd");
 	});
 
 	$('#canvas').on('mousewheel', function(event) {
@@ -246,19 +256,22 @@ var setScreenSize = function(){
 
 var menuOptions = function(nb){
 	switch(nb) {
-		case 1:
+		case 'ranked':
 		socket.emit("matchmaking");
 		break;
-		case 2:
+		case 'fun':
+		socket.emit("getFunGames");
+		break;
+		case 'spectate':
 		socket.emit("spectableRooms");
 		break;
-		case 3:
+		case 'ranking':
 		socket.emit("ranking");
 		break;
-		case 4:
+		case 'options':
 		client.display.options();
 		break;
-		case 5:
+		case 'help':
 		client.display.help();
 		break;
 	}
@@ -267,6 +280,15 @@ var menuOptions = function(nb){
 var spectate = function(id){
 	socket.emit("spectate", {id:id});
 	$("#popup").hide();
+}
+
+var createParty = function(){
+	socket.emit("createFunGame", {name:document.getElementById("creation_nom").value, map:document.getElementById("creation_map").value, password:document.getElementById("creation_password").value});
+	$("#popup").hide();
+}
+
+var join = function(id){
+	socket.emit("joinFunGame", {id:id, password:document.getElementById("password_"+id).value});
 }
 
 var changeInput = function(inp){

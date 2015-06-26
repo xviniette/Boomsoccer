@@ -61,6 +61,7 @@ setInterval(function(){
 io.on('connection', function(socket){
 	//On demande le pseudo au joueur
 	socket.emit("login", true);
+	socket.emit("nbPlayers", game.getNbPlayers());
 	//Reponse du pseudo
 	socket.on("login", function(data){
 		Utils.onLogin(data, socket);
@@ -83,6 +84,18 @@ io.on('connection', function(socket){
 	socket.on("matchmaking", function(data){
 		Utils.onMatchmaking(data, socket);
 	});
+
+	socket.on("getFunGames", function(data){
+		Utils.onGetFunGame(data, socket);
+	});
+
+	socket.on("createFunGame", function(data){
+		Utils.onCreateFunGame(data, socket);
+	});	
+
+	socket.on("joinFunGame", function(data){
+		Utils.onJoinFunGame(data, socket);
+	});	
 
 	//ok
 	socket.on("spectableRooms", function(data){

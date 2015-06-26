@@ -1,6 +1,7 @@
 var Room = function(json){
 	this.id;
 	this.name;
+	this.password;
 
 	this.map;
 	this.ball;
@@ -42,7 +43,7 @@ Room.prototype.start = function(){
 	var _this = this;
 	setTimeout(function(){
 		_this.newBall();
-	}, 5000);
+	}, 8000);
 }
 
 Room.prototype.update = function(){
@@ -68,15 +69,16 @@ Room.prototype.physic = function(){
 	for(var i in this.players){
 		this.players[i].update();
 		if(this.players[i].isOutsideMap()){
+			//Joueurs en dehors de la map
 			this.players[i].setCoordinate(_this.map.player.x, _this.map.player.y);
 		}
 		if(!this.players[i].isConnected){
 			nbDisconnectedPlayers++;
 		}
 	}
-	//Si tous le joueurs déco
-	if(nbDisconnectedPlayers > 0 && nbDisconnectedPlayers == this.players.length){
-		this.endMatch(999); // On clos la game et tous les joueurs sont perdants
+	//Si tous le joueurs déco et pas game initiale
+	if((this.players.length == 0 && this.id != 0) || (nbDisconnectedPlayers > 0 && nbDisconnectedPlayers == this.players.length)){
+		this.endMatch(-1); // On clos la game et tous les joueurs sont perdants
 		return;
 	}
 	for(var i in this.bombs){
@@ -107,27 +109,38 @@ Room.prototype.addPlayer = function(p, team){
 	}else{
 		p.team = 0;
 	}
+	var toAdd = true;
+	for(var i in this.players){
+		if(this.players[i].id == p.id){
+			toAdd = false;
+			break;
+		}
+	}
 	if(isServer){
-		//Si serveur on envoi le nouveau joueur à tout le monde
-		for(var i in this.players){
-			Utils.messageTo(this.players[i].socket, "newPlayer", p.getInitInfo());
-			Utils.messageTo(this.players[i].socket, "information", p.pseudo+" a rejoint la partie.");
+		if(toAdd){
+			for(var i in this.players){
+				Utils.messageTo(this.players[i].socket, "newPlayer", p.getInitInfo());
+				Utils.messageTo(this.players[i].socket, "information", p.pseudo+" a rejoint la partie.");
+			}
+			for(var i in this.spectators){
+				Utils.messageTo(this.spectators[i].socket, "newPlayer", p.getInitInfo());
+				Utils.messageTo(this.spectators[i].socket, "information", p.pseudo+" a rejoint la partie.");
+			}
+			p.room = this;
+			p.reset();
+			p.setCoordinate(this.map.player.x, this.map.player.y);
+			this.players.push(p);
+			Utils.messageTo(p.socket, "initRoom", this.getInitInfo());
+			if(this.ranked){
+				Utils.messageTo(p.socket, "information", "Le premier à "+this.nbGoal+" gagne le match !");
+				Utils.messageTo(p.socket, "information", "Lorsque que "+(this.nbGoal - 1)+" buts seront marqué, les cages changent de côté.");
+			}
 		}
-		for(var i in this.spectators){
-			Utils.messageTo(this.spectators[i].socket, "newPlayer", p.getInitInfo());
-			Utils.messageTo(this.spectators[i].socket, "information", p.pseudo+" a rejoint la partie.");
-		}
-		p.room = this;
-		p.reset();
-		p.setCoordinate(this.map.player.x, this.map.player.y);
-		this.players.push(p);
-		Utils.messageTo(p.socket, "initRoom", this.getInitInfo());
-		if(this.ranked){
-			Utils.messageTo(p.socket, "information", "Le premier à "+this.nbGoal+" gagne le match !");
-			Utils.messageTo(p.socket, "information", "Lorsque que "+(this.nbGoal - 1)+" buts seront marqué, les cages changent de côté.");
-		}
+		
 	}else{
-		this.players.push(p);
+		if(toAdd){
+			this.players.push(p);
+		}
 	}
 }
 
@@ -140,13 +153,16 @@ Room.prototype.deletePlayer = function(p){
 		}
 	}
 	if(isServer){
-		for(var i in this.players){
-			Utils.messageTo(this.players[i].socket, "deletePlayer", {id:p.id});
-			Utils.messageTo(this.players[i].socket, "information", p.pseudo+" quitte la partie.");
-		}
-		for(var i in this.spectators){
-			Utils.messageTo(this.spectators[i].socket, "deletePlayer", {id:p.id});
-			Utils.messageTo(this.spectators[i].socket, "information", p.pseudo+" quitte la partie.");
+		if(del){
+			p.room = null;
+			for(var i in this.players){
+				Utils.messageTo(this.players[i].socket, "deletePlayer", {id:p.id});
+				Utils.messageTo(this.players[i].socket, "information", p.pseudo+" quitte la partie.");
+			}
+			for(var i in this.spectators){
+				Utils.messageTo(this.spectators[i].socket, "deletePlayer", {id:p.id});
+				Utils.messageTo(this.spectators[i].socket, "information", p.pseudo+" quitte la partie.");
+			}
 		}
 	}
 	return del;
@@ -162,34 +178,62 @@ Room.prototype.isPlayer = function(p){
 }
 
 Room.prototype.addSpectator = function(p){
-	if(isServer){
-		p.room = this;
-		this.spectators.push(p);
-		Utils.messageTo(p.socket, "initRoom", this.getInitInfo());
-		for(var i in this.players){
-			Utils.messageTo(this.players[i].socket, "information", p.pseudo+" observe la partie.");
+	var toAdd = true;
+	for(var i in this.spectators){
+		if(this.spectators[i].id == p.id){
+			toAdd = false;
+			break;
 		}
-		for(var i in this.spectators){
-			Utils.messageTo(this.spectators[i].socket, "information", p.pseudo+" observe la partie.");
+	}
+	if(isServer){
+		if(toAdd){
+			p.room = this;
+			this.spectators.push(p);
+			Utils.messageTo(p.socket, "initRoom", this.getInitInfo());
+			for(var i in this.players){
+				Utils.messageTo(this.players[i].socket, "information", p.pseudo+" observe la partie.");
+			}
+			for(var i in this.spectators){
+				Utils.messageTo(this.spectators[i].socket, "information", p.pseudo+" observe la partie.");
+			}
 		}
 	}else{
-		this.spectators.push(p);
+		if(toAdd){
+			this.spectators.push(p);
+		}
 	}
 }
 
 Room.prototype.deleteSpectator = function(p){
 	if(isServer){
-		for(var i in this.players){
-			Utils.messageTo(this.players[i].socket, "information", p.pseudo+" n'observe plus la partie.");
-		}
-		for(var i in this.spectators){
-			Utils.messageTo(this.spectators[i].socket, "information", p.pseudo+" n'observe plus la partie.");
-		}
 		for(var i in this.spectators){
 			if(this.spectators[i].id == p.id){
+				p.room = null;
 				this.spectators.splice(i, 1);
+				for(var i in this.players){
+					Utils.messageTo(this.players[i].socket, "information", p.pseudo+" n'observe plus la partie.");
+				}
+				for(var i in this.spectators){
+					Utils.messageTo(this.spectators[i].socket, "information", p.pseudo+" n'observe plus la partie.");
+				}
+				break;
 			}
 		}
+	}
+}
+
+Room.prototype.playerLeave = function(p){
+	if(this.isPlayer(p)){
+		//Player
+		if(this.ranked){
+			//Abandon
+			this.giveUp(p);
+		}else{
+			this.deletePlayer(p);
+		}
+	}else{
+		//spectator
+		this.deleteSpectator(p);
 	}
 }
 
@@ -291,7 +335,10 @@ Room.prototype.giveUp = function(p){
 }
 
 Room.prototype.endMatch = function(team){
-	if(this.ranked && this.players[1] && this.players[0]){
+	var scoreboard = this.getInitInfo();
+	scoreboard.teamWin = team;
+	scoreboard.players = [];
+	if(this.ranked){
 		var now = new Date();
 		var date = now.getFullYear()+"-"+parseInt(now.getMonth() + 1)+"-"+now.getDate()+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
 		var d = {name:this.name, user1:this.players[0].id, user2:this.players[1].id, map:this.map.id, score1:this.score["1"], score2:this.score["2"], date:date};
@@ -307,22 +354,28 @@ Room.prototype.endMatch = function(team){
 			}else{
 				var resultat = 0;
 			}
+			var oldElo = this.players[i].elo;
 			this.players[i].calcNewElo(teamFacingElo[this.players[i].team], resultat, Math.abs(this.score["1"] - this.score["2"]));
 			this.players[i].dbSave();
 
 			Utils.messageTo(this.players[i].socket, "information", (resultat == 1 ? "Victoire !" : "Défaite !")+" "+this.score["1"]+" - "+this.score["2"]+".");
+			var playerData = this.players[i].getInitInfo();
+			playerData.deltaElo = playerData.elo - oldElo;
+			scoreboard.players.push(playerData);
 		}
 	}
 	//On supprimes les joueurs de la room et ajoute à la room principale
 	for(var i in this.players){
 		if(this.players[i].isConnected){
-			game.rooms[0].addPlayer(this.players[i]);
+			game.getInitRoom().addPlayer(this.players[i]);
+			Utils.messageTo(this.players[i].socket, "scoreboard", scoreboard);
 		}else{
 			game.deletePlayer(this.players[i].socket);
 		}
 	}
 	for(var i in this.spectators){
-		game.rooms[0].addPlayer(this.spectators[i]);
+		game.getInitRoom().addPlayer(this.spectators[i]);
+		Utils.messageTo(this.spectators[i].socket, "scoreboard", scoreboard);
 	}
 	game.deleteRoom(this.id);
 	//On supprime la room

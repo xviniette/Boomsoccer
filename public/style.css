@@ -13,6 +13,11 @@ body{
 	left:0px;
 	transform-origin:0 0;
 	transform: scale(1);
+	filter: none; 
+	-webkit-filter: blur(0px); 
+	-moz-filter: blur(0px); 
+	-ms-filter: blur(0px);
+	filter:progid:DXImageTransform.Microsoft.Blur(PixelRadius='0');
 }
 
 #loader{
@@ -103,6 +108,15 @@ body{
 #messages .information{
 	color:green;
 }
+
+#messages .private{
+	color:#0094FF;
+}
+
+#messages .spectator{
+	color:#FF9B00;
+}
+
 
 
 .menu{
@@ -269,15 +283,15 @@ table, th, td {
 }
 
 
-input:-moz-placeholder, textarea:-moz-placeholder {
+.loginPanel:-moz-placeholder{
 	color: #E0E0E0;
 }
 
-input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
+.loginPanel::-webkit-input-placeholder{
 	color: #E0E0E0;
 }
 
-input.placeholder, textarea.placeholder {
+.loginPanel.placeholder{
 	color: #E0E0E0;
 }
 #homePanel .bloc {
@@ -328,4 +342,9 @@ input.placeholder, textarea.placeholder {
 	background: url(img/logo.png) no-repeat;
 	background-size: Auto 180px;
 	margin-left: 20px;
+}
+
+.nbPlayers{
+	color:white;
+	float: right;
 }

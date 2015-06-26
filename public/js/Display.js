@@ -209,7 +209,7 @@ Display.prototype.initRoom = function(){
 	var room = this.client.room;
 	$("#score1").text(room.score["1"]);
 	$("#score2").text(room.score["2"]);
-	$("#roomName").text(room.name);
+	$("#roomName").text(htmlEntities(room.name));
 }
 
 Display.prototype.displayRoomPlayers = function(){
@@ -237,10 +237,30 @@ Display.prototype.ranking = function(data){
 }
 
 Display.prototype.watching = function(data){
-	var html = "Partie en cours : "+data.length+"<table>";
-	html += "<tr><th>Partie</th><th>Scores</th><th>Elo</th><th>Map</th></tr>";
+	var html = "Parties : "+data.length+"<table>";
+	html += "<tr><th>Partie</th><th>Scores</th><th>Elo</th><th>Map</th><th>Spectateur</th></tr>";
 	for(var i in data){
-		html += "<tr><td>"+data[i].name+"</td><td>"+data[i].score["1"]+" - "+data[i].score["2"]+"</td><td>"+data[i].elo+"</td><td>"+data[i].map.name+"</td><td><button onclick='spectate(\""+data[i].id+"\")'>Regarder</button></td></tr>";
+		html += "<tr><td>"+data[i].name+"</td><td>"+data[i].score["1"]+" - "+data[i].score["2"]+"</td><td>"+data[i].elo+"</td><td>"+data[i].map.name+"</td><td>"+data[i].nbSpectator+"</td><td><button onclick='spectate(\""+data[i].id+"\")'>Regarder</button></td></tr>";
+	}
+	html += "</table>";
+	this.showPopup(html);
+}
+
+Display.prototype.funGames = function(data){
+	var html = "<h2>Créer ma partie</h2>";
+	html += '<input type="text" id="creation_nom" placeholder="Nom partie"> ';
+	html += '<select id="creation_map">';
+	for(var i in data.maps){
+		html += '<option value="'+data.maps[i].id+'">'+data.maps[i].name+'</option>';
+	}
+	html += '</select> ';
+	html += '<input type="password" id="creation_password" placeholder="Mot de passe (Optionnel)"> ';
+	html += '<button onclick="createParty();">Créer</button>';
+	html += "<h2>Partie fun en cours : "+data.games.length+"</h2>";
+	html += "<table><tr><th>Nom</th><th>Map</th><th>Mot de passe</th><th>Rejoindre</th></tr>";
+	for(var i in data.games){
+		var g = data.games[i];
+		html += "<tr><td>"+g.name+"</td><td>"+htmlEntities(g.map.name)+"</td><td><input type='password' id='password_"+g.id+"'></td><td><button onclick='join(\""+g.id+"\")'>Rejoindre</button></td></tr>";
 	}
 	html += "</table>";
 	this.showPopup(html);
@@ -287,6 +307,21 @@ Display.prototype.help = function(){
 	html += "<li>/leave : Permet de quitter une partie (sauf si on est en ranked).</li>";
 	html += "<li>/ball : Lance un vote pour faire renaître la balle.</li>";
 	html += "<li>/respawn : Nous fait réapparaitre à la position d'origine.</li></ul></p>";
+	this.showPopup(html);
+}
+
+Display.prototype.scoreboard = function(data){
+	var html = "<h1>"+data.name+"</h1>";
+	html += "<table>";
+	for(var i = 1; i <= 2; i++){
+		html += "<tr><th>Equipe "+i+"</th><th>"+data.score[i]+"</th></tr>";
+		for(var j in data.players){
+			if(data.players[j].team == i){
+				html += "<tr><td>"+data.players[j].pseudo+"</td><td>"+data.players[j].elo+"</td><td>"+( data.players[j].deltaElo > 0 ? "+"+data.players[j].deltaElo : data.players[j].deltaElo)+"</td></rt>";
+			}
+		}
+	}
+	html += "</table>";
 	this.showPopup(html);
 }
 

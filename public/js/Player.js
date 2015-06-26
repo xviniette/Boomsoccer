@@ -69,7 +69,7 @@ Player.prototype.calcNewElo = function(eloAdv, resultat, deltaScore){
 	if(this.elo > 2400){	
 		k = 10;
 	}
-	if(this.played <= 10){
+	if(this.played <= NBGAMEPLACEMENT){
 		ratioScore = 5;
 	}
 	k += deltaScore * ratioScore;

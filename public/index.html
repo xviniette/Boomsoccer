@@ -11,7 +11,7 @@
 		<div id="loader">Chargement du jeu...</div>
 		<div id="homePanel">
 			<div id="connectionPanel">
-				<div class="logo"></div>
+				<div class="logo"><div class="nbPlayers">Joueurs en ligne : <span id="nbPlayers"></span></div></div>
 				<div class="connectionPanel">
 					<form class="bloc" id="loginForm">
 						<input type="text" id="loginLoginForm" placeholder="Pseudo" class="loginPanel">
@@ -43,11 +43,12 @@
 		</div>
 		<div class="menu">
 			<ul>
-				<li onclick="menuOptions(1);"><button class="full" style="color:#FFBA00;">Chercher une partie</button></li>
-				<li onclick="menuOptions(2);"><button>Observer</button></li>
-				<li onclick="menuOptions(3);"><button>Classement</button></li>
-				<li onclick="menuOptions(4);"><button>Options</button></li>
-				<li onclick="menuOptions(5);"><button>Aide</button></li>
+				<li onclick="menuOptions('ranked');"><button class="full" style="color:#FFBA00;">Chercher une partie</button></li>
+				<li onclick="menuOptions('fun');"><button>Partie fun</button></li>
+				<li onclick="menuOptions('spectate');"><button>Observer</button></li>
+				<li onclick="menuOptions('ranking');"><button>Classement</button></li>
+				<li onclick="menuOptions('options');"><button>Options</button></li>
+				<li onclick="menuOptions('help');"><button>Aide</button></li>
 			</ul>
 		</div>
 		<div class="roomPlayers">

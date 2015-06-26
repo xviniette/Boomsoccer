@@ -57,11 +57,20 @@ Objet.prototype.physic = function(){
 		this.ry = 1 - this.rapport;
 		this.onGround = true;
 	}else if(this.hasWallCollision(this.cx, this.cy) && this.dy >= 0 && this.hasWallCollision(this.cx, this.cy + 1)){
-		if(!this.hasWallCollision(this.cx + 1, this.cy) && this.cx + 1 < tiles.length - 1){
-			this.cx += 1;
-		}else if(!this.hasWallCollision(this.cx - 1, this.cy) && this.cx - 1 > 0){
-			this.cx -= 1;
+		if(this.dx >= 0){
+			if(!this.hasWallCollision(this.cx + 1, this.cy) && this.cx + 1 < tiles.length - 1){
+				this.cx += 1;
+			}else if(!this.hasWallCollision(this.cx - 1, this.cy) && this.cx - 1 > 0){
+				this.cx -= 1;
+			}
+		}else{
+			if(!this.hasWallCollision(this.cx - 1, this.cy) && this.cx - 1 > 0){
+				this.cx -= 1;
+			}else if(!this.hasWallCollision(this.cx + 1, this.cy) && this.cx + 1 < tiles.length - 1){
+				this.cx += 1;
+			}
 		}
+		
 	}
 
 	//On met les bonnes valeurs pour ry/cy
