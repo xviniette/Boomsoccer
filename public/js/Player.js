@@ -99,9 +99,9 @@ Player.prototype.update = function(){
 		this.friction = {x:0.3,y:0.9};
 		this.bounce = {x:0,y:0};
 	}
-
 	for(var i in this.inputs){
 		var inp = this.inputs[i];
+		var baseInput = {}
 		if(!this.isStun()){
 			if(inp.u){
 				if(this.onGround){
@@ -117,10 +117,10 @@ Player.prototype.update = function(){
 				this.direction = 1;
 			}
 			if(isServer){
-				if(inp.k && this.lastInput != null && this.lastInput.k == false){
+				if(inp.k && this.lastInput != null && !this.lastInput.k){
 					this.kick(inp.svTime);
 				}
-				if(inp.d && this.lastInput != null && this.lastInput.d == false){
+				if(inp.d && this.lastInput != null && !this.lastInput.d){
 					this.up(inp.svTime);
 				}
 			}
@@ -128,6 +128,7 @@ Player.prototype.update = function(){
 		this.lastInput = inp;
 		this.lowerStun();
 		this.physic();
+		this.nbInputsToExecute--;
 	}
 	if(isServer){
 		this.inputs = [];

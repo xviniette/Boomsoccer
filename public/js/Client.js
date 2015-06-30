@@ -11,6 +11,8 @@ var Client = function(){
 
 	this.lastFrame = Date.now();
 	this.room;
+
+	this.ignoredPlayers = {};
 }
 
 Client.prototype.initRoom = function(data){
@@ -45,7 +47,7 @@ Client.prototype.snapshot = function(data){
 						if(input.seq == data.players[i].seq){
 							//on supprime toutes les inputs avant et compris
 							this.room.players[j].inputs.splice(0, k + 1);
-							if(input.pos.x != data.players[i].x || input.pos.y != data.players[i].y){
+							if((data.players[i].x != undefined && input.pos.x != data.players[i].x) || (data.players[i].y != undefined && input.pos.y != data.players[i].y)){
 								console.log("soucis");
 								//probleme dans coordonnées
 								this.room.players[j].setCoordinate(data.players[i].x, data.players[i].y);
@@ -68,8 +70,25 @@ Client.prototype.snapshot = function(data){
 					}
 				}else{
 					//Autres joueurs = interpolation
+					/*var dataPlayer = clone(data.players[i]);
+					delete dataPlayer.x;
+					delete dataPlayer.y;*/
+
 					this.room.players[j].init({dx:data.players[i].dx, dy:data.players[i].dy, stun:data.players[i].stun});
 					data.players[i].t = d;
+					/*var longueur = this.room.players[j].positions.length - 1;
+					if(data.players[i].x == undefined){
+						data.players[i].x = this.room.players[j].x;
+						if(this.room.players[j].positions[longueur]){
+							data.players[i].x = this.room.players[j].positions[longueur].x;
+						}
+					}
+					if(data.players[i].y == undefined){
+						data.players[i].y = this.room.players[j].y;
+						if(this.room.players[j].positions[longueur]){
+							data.players[i].y = this.room.players[j].positions[longueur].y;
+						}
+					}*/
 					this.room.players[j].positions.push(data.players[i]);
 				}
 			}
@@ -81,6 +100,19 @@ Client.prototype.snapshot = function(data){
 		for(var j in this.room.bombs){
 			if(this.room.bombs[j].id == data.bombs[i].id){
 				data.bombs[i].t = d;
+				/*var longueur = this.room.bombs[j].positions.length - 1;
+				if(data.bombs[i].x == undefined){
+					data.bombs[i].x = this.room.bombs[j].x;
+					if(this.room.bombs[j].positions[longueur]){
+						data.bombs[i].x = this.room.bombs[j].positions[longueur].x;
+					}
+				}
+				if(data.bombs[i].y == undefined){
+					data.bombs[i].y = this.room.bombs[j].y;
+					if(this.room.bombs[j].positions[longueur]){
+						data.bombs[i].y = this.room.bombs[j].positions[longueur].y;
+					}
+				}*/				
 				this.room.bombs[j].positions.push(data.bombs[i]);
 				found = true;
 				break;
@@ -111,6 +143,19 @@ Client.prototype.snapshot = function(data){
 	if(data.ball){
 		if(this.room.ball){
 			data.ball.t = d;
+			/*var longueur = this.room.ball.positions.length - 1;
+			if(data.ball.x == undefined){
+				data.ball.x = this.room.ball.x;
+				if(this.room.ball.positions[longueur]){
+					data.ball.x = this.room.ball.positions[longueur].x;
+				}
+			}
+			if(data.ball.y == undefined){
+				data.ball.y = this.room.ball.y;
+				if(this.room.ball.positions[longueur]){
+					data.ball.y = this.room.ball.positions[longueur].y;
+				}
+			}*/
 			this.room.ball.positions.push(data.ball);
 		}else{
 			this.room.ball = new Ball(data.ball);
@@ -169,7 +214,7 @@ Client.prototype.calcServerTime = function(tps){
 }
 
 Client.prototype.checkKeys = function(){
-	var input = {u:false,d:false,l:false,r:false,k:false};
+	var input = {};
 	if(this.keys[inputsKeyCode.up]){
 		input.u = true;
 	}

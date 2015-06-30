@@ -348,3 +348,7 @@ table, th, td {
 	color:white;
 	float: right;
 }
+
+.pointer{
+	cursor: pointer;
+}

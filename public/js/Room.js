@@ -14,6 +14,10 @@ var Room = function(json){
 	this.ranked = false;
 	this.score = {"1":0, "2":0};
 
+	this.nbMaxPlayers = 100;
+	this.joinable = true;
+	this.spectable = true;
+
 	this.pollBall = [];
 
 	this.nbGoal = 5;
@@ -29,6 +33,8 @@ var Room = function(json){
 	this.iterateur = 0;
 	this.lastFrame = Date.now();
 	this.lastFrameNetwork = Date.now();
+
+	this.lastSnapshot = null;
 
 	this.init(json);
 }
@@ -446,5 +452,48 @@ Room.prototype.getSnapshotInfo = function(){
 	if(this.ball){
 		data.ball = this.ball.getSnapshotInfo();
 	}
+	/*var total = data;
+	var last = clone(this.lastSnapshot);
+	this.lastSnapshot = clone(data);
+	return this.getDeltaSnapshot(total, last);*/
 	return data;
+}
+
+Room.prototype.getDeltaSnapshot = function(total, last){
+	if(last == null){
+		return total;
+	}
+	for(var i in total.players){
+		for(var j in last.players){
+			if(total.players[i].id == last.players[j].id){
+				for(var k in total.players[i]){
+					if(total.players[i][k] == last.players[j][k] && k != "id"){
+						delete total.players[i][k];
+					}
+				}
+			}
+			
+		}
+	}
+
+	for(var i in total.bombs){
+		for(var j in last.bombs){
+			if(total.bombs[i].id == last.bombs[j].id){
+				for(var k in total.bombs[i]){
+					if(total.bombs[i][k] == last.bombs[j][k] && k != "id"){
+						delete total.bombs[i][k];
+					}
+				}
+			}
+		}
+	}
+
+	if(total.ball && last.ball){
+		for(var k in total.ball){
+			if(total.ball[k] == last.ball[k]){
+				delete total.ball[k];
+			}
+		}
+	}	
+	return total;
 }

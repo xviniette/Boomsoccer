@@ -20,7 +20,7 @@ Utils.onLogin = function(data, socket){
 					if(data.first){
 						//TUTORIEL
 						var tutomap = '{"name":"Tutoriel","tiles":[[1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,1,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,"p;L\'objectif est de marquer des buts. Utilise la touche Entrer pour taper dans un ballon quand tu es dessus. Si tu n\'es pas sur la balle, ça pose une bombe.",1,0,0,1,"w","w",1],[1,0,0,"p;Bienvenue dans ce tutoriel. Utilise les touches directionnelles Gauche et Droite pour te déplacer.",1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,1,1,1,1,0,0,0,0,0,0,1,0,0,1,0,"p;Utilise la touche fléchée Bas pour lever le ballon.",1],[1,0,0,0,1,0,0,0,1,0,0,1,0,0,0,0,0,"p;Utilise ce téléporteur pour te rendre à l\'autre.",1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,1,0,"p;Tu peux passer à travers les sols en sautant par dessous.",1,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,0,0,0,1,1,1,1,1,0,0,1,0,0,0,1,"w;1;22","w;1;23",1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,"p;Enfin marque un but pour finir ce tutoriel.",1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,1,1,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,0,0,0,0,0,0,"p;Utilise la touche fléchée Haut pour sauter. Tu peux modifier ces touches dans les options.",1,0,0,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,2,2,1,0,0,1],[1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1]],"tilesize":20,"balls":[{"x":50,"y":330}],"player":{"x":40,"y":60}}';
-						var room = new Room({id:uuid.v1(), ranked:false, name:"Tutoriel - Lisez l'aide", spawningBall:true, spawningBomb:true, nbGoal:1});
+						var room = new Room({id:uuid.v1(), ranked:false, name:"Tutoriel - Lisez l'aide", spawningBall:true, spawningBomb:true, nbGoal:1, joinable:false});
 						room.map = new Map(JSON.parse(tutomap));
 						room.addPlayer(p, 1);
 						_this.messageTo(p.socket, "information", "Voici une map Tutoriel qui vous fait découvrir les différentes fonctionnalitées de BoomSoccer. N'hésitez pas à lire l'aide. Amenez le Ballon dans les cages ! Vous pouvez quitter cette Map en écrivant /leave dans le tchat.");
@@ -143,24 +143,11 @@ Utils.onMatchmaking = function(data, socket){
 	if(!p){return;}
 	if(!(p.room && p.room.ranked == true && p.room.isPlayer(p))){
 		if(!game.matchmaking.isInQueue(p)){
-			game.matchmaking.addPlayer(p);
+			game.matchmaking.addPlayer(p, data);
 		}else{
 			game.matchmaking.removePlayer(p);
 		}
 	}
-}
-
-Utils.onGetFunGame = function(data, socket){
-	var p = game.getPlayerBySocket(socket.id);
-	if(!p){return;}
-	var d = {};
-	d.maps = [];
-	for(var i in game.maps){
-		var m = JSON.parse(game.maps[i]);
-		d.maps.push({id:m.id, name:m.name});
-	}
-	d.games = game.getFunGames();
-	this.messageTo(p.socket, "funGames", d);
 }
 
 Utils.onCreateFunGame = function(data, socket){
@@ -200,7 +187,7 @@ Utils.onJoinFunGame = function(data, socket){
 	if(!p){return;}
 	if(!(p.room && p.room.ranked == true && p.room.isPlayer(p))){
 		var room = game.getRoom(data.id);
-		if(room){
+		if(room && room.joinable && room.nbMaxPlayers > room.players.length){
 			if(!room.password || data.password == room.password){
 				p.room.playerLeave(p);
 				room.addPlayer(p);
@@ -213,7 +200,7 @@ Utils.onSpectate = function(data, socket){
 	var p = game.getPlayerBySocket(socket.id);
 	if(!p){return;}
 	var room = game.getRoom(data.id);
-	if(room){
+	if(room && room.spectable){
 		if(p.room && !(p.room.ranked == true && p.room.isPlayer(p))){
 			p.room.playerLeave(p);
 			room.addSpectator(p);
@@ -229,15 +216,27 @@ Utils.onSpectate = function(data, socket){
 Utils.onLeaveGame = function(data, socket){
 	var p = game.getPlayerBySocket(socket.id);
 	if(!p){return;}
-	if(p.room){
+	if(p.room && p.room.id != 0){
 		p.room.playerLeave(p);
 		game.getInitRoom().addPlayer(p);
 	}
 }
 
+Utils.onGameCreation = function(data, socket){
+	var p = game.getPlayerBySocket(socket.id);
+	if(!p){return;}
+	var d = {};
+	d.maps = [];
+	for(var i in game.maps){
+		var m = JSON.parse(game.maps[i]);
+		d.maps.push({id:m.id, name:m.name});
+	}
+	this.messageTo(p.socket, "gameCreation", d);
+}
+
 //Get Match en cours
-Utils.onGetSpectableRooms = function(data, socket){
-	socket.emit("spectableRooms", game.getSpectableRooms());
+Utils.onInProgresGames = function(data, socket){
+	socket.emit("inProgressGames", game.getInProgressRooms());
 }
 
 //Get joueurs
@@ -258,7 +257,21 @@ Utils.onGetRanking = function(data, socket){
 	});
 }
 
-//OK à finir pour reconnexion en combat
+Utils.onGetProfil = function(data, socket){
+	var _this = this;
+	var d = {};
+	db.query("SELECT id, pseudo, elo, won, played FROM users WHERE id = ?;", [data], function(e, r, f){
+		if(r[0]){
+			d = r[0];
+			db.query("SELECT m.id, m.name, m.score1, m.score2, m.date FROM matchs m WHERE m.user1 = ? OR m.user2 = ? ORDER BY id DESC LIMIT 0,50;", [data, data], function(e, r, f){
+				d.games = r;
+				_this.messageTo(socket.id, "profil", d);
+			});
+		}
+	});
+}
+
+//OK 
 Utils.onDisconnect = function(socket){
 	var p = game.getPlayerBySocket(socket.id);
 	if(!p){return;}
@@ -274,7 +287,6 @@ Utils.onDisconnect = function(socket){
 		game.deletePlayer(socket.id);
 	}
 }
-
 
 Utils.messageTo = function(socket, type, message){
 	if(io.sockets.connected[socket]){

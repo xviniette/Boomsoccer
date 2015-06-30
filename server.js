@@ -23,7 +23,7 @@ server.listen(1321);
 var db = mysql.createConnection({
 	host     : 'localhost',
 	user     : 'root',
-	password : '',
+	password : 'angelets',
 	database : 'soccerfest'
 });
 
@@ -85,10 +85,6 @@ io.on('connection', function(socket){
 		Utils.onMatchmaking(data, socket);
 	});
 
-	socket.on("getFunGames", function(data){
-		Utils.onGetFunGame(data, socket);
-	});
-
 	socket.on("createFunGame", function(data){
 		Utils.onCreateFunGame(data, socket);
 	});	
@@ -98,8 +94,12 @@ io.on('connection', function(socket){
 	});	
 
 	//ok
-	socket.on("spectableRooms", function(data){
-		Utils.onGetSpectableRooms(data, socket);
+	socket.on("inProgressGames", function(data){
+		Utils.onInProgresGames(data, socket);
+	});
+
+	socket.on("gameCreation", function(data){
+		Utils.onGameCreation(data, socket);
 	});
 
 	//ok
@@ -115,6 +115,11 @@ io.on('connection', function(socket){
 	//ok
 	socket.on("ranking", function(data){
 		Utils.onGetRanking(data, socket);
+	});
+
+	//ok
+	socket.on("profil", function(data){
+		Utils.onGetProfil(data, socket);
 	});
 	
 	//ok

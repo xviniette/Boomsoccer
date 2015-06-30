@@ -218,7 +218,7 @@ Display.prototype.displayRoomPlayers = function(){
 	if(this.client.room){
 		var p = this.client.room.players;
 		for(var i in p){
-			html += "<tr><td>"+p[i].pseudo+"</td><td>"+p[i].elo+"</td><td>"+p[i].won+"</td><td>"+p[i].played+"</td><td>"+(p[i].played == 0 ? 0 : Math.round(p[i].won/p[i].played*100))+"%</td></tr>";
+			html += "<tr><td><span class='pointer' onclick='profil("+p[i].id+")'>"+p[i].pseudo+"</span></td><td>"+p[i].elo+"</td><td>"+p[i].won+"</td><td>"+p[i].played+"</td><td>"+(p[i].played == 0 ? 0 : Math.round(p[i].won/p[i].played*100))+"%</td></tr>";
 		}
 	}
 	html += "</table>";
@@ -230,24 +230,57 @@ Display.prototype.ranking = function(data){
 	var html = "Classement des joueurs classés ("+NBGAMEPLACEMENT+" parties jouées).<table>";
 	html += "<tr><th>n°</th><th>Pseudo</th><th>ELo</th><th>Gagné</th><th>Joué</th><th>Ratio</th></tr>";
 	for(var i in data){
-		html += "<tr><td>"+(parseInt(i)+1)+"</td><td>"+data[i].pseudo+"</td><td>"+data[i].elo+"</td><td>"+data[i].won+"</td><td>"+data[i].played+"</td><td>"+(data[i].played == 0 ? 0 : Math.round(data[i].won/data[i].played*100))+"%</td></tr>";
+		html += "<tr><td>"+(parseInt(i)+1)+"</td><td><span class='pointer' onclick='profil("+data[i].id+")'>"+data[i].pseudo+"</span></td><td>"+data[i].elo+"</td><td>"+data[i].won+"</td><td>"+data[i].played+"</td><td>"+(data[i].played == 0 ? 0 : Math.round(data[i].won/data[i].played*100))+"%</td></tr>";
 	}
 	html += "</table>";
 	this.showPopup(html);
 }
 
-Display.prototype.watching = function(data){
+Display.prototype.profil = function(data){
+	var html = "<h1>"+data.pseudo+" ("+data.elo+" Elo)</h1>";
+	html += "<h2>"+data.won+"/"+data.played+" - "+(data.played == 0 ? 0 : Math.round(data.won/data.played*100))+"%</h2>";
+	html += "Les 50 derniers matchs<table>";
+	for(var i in data.games){
+		var g = data.games[i];
+		html += "<tr><td>"+g.score1+"</td><td>"+g.name+"</td><td>"+g.score2+"</td></tr>";
+	}
+	html += "</table>";
+	this.showPopup(html);
+}
+
+Display.prototype.inProgressGames = function(data){
 	var html = "Parties : "+data.length+"<table>";
-	html += "<tr><th>Partie</th><th>Scores</th><th>Elo</th><th>Map</th><th>Spectateur</th></tr>";
+	html += "<tr><th>Type</th><th>Partie</th><th>Scores</th><th>Elo</th><th>Map</th><th>Joueur</th><th>Spectateur</th></tr>";
 	for(var i in data){
-		html += "<tr><td>"+data[i].name+"</td><td>"+data[i].score["1"]+" - "+data[i].score["2"]+"</td><td>"+data[i].elo+"</td><td>"+data[i].map.name+"</td><td>"+data[i].nbSpectator+"</td><td><button onclick='spectate(\""+data[i].id+"\")'>Regarder</button></td></tr>";
+		html += "<tr>";
+		if(data[i].ranked){
+			html += "<td><b>Classé</b></td>";
+		}else{
+			html += "<td><b>Fun</b></td>";
+		}
+		html += "<td>"+data[i].name+"</td><td>"+data[i].score["1"]+" - "+data[i].score["2"]+"</td><td>"+data[i].elo+"</td><td>"+data[i].map.name+"</td><td>"+data[i].nbPlayer+"</td><td>"+data[i].nbSpectator+"</td>";
+		if(data[i].spectable){
+			html += "<td><button onclick='spectate(\""+data[i].id+"\")'>Regarder</button></td>";
+		}
+		if(data[i].joinable){
+			html += "<td><input type='password' placeholder='Mot de passe' size='5' id='password_"+data[i].id+"'><button onclick='join(\""+data[i].id+"\")'>Rejoindre</button></td>";
+		}
+		html += "</tr>";
 	}
 	html += "</table>";
 	this.showPopup(html);
 }
 
-Display.prototype.funGames = function(data){
-	var html = "<h2>Créer ma partie</h2>";
+Display.prototype.gameCreation = function(data){
+	var html = "";
+	html += "<h2>Match classé</h2>";
+	html += 'Maps :';
+	for(var i in data.maps){
+		html += ' <INPUT class="mapChoice" type="checkbox" name="choix1" value="'+data.maps[i].id+'" checked>'+data.maps[i].name;
+	}
+	html += '</br><button onclick="matchmaking();">JOUER !</button>';
+
+	html += "<h2>Match fun</h2>";
 	html += '<input type="text" id="creation_nom" placeholder="Nom partie"> ';
 	html += '<select id="creation_map">';
 	for(var i in data.maps){
@@ -256,13 +289,6 @@ Display.prototype.funGames = function(data){
 	html += '</select> ';
 	html += '<input type="password" id="creation_password" placeholder="Mot de passe (Optionnel)"> ';
 	html += '<button onclick="createParty();">Créer</button>';
-	html += "<h2>Partie fun en cours : "+data.games.length+"</h2>";
-	html += "<table><tr><th>Nom</th><th>Map</th><th>Mot de passe</th><th>Rejoindre</th></tr>";
-	for(var i in data.games){
-		var g = data.games[i];
-		html += "<tr><td>"+g.name+"</td><td>"+htmlEntities(g.map.name)+"</td><td><input type='password' id='password_"+g.id+"'></td><td><button onclick='join(\""+g.id+"\")'>Rejoindre</button></td></tr>";
-	}
-	html += "</table>";
 	this.showPopup(html);
 }
 
@@ -304,9 +330,9 @@ Display.prototype.help = function(){
 	html += "<h2>Commandes disponibles</h2>";
 	html += "<p>Différentes commande à faire dans le tchat existent : ";
 	html += "<ul><li>/w \<pseudo\> \<message\> : Permet d'envoyer un message privé.</li>";
-	html += "<li>/leave : Permet de quitter une partie (sauf si on est en ranked).</li>";
 	html += "<li>/ball : Lance un vote pour faire renaître la balle.</li>";
 	html += "<li>/respawn : Nous fait réapparaitre à la position d'origine.</li></ul></p>";
+	html += "<li>/ignore <pseudo> : Permet d'ignorer ou de ne plus ignorer les messages d'un joueur.</li></ul></p>";
 	this.showPopup(html);
 }
 

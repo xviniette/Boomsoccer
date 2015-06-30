@@ -18,7 +18,7 @@ var Ball = function(json){
 	this.kick = {x:20,y:-13};
 	this.up = {x:5,y:38};
 
-	this.maxSpeed = 100;
+	this.maxSpeed = 65;
 
 	this.gravity = 1.1;
 	this.friction = {x:0.955,y:0.9};
@@ -127,8 +127,6 @@ Ball.prototype.getSnapshotInfo = function(){
 	return {
 		radius:this.radius,
 		x:this.x,
-		y:this.y,
-		dx:this.dx,
-		dy:this.dy
+		y:this.y
 	}
 }

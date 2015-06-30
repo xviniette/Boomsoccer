@@ -59,24 +59,32 @@ $(function(){
 	});
 
 	socket.on("tchat", function(data){
+		for(var i in client.ignoredPlayers){
+			if(client.ignoredPlayers[data.pseudo.toLowerCase()]){
+				return;
+			}
+		}
+		var date = new Date();
 		var msgDiv = $("#messages");
 		var html = "";
+		data.pseudo = "<span class='pointer' onclick='profil("+data.pID+")'>"+data.pseudo+"</span>";
 		if(data.type == "private"){
 			if(data.from){
-				html = "<li class='private'> De "+data.pseudo+" : "+htmlEntities(data.message)+"</li>";
+				html = "<li class='private'>["+date.getHours()+":"+date.getMinutes()+"] De "+data.pseudo+" : "+htmlEntities(data.message)+"</li>";
 			}else{
-				html = "<li class='private'> A "+data.pseudo+" : "+htmlEntities(data.message)+"</li>";
+				html = "<li class='private'>["+date.getHours()+":"+date.getMinutes()+"] A "+data.pseudo+" : "+htmlEntities(data.message)+"</li>";
 			}
 		}else{
-			html = "<li class='"+data.type+"'>"+data.pseudo+" : "+htmlEntities(data.message)+"</li>";
+			html = "<li class='"+data.type+"'>["+date.getHours()+":"+date.getMinutes()+"] "+data.pseudo+" : "+htmlEntities(data.message)+"</li>";
 		}
 		msgDiv.append(html);
 		msgDiv.animate({scrollTop:$("#messages").prop('scrollHeight')}, 0);
 	});
 
 	socket.on("information", function(data){
+		var date = new Date();
 		var msgDiv = $("#messages");
-		msgDiv.append("<li class='information'>"+htmlEntities(data)+"</li>");
+		msgDiv.append("<li class='information'>["+date.getHours()+":"+date.getMinutes()+"] "+htmlEntities(data)+"</li>");
 		msgDiv.animate({scrollTop:$("#messages").prop('scrollHeight')}, 0);
 	});
 
@@ -104,27 +112,27 @@ $(function(){
 		client.display.particles.push(new Particle({sprite:new Sprite(client.display.sprites["mitemps"]), x:125, y:350, w:300, h:100, life:120}));
 	});
 
-	socket.on("spectableRooms", function(data){
+	socket.on("inProgressGames", function(data){
 		if(client && client.display){
-			client.display.watching(data);
+			client.display.inProgressGames(data);
 		}
 	});
 
-	socket.on("funGames", function(data){
+	socket.on("gameCreation", function(data){
 		if(client && client.display){
-			client.display.funGames(data);
-		}
-	});
-
-	socket.on("ranking", function(data){
-		if(client && client.display){
-			client.display.ranking(data);
+			client.display.gameCreation(data);
 		}
 	});
 
 	socket.on("ranking", function(data){
 		if(client && client.display){
 			client.display.ranking(data);
+		}
+	});
+
+	socket.on("profil", function(data){
+		if(client && client.display){
+			client.display.profil(data);
 		}
 	});
 
@@ -189,7 +197,28 @@ $(function(){
 		e.preventDefault();
 		var text = $('#inputTchat').val();
 		if(text.length > 0){
-			socket.emit("tchat", text);
+			if(text[0] && text[0] == "/"){
+				var split = text.split(" ");
+				switch(split[0]) {
+					case "/ignore":
+					if(client.ignoredPlayers[split[1].toLowerCase()]){
+						delete client.ignoredPlayers[split[1].toLowerCase()];
+						var msgDiv = $("#messages");
+						msgDiv.append("<li class='information'>Vous n'ignorez plus "+split[1]+".</li>");
+						msgDiv.animate({scrollTop:$("#messages").prop('scrollHeight')}, 0);
+					}else{
+						client.ignoredPlayers[split[1].toLowerCase()] = 1;
+						var msgDiv = $("#messages");
+						msgDiv.append("<li class='information'>Vous ignorez "+split[1]+".</li>");
+						msgDiv.animate({scrollTop:$("#messages").prop('scrollHeight')}, 0);
+					}
+					break;
+					default:
+					socket.emit("tchat", text);
+				}
+			}else{
+				socket.emit("tchat", text);
+			}
 		}
 		$('#inputTchat').val("");
 	});
@@ -256,14 +285,11 @@ var setScreenSize = function(){
 
 var menuOptions = function(nb){
 	switch(nb) {
-		case 'ranked':
-		socket.emit("matchmaking");
+		case 'creation':
+		socket.emit("gameCreation");
 		break;
-		case 'fun':
-		socket.emit("getFunGames");
-		break;
-		case 'spectate':
-		socket.emit("spectableRooms");
+		case 'games':
+		socket.emit("inProgressGames");
 		break;
 		case 'ranking':
 		socket.emit("ranking");
@@ -287,10 +313,28 @@ var createParty = function(){
 	$("#popup").hide();
 }
 
+var matchmaking = function(){
+	var checkedValue = null; 
+	var maps = [];
+	var inputElements = document.getElementsByClassName('mapChoice');
+	for(var i=0; inputElements[i]; ++i){
+		if(inputElements[i].checked){
+			checkedValue = inputElements[i].value;
+			maps.push(checkedValue);
+		}
+	}
+	socket.emit("matchmaking", maps);
+	$("#popup").hide();
+}
+
 var join = function(id){
 	socket.emit("joinFunGame", {id:id, password:document.getElementById("password_"+id).value});
 }
 
 var changeInput = function(inp){
 	nextInput = inp;
+}
+
+var profil = function(id){
+	socket.emit("profil", id);
 }
