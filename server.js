@@ -62,6 +62,7 @@ io.on('connection', function(socket){
 	//On demande le pseudo au joueur
 	socket.emit("login", true);
 	socket.emit("nbPlayers", game.getNbPlayers());
+	socket.emit("nbGames", game.rooms.length);
 	//Reponse du pseudo
 	socket.on("login", function(data){
 		Utils.onLogin(data, socket);

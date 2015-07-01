@@ -74,6 +74,7 @@ Game.prototype.addRanked = function(p1, p2, map){
 	room.addPlayer(p2, 2);
 	room.start();
 	this.rooms.push(room);
+	this.sendNbGames();
 }
 
 Game.prototype.getPlayerBySocket = function(socket){
@@ -129,4 +130,11 @@ Game.prototype.getInProgressRooms = function(){
 
 Game.prototype.getNbPlayers = function(){
 	return Object.keys(this.players).length;
+}
+
+Game.prototype.sendNbGames = function(){
+	console.log("new");
+	for(var i in game.players){
+		Utils.messageTo(game.players[i].socket, "nbGames", game.rooms.length);
+	}
 }

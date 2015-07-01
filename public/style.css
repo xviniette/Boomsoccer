@@ -7,17 +7,13 @@ body{
 }
 
 #jeu{
+	zoom:0;
 	margin:0;
 	position: absolute;
 	top:0px;
 	left:0px;
 	transform-origin:0 0;
 	transform: scale(1);
-	filter: none; 
-	-webkit-filter: blur(0px); 
-	-moz-filter: blur(0px); 
-	-ms-filter: blur(0px);
-	filter:progid:DXImageTransform.Microsoft.Blur(PixelRadius='0');
 }
 
 #loader{
@@ -141,7 +137,7 @@ body{
 	margin: 0px;
 }
 
-.menu button{
+.menu button, .big{
 	-webkit-box-sizing: content-box;
 	-moz-box-sizing: content-box;
 	box-sizing: content-box;

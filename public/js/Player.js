@@ -65,12 +65,12 @@ Player.prototype.reset = function(){
 
 Player.prototype.calcNewElo = function(eloAdv, resultat, deltaScore){
 	var ratioScore = 2;
-	var k = 20;
+	var k = 25;
 	if(this.elo > 2400){	
 		k = 10;
 	}
 	if(this.played <= NBGAMEPLACEMENT){
-		ratioScore = 5;
+		ratioScore = 8;
 	}
 	k += deltaScore * ratioScore;
 	var estimation = 1/(1+Math.pow(10, (eloAdv - this.elo)/400));

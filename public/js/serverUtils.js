@@ -26,6 +26,7 @@ Utils.onLogin = function(data, socket){
 						_this.messageTo(p.socket, "information", "Voici une map Tutoriel qui vous fait découvrir les différentes fonctionnalitées de BoomSoccer. N'hésitez pas à lire l'aide. Amenez le Ballon dans les cages ! Vous pouvez quitter cette Map en écrivant /leave dans le tchat.");
 						room.start();
 						game.rooms.push(room);
+						game.sendNbGames();
 					}else{
 						//Connexion lobby
 						game.getInitRoom().addPlayer(p);
@@ -180,6 +181,7 @@ Utils.onCreateFunGame = function(data, socket){
 	room.addPlayer(p);
 	room.start();
 	game.rooms.push(room);
+	game.sendNbGames();
 }
 
 Utils.onJoinFunGame = function(data, socket){
@@ -263,7 +265,7 @@ Utils.onGetProfil = function(data, socket){
 	db.query("SELECT id, pseudo, elo, won, played FROM users WHERE id = ?;", [data], function(e, r, f){
 		if(r[0]){
 			d = r[0];
-			db.query("SELECT m.id, m.name, m.score1, m.score2, m.date FROM matchs m WHERE m.user1 = ? OR m.user2 = ? ORDER BY id DESC LIMIT 0,50;", [data, data], function(e, r, f){
+			db.query("SELECT m.id, m.name, m.score1, m.score2, m.user1, m.user2, m.date FROM matchs m WHERE m.user1 = ? OR m.user2 = ? ORDER BY id DESC LIMIT 0,50;", [data, data], function(e, r, f){
 				d.games = r;
 				_this.messageTo(socket.id, "profil", d);
 			});

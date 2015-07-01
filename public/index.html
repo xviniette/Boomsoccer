@@ -6,7 +6,7 @@
 	<link rel="shortcut icon" href="public/favicon.ico">
 	<link rel="stylesheet" href="public/style.css" />
 </head>
-<body>	
+<body style="zoom: 1;">	
 	<div id="jeu">
 		<div id="loader">Chargement du jeu...</div>
 		<div id="homePanel">
@@ -44,7 +44,7 @@
 		<div class="menu">
 			<ul>
 				<li onclick="menuOptions('creation');"><button class="full" style="color:#FFBA00;">Jouer une partie</button></li>
-				<li onclick="menuOptions('games');"><button class="full">Parties en cours</button></li>
+				<li onclick="menuOptions('games');"><button class="full">Parties en cours : <span id="inProgressGames"></span></button></li>
 				<li onclick="menuOptions('ranking');"><button>Classement</button></li>
 				<li onclick="menuOptions('options');"><button>Options</button></li>
 				<li onclick="menuOptions('help');"><button>Aide</button></li>

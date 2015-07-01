@@ -15,6 +15,22 @@ function htmlEntities(str) {
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+function getRank(elo, played){
+	var miniElo = 800;
+	var ecartLevel = 100;
+	var d = {rank:0,points:0};
+	if(played == null || played >= NBGAMEPLACEMENT){
+		d.rank = Math.floor((elo-miniElo)/ecartLevel)+1;
+		if(d.rank < 1){
+			d.rank = 1;
+		}else if(d.rank > 15){
+			d.rank = 15;
+		}
+		d.points = elo - ((d.rank-1)*ecartLevel+miniElo);
+	}	
+	return d;
+}
+
 function clone(src) {
 	function mixin(dest, source, copyFunc) {
 		var name, s, i, empty = {};

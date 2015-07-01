@@ -102,6 +102,10 @@ $(function(){
 		$("#nbPlayers").text(data);
 	});
 
+	socket.on("nbGames", function(data){
+		$("#inProgressGames").text(data);
+	});
+
 	socket.on("goal", function(data){
 		$("#score"+data.team).text(data.score);
 		client.display.particles.push(new Particle({sprite:new Sprite(client.display.sprites["marqueurgoal"+data.team]), x:125, y:225, w:300, h:100, life:60}));
@@ -164,6 +168,7 @@ $(function(){
 
 	//Clavier
 	document.body.addEventListener("keydown", function(e) {
+		var FocusTchat = 9;
 		if($('input:focus').length == 0 ){
 			//Choix changement input
 			if(nextInput != null){
@@ -173,6 +178,10 @@ $(function(){
 				nextInput = null;
 			}else{
 				client.keys[e.keyCode] = true;
+				if(e.keyCode == FocusTchat){
+					e.preventDefault();
+					$("#inputTchat").focus();
+				}
 			}
 		}
 	});
@@ -259,28 +268,18 @@ var setScreenSize = function(){
 	if(rW < rH){
 		//on gere en fonction de la largeur
 		var scale = sW/bW;
-		jeu.css({
-			'-webkit-transform' : 'scale(' + scale + ')',
-			'-moz-transform'    : 'scale(' + scale + ')',
-			'-ms-transform'     : 'scale(' + scale + ')',
-			'-o-transform'      : 'scale(' + scale + ')',
-			'transform'         : 'scale(' + scale + ')'
-		});
 	}else{
 		//on gere en fonction de la hauteur
 		var scale = sH/bH;
-		jeu.css({
-			'-webkit-transform' : 'scale(' + scale + ')',
-			'-moz-transform'    : 'scale(' + scale + ')',
-			'-ms-transform'     : 'scale(' + scale + ')',
-			'-o-transform'      : 'scale(' + scale + ')',
-			'transform'         : 'scale(' + scale + ')'
-		});
 	}
+	client.scale = scale;
 	jeu.css("top", (sH/2 - (bH/2)*scale)+"px");
 	jeu.css("left", (sW/2 - (bW/2)*scale)+"px");
-
-	client.scale = scale;
+	jeu.css({
+		'zoom' : scale,
+		'-moz-transform'    : 'scale(' + scale + ')',
+		'-o-transform'    : 'scale(' + scale + ')',
+	});
 }
 
 var menuOptions = function(nb){
@@ -323,6 +322,7 @@ var matchmaking = function(){
 			maps.push(checkedValue);
 		}
 	}
+	localStorage.setItem("choosenMaps", maps);
 	socket.emit("matchmaking", maps);
 	$("#popup").hide();
 }

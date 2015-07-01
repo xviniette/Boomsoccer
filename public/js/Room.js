@@ -384,6 +384,7 @@ Room.prototype.endMatch = function(team){
 		Utils.messageTo(this.spectators[i].socket, "scoreboard", scoreboard);
 	}
 	game.deleteRoom(this.id);
+	game.sendNbGames();
 	//On supprime la room
 }
 
