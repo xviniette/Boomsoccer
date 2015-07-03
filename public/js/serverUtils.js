@@ -18,15 +18,8 @@ Utils.onLogin = function(data, socket){
 					_this.messageTo(p.socket, "playerID", p.id);
 					game.addPlayer(p);
 					if(data.first){
-						//TUTORIEL
-						var tutomap = '{"name":"Tutoriel","tiles":[[1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,1,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,"p;L\'objectif est de marquer des buts. Utilise la touche Entrer pour taper dans un ballon quand tu es dessus. Si tu n\'es pas sur la balle, ça pose une bombe.",1,0,0,1,"w","w",1],[1,0,0,"p;Bienvenue dans ce tutoriel. Utilise les touches directionnelles Gauche et Droite pour te déplacer.",1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,1,1,1,1,0,0,0,0,0,0,1,0,0,1,0,"p;Utilise la touche fléchée Bas pour lever le ballon.",1],[1,0,0,0,1,0,0,0,1,0,0,1,0,0,0,0,0,"p;Utilise ce téléporteur pour te rendre à l\'autre.",1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,1,0,"p;Tu peux passer à travers les sols en sautant par dessous.",1,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,0,0,0,1,1,1,1,1,0,0,1,0,0,0,1,"w;1;22","w;1;23",1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,"p;Enfin marque un but pour finir ce tutoriel.",1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,1,1,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,0,0,0,0,0,0,"p;Utilise la touche fléchée Haut pour sauter. Tu peux modifier ces touches dans les options.",1,0,0,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,2,2,1,0,0,1],[1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1]],"tilesize":20,"balls":[{"x":50,"y":330}],"player":{"x":40,"y":60}}';
-						var room = new Room({id:uuid.v1(), ranked:false, name:"Tutoriel - Lisez l'aide", spawningBall:true, spawningBomb:true, nbGoal:1, joinable:false});
-						room.map = new Map(JSON.parse(tutomap));
-						room.addPlayer(p, 1);
-						_this.messageTo(p.socket, "information", "Voici une map Tutoriel qui vous fait découvrir les différentes fonctionnalitées de BoomSoccer. N'hésitez pas à lire l'aide. Amenez le Ballon dans les cages ! Vous pouvez quitter cette Map en écrivant /leave dans le tchat.");
-						room.start();
-						game.rooms.push(room);
-						game.sendNbGames();
+						//Tutoriel
+						_this.onTutorial({}, socket);
 					}else{
 						//Connexion lobby
 						game.getInitRoom().addPlayer(p);
@@ -121,6 +114,10 @@ Utils.onTchat = function(data, socket){
 				}, 5000);
 			}
 			break;
+			case "/tuto":
+			//réapparition
+			this.onTutorial({}, socket);
+			break;
 		}
 	}else{
 		if(p.room){	
@@ -148,6 +145,23 @@ Utils.onMatchmaking = function(data, socket){
 		}else{
 			game.matchmaking.removePlayer(p);
 		}
+	}
+}
+
+Utils.onTutorial = function(data, socket){
+	var p = game.getPlayerBySocket(socket.id);
+	if(!p){return;}
+	if(!(p.room && p.room.ranked == true && p.room.isPlayer(p))){
+		if(p.room){
+			p.room.playerLeave(p);
+		}
+		var tutomap = '{"name":"Tutoriel","tiles":[[1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,1,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,"p;L\'objectif est de marquer des buts. Utilise la touche Entrer pour taper dans un ballon quand tu es dessus. Si tu n\'es pas sur la balle, ça pose une bombe.",1,0,0,1,"w","w",1],[1,0,0,"p;Bienvenue dans ce tutoriel. Utilise les touches directionnelles Gauche et Droite pour te déplacer.",1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,1,1,1,1,0,0,0,0,0,0,1,0,0,1,0,"p;Utilise la touche fléchée Bas pour lever le ballon.",1],[1,0,0,0,1,0,0,0,1,0,0,1,0,0,0,0,0,"p;Utilise ce téléporteur pour te rendre à l\'autre.",1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,1,0,"p;Tu peux passer à travers les sols en sautant par dessous.",1,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,0,0,0,1,1,1,1,1,0,0,1,0,0,0,1,"w;1;22","w;1;23",1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,"p;Enfin marque un but pour finir ce tutoriel.",1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,1,1,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,0,0,0,0,0,0,"p;Utilise la touche fléchée Haut pour sauter. Tu peux modifier ces touches dans les options.",1,0,0,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,2,2,1,0,0,1],[1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1]],"tilesize":20,"balls":[{"x":50,"y":330}],"player":{"x":40,"y":60}}';
+		var room = new Room({id:uuid.v1(), ranked:false, name:"Tutoriel de "+p.pseudo, spawningBall:true, spawningBomb:true, nbGoal:1, joinable:false});
+		room.map = new Map(JSON.parse(tutomap));
+		room.addPlayer(p, 1);
+		room.start();
+		game.rooms.push(room);
+		game.sendNbGames();
 	}
 }
 

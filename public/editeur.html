@@ -35,7 +35,18 @@
 		}else if(map.tiles[x][y] == 2){
 			map.tiles[x][y] = 3;
 		}else if(map.tiles[x][y] == 3){
-			map.tiles[x][y] = "w";
+			var dx = prompt("x ?");
+			var dy = prompt("y ?");
+			if(dx != "" && dy != ""){
+				map.tiles[x][y] = "w;"+parseInt(dx)+";"+parseInt(dy);
+			}else{
+				map.tiles[x][y] = "w";
+			}
+		}else if(map.tiles[x][y][0] == "w"){
+			var text = prompt("oui ?");
+			if(text != ""){
+				map.tiles[x][y] = "p;"+text;
+			}
 		}else{
 			map.tiles[x][y] = 0;
 		}
@@ -137,6 +148,8 @@
 	}
 
 	var resizeMap = function(w, h){
+		$("#canvas").attr("width", (w * 20)+"px");
+		$("#canvas").attr("height", (h * 20)+"px");
 		var newmap = [];
 		for(var i = 0; i < w; i++){
 			newmap[i] = [];

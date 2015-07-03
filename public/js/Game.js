@@ -133,7 +133,6 @@ Game.prototype.getNbPlayers = function(){
 }
 
 Game.prototype.sendNbGames = function(){
-	console.log("new");
 	for(var i in game.players){
 		Utils.messageTo(game.players[i].socket, "nbGames", game.rooms.length);
 	}
