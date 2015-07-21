@@ -35,6 +35,7 @@ var Room = function(json){
 	this.lastFrameNetwork = Date.now();
 
 	this.lastSnapshot = null;
+	this.snapshotToMerge = {};//Pour envoyer des infos supprimés (le ballon qui disparait quand but)
 
 	this.init(json);
 }
@@ -45,11 +46,14 @@ Room.prototype.init = function(json){
 	}
 }
 
-Room.prototype.start = function(){
+Room.prototype.start = function(time){
+	if(time == null){
+		time = 8000;
+	}
 	var _this = this;
 	setTimeout(function(){
 		_this.newBall();
-	}, 8000);
+	}, time);
 }
 
 Room.prototype.update = function(){
@@ -100,7 +104,7 @@ Room.prototype.physic = function(){
 }
 
 Room.prototype.sendSnapshot = function(){
-	var snap = JSON.stringify(this.getSnapshotInfo());
+	var snap = this.getSnapshotInfo();
 	for(var i in this.players){
 		Utils.messageTo(this.players[i].socket, "snapshot", snap);
 	}
@@ -348,11 +352,20 @@ Room.prototype.endMatch = function(team){
 		var now = new Date();
 		var date = now.getFullYear()+"-"+parseInt(now.getMonth() + 1)+"-"+now.getDate()+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
 		var d = {name:this.name, user1:this.players[0].id, user2:this.players[1].id, map:this.map.id, score1:this.score["1"], score2:this.score["2"], date:date};
+		if(this.players[0].team == team){
+			d.winner = d.user1;
+		}else if(this.players[1].team == team){
+			d.winner = d.user2;
+		}
 		db.query("INSERT INTO matchs SET ?", d, function(e, r, f){});
 
 		teamFacingElo = {"1":this.players[1].elo, "2":this.players[0].elo};
 
 		for(var i in this.players){
+			if(this.players[i].xp == null){
+				this.players[i].xp = 0;
+			}
+			this.players[i].xp += this.score[this.players[i].team];
 			this.players[i].played++;
 			if(this.players[i].team == team){
 				this.players[i].won++;
@@ -453,6 +466,12 @@ Room.prototype.getSnapshotInfo = function(){
 	if(this.ball){
 		data.ball = this.ball.getSnapshotInfo();
 	}
+
+	//Information que l'on ajoute si supprimé (ballon déjà dans les cages par exemple)
+	for(var i in this.snapshotToMerge){
+		data[i] = this.snapshotToMerge[i];
+	}
+	this.snapshotToMerge = {};
 	/*var total = data;
 	var last = clone(this.lastSnapshot);
 	this.lastSnapshot = clone(data);

@@ -14,10 +14,13 @@ Game.prototype.update = function(){
 
 Game.prototype.loadMaps = function(callback){
 	var _this = this;
-	db.query("SELECT * FROM maps", function(e, r, f){
+	db.query("SELECT * FROM maps WHERE playable = 1 ORDER BY difficulty ASC", function(e, r, f){
 		for(var i in r){
 			var d = JSON.parse(r[i]["informations"]);
 			d.id = r[i]['id'];
+			d.name = r[i]['name'];
+			d.type = r[i]['type'];
+			d.difficulty = r[i]['difficulty'];
 			d = JSON.stringify(d);
 			_this.maps.push(d);
 		}

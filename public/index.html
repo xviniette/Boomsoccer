@@ -11,7 +11,7 @@
 		<div id="loader">Chargement du jeu...</div>
 		<div id="homePanel">
 			<div id="connectionPanel">
-				<div class="logo"><div class="nbPlayers">Joueurs en ligne : <span id="nbPlayers"></span></div></div>
+				<div class="logo"><div class="nbPlayers"></div></div>
 				<div class="connectionPanel">
 					<form class="bloc" id="loginForm">
 						<input type="text" id="loginLoginForm" placeholder="Pseudo" class="loginPanel">
@@ -64,15 +64,22 @@
 
 	<script src="public/js/socketio.js"></script>
 	<script src="public/js/jquery.js"></script>
+	<script src="public/mustache.min.js"></script>
+
+	<script src="public/js/jeu.js"></script>
+	<script src="public/js/config.js"></script>
+	<script src="public/js/common.js"></script>
+	<script src="public/js/socketioevent.js"></script>
+	<script src="public/js/userEvent.js"></script>
+	<script src="public/js/clientFunctions.js"></script>
+
 
 	<script src="public/js/Objet.js"></script>
-	<script src="public/js/config.js"></script>
 	<script src="public/js/Player.js"></script>
 	<script src="public/js/Room.js"></script>
 	<script src="public/js/Display.js"></script>
 	<script src="public/js/Sprite.js"></script>
 	<script src="public/js/Particle.js"></script>
-	<script src="public/js/jeu.js"></script>
 	<script src="public/js/Map.js"></script>
 	<script src="public/js/Ball.js"></script>
 	<script src="public/js/Bomb.js"></script>

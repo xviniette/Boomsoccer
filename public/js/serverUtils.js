@@ -11,6 +11,16 @@ Utils.onLogin = function(data, socket){
 		db.query("SELECT * FROM users WHERE pseudo = ? AND password = ?", [data.login, pwd], function(e, r, f){
 			if(r.length > 0){
 				var res = r[0];
+
+				var now = new Date();
+				var date = now.getFullYear()+"-"+parseInt(now.getMonth() + 1)+"-"+now.getDate()+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
+				
+				var d = [{
+					connectionDate:date,
+					online:true
+				}, res.id];
+				db.query("UPDATE users SET ? WHERE id = ?", d);
+
 				var p = game.getPlayerById(res.id);
 				if(p == null){
 					//Connexion
@@ -53,8 +63,10 @@ Utils.onSignin = function(data, socket){
 			//On vérifie pseudo non utilisé
 			if(r.length == 0){
 				//inscription ok
+				var now = new Date();
+				var date = now.getFullYear()+"-"+parseInt(now.getMonth() + 1)+"-"+now.getDate()+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
 				var pwd = crypto.createHash('sha256').update(data.password).digest("hex");
-				var d = {pseudo:data.login, password:pwd, elo:1200, won:0, played:0};
+				var d = {pseudo:data.login, password:pwd, elo:1200, won:0, played:0, registrationDate:date, connectionDate:date, online:false};
 				db.query("INSERT INTO users SET ?", d, function(e, r, f){
 					//Insertion puis auto login
 					data.first = true;
@@ -72,7 +84,7 @@ Utils.onKeyboard = function(data, socket){
 	var p = game.getPlayerBySocket(socket.id);
 	if(!p){return;}
 	if(p.room){
-		p.inputs.push(JSON.parse(data));
+		p.inputs.push(data);
 	}
 }
 
@@ -155,11 +167,11 @@ Utils.onTutorial = function(data, socket){
 		if(p.room){
 			p.room.playerLeave(p);
 		}
-		var tutomap = '{"name":"Tutoriel","tiles":[[1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,1,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,"p;L\'objectif est de marquer des buts. Utilise la touche Entrer pour taper dans un ballon quand tu es dessus. Si tu n\'es pas sur la balle, ça pose une bombe.",1,0,0,1,"w","w",1],[1,0,0,"p;Bienvenue dans ce tutoriel. Utilise les touches directionnelles Gauche et Droite pour te déplacer.",1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,1,1,1,1,0,0,0,0,0,0,1,0,0,1,0,"p;Utilise la touche fléchée Bas pour lever le ballon.",1],[1,0,0,0,1,0,0,0,1,0,0,1,0,0,0,0,0,"p;Utilise ce téléporteur pour te rendre à l\'autre.",1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,1,0,"p;Tu peux passer à travers les sols en sautant par dessous.",1,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,0,0,0,1,1,1,1,1,0,0,1,0,0,0,1,"w;1;22","w;1;23",1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,"p;Enfin marque un but pour finir ce tutoriel.",1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,1,1,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,0,0,0,0,0,0,"p;Utilise la touche fléchée Haut pour sauter. Tu peux modifier ces touches dans les options.",1,0,0,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,2,2,1,0,0,1],[1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1]],"tilesize":20,"balls":[{"x":50,"y":330}],"player":{"x":40,"y":60}}';
+		var tutomap = '{"name":"Tutoriel","tiles":[[1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,1,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,"p;Utilise la touche Entrée pour taper dans la balle ! Si tu n\'es pas sur la balle, tu poses une bombe.",1,0,0,1,"w","w",1],[1,0,0,"p;Bienvenue ! Utilise les flèches du clavier pour te déplacer.",1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,1,1,1,1,0,0,0,0,0,0,1,0,0,1,0,"p;La flèche du bas permet de lever le ballon et les bombes !",1],[1,0,0,0,1,0,0,0,1,0,0,1,0,0,0,0,0,"p;Utilise ce téléporteur pour te rendre à l\'autre !",1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,1,0,"p;Tu peux sauter à travers un plafond !.",1,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,0,0,0,1,1,1,1,1,0,0,1,0,0,0,1,"w;1;22","w;1;23",1,0,"p;Pour finir ce tutoriel, marque un but dans les cages bleues !",1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,"p;Il y a deux modes de jeu : <ul><li>Partie classée : recherche d\'un adversaire de même niveau pour un duel ! Ce mode compte dans le classement et le rang des joueurs.</li><li>Mode libre : Créez vos parties ! Pratique pour s\'entraîner sur des maps spéciales !</li></ul> Nous vous conseillons de réussir toutes les maps d\'entraînement avant de s\'attaquer au parties classées..",1,0,0,1],[1,0,0,0,1,1,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,0,0,0,0,0,0,0,0,0,"p;Pour sauter, utilise la flèche du haut.",1,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,1,0,0,1],[1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,2,2,1,1,1,1,1,1,1]],"tilesize":20,"balls":[{"x":50,"y":330}],"player":{"x":40,"y":60}}';
 		var room = new Room({id:uuid.v1(), ranked:false, name:"Tutoriel de "+p.pseudo, spawningBall:true, spawningBomb:true, nbGoal:1, joinable:false});
 		room.map = new Map(JSON.parse(tutomap));
 		room.addPlayer(p, 1);
-		room.start();
+		room.start(0);
 		game.rooms.push(room);
 		game.sendNbGames();
 	}
@@ -193,7 +205,7 @@ Utils.onCreateFunGame = function(data, socket){
 	room.map = new Map(m);
 	p.room.playerLeave(p);
 	room.addPlayer(p);
-	room.start();
+	room.start(0);
 	game.rooms.push(room);
 	game.sendNbGames();
 }
@@ -245,7 +257,7 @@ Utils.onGameCreation = function(data, socket){
 	d.maps = [];
 	for(var i in game.maps){
 		var m = JSON.parse(game.maps[i]);
-		d.maps.push({id:m.id, name:m.name});
+		d.maps.push({id:m.id, name:m.name, type:m.type, difficulty:m.difficulty});
 	}
 	this.messageTo(p.socket, "gameCreation", d);
 }
@@ -268,7 +280,7 @@ Utils.onGetPlayerProfil = function(data, socket){
 //Get classement
 Utils.onGetRanking = function(data, socket){
 	var _this = this;
-	db.query("SELECT id, pseudo, elo, won, played FROM users WHERE played >= "+NBGAMEPLACEMENT+" ORDER BY elo DESC;", [data], function(e, r, f){
+	db.query("SELECT id, pseudo, elo, won, xp, played, online FROM users WHERE played >= "+NBGAMEPLACEMENT+" ORDER BY elo DESC;", [data], function(e, r, f){
 		_this.messageTo(socket.id, "ranking", r);
 	});
 }
@@ -276,12 +288,34 @@ Utils.onGetRanking = function(data, socket){
 Utils.onGetProfil = function(data, socket){
 	var _this = this;
 	var d = {};
-	db.query("SELECT id, pseudo, elo, won, played FROM users WHERE id = ?;", [data], function(e, r, f){
+	db.query("SELECT id, pseudo, elo, xp, won, played FROM users WHERE id = ?;", [data], function(e, r, f){
 		if(r[0]){
 			d = r[0];
-			db.query("SELECT m.id, m.name, m.score1, m.score2, m.user1, m.user2, m.date FROM matchs m WHERE m.user1 = ? OR m.user2 = ? ORDER BY id DESC LIMIT 0,50;", [data, data], function(e, r, f){
+			db.query("SELECT m.id, m.name, m.score1, m.score2, m.user1, m.user2, m.date, m.winner, c.id as idMap, c.name as nameMap FROM matchs m, maps c WHERE (m.user1 = ? OR m.user2 = ?) AND c.id = m.map ORDER BY id DESC LIMIT 0,50;", [data, data], function(e, r, f){
 				d.games = r;
 				_this.messageTo(socket.id, "profil", d);
+			});
+		}
+	});
+}
+
+Utils.onPlayersStats = function(data, socket){
+	var _this = this;
+	var d = {
+		online:game.getNbPlayers()
+	};
+
+	var now = new Date();
+	now.setTime(Date.now() - 15 * 24 * 3600 * 1000);
+	var data = now.getFullYear()+"-"+parseInt(now.getMonth() + 1)+"-"+now.getDate()+" "+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
+	db.query("SELECT COUNT(*) FROM users WHERE connectionDate > ?;", [data], function(e, r, f){
+		if(r[0]){
+			d.active = r[0]["COUNT(*)"];
+			db.query("SELECT COUNT(*) FROM users;", function(e, r, f){
+				if(r[0]){
+					d.register = r[0]["COUNT(*)"];
+					_this.messageTo(socket.id, "playersStats", d);
+				}
 			});
 		}
 	});
@@ -291,6 +325,12 @@ Utils.onGetProfil = function(data, socket){
 Utils.onDisconnect = function(socket){
 	var p = game.getPlayerBySocket(socket.id);
 	if(!p){return;}
+
+	var d = [{
+		online:false
+	}, p.id];
+	db.query("UPDATE users SET ? WHERE id = ?", d);
+
 	//On l'enleve du matchmaking
 	game.matchmaking.removePlayer(p);
 	if(p.room && p.room.isPlayer(p) && p.room.ranked){

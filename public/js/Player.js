@@ -8,6 +8,7 @@ var Player = function(json){
 	this.isConnected = true;
 
 	this.elo;
+	this.xp;
 	this.won = 0;
 	this.played = 0;
 	this.team = 0;
@@ -41,6 +42,7 @@ var Player = function(json){
 	this.inputs = [];
 	this.lastInput = null;
 	this.lastAction = 0;
+	this.nbInputsExecutable = 0;
 
 	this.positions = [];
 
@@ -82,7 +84,7 @@ Player.prototype.calcNewElo = function(eloAdv, resultat, deltaScore){
 
 Player.prototype.dbSave = function(){
 	if(isServer){
-		d = [{elo:this.elo, won:this.won, played:this.played}, this.id];
+		d = [{elo:this.elo, xp:this.xp, won:this.won, played:this.played}, this.id];
 		db.query("UPDATE users SET ? WHERE id = ?", d);
 	}
 }
@@ -92,45 +94,56 @@ Player.prototype.update = function(){
 	var tilesize = this.room.map.tilesize;
 	var tiles = this.room.map.tiles;
 
-	if(this.isStun()){
-		this.friction = {x:0.95,y:0.9};
-		this.bounce = {x:0.9,y:0.9};
-	}else{
-		this.friction = {x:0.3,y:0.9};
-		this.bounce = {x:0,y:0};
-	}
+	this.nbInputsExecutable += 1;
+
+	//var nb = this.nbInputsExecutable;
 	for(var i in this.inputs){
-		var inp = this.inputs[i];
-		var baseInput = {}
-		if(!this.isStun()){
-			if(inp.u){
-				if(this.onGround){
-					this.dy = -this.jump * delta;
-				}
-			}
-			if(inp.l){
-				this.dx = -this.speed * delta;
-				this.direction = -1;
-			}
-			if(inp.r){
-				this.dx = this.speed * delta;
-				this.direction = 1;
-			}
-			if(isServer){
-				if(inp.k && this.lastInput != null && !this.lastInput.k){
-					this.kick(inp.svTime);
-				}
-				if(inp.d && this.lastInput != null && !this.lastInput.d){
-					this.up(inp.svTime);
-				}
-			}
+
+		if(this.isStun()){
+			this.friction = {x:0.95,y:0.9};
+			this.bounce = {x:0.9,y:0.9};
+		}else{
+			this.friction = {x:0.3,y:0.9};
+			this.bounce = {x:0,y:0};
 		}
-		this.lastInput = inp;
-		this.lowerStun();
-		this.physic();
-		this.nbInputsToExecute--;
+		
+		if(this.inputs[i]){
+			//this.nbInputsExecutable -= 1;
+			var inp = this.inputs[i];
+			var baseInput = {}
+			if(!this.isStun()){
+				if(inp.u){
+					if(this.onGround){
+						this.dy = -this.jump * delta;
+					}
+				}
+				if(inp.l){
+					this.dx = -this.speed * delta;
+					this.direction = -1;
+				}
+				if(inp.r){
+					this.dx = this.speed * delta;
+					this.direction = 1;
+				}
+				if(isServer){
+					if(inp.k && this.lastInput != null && !this.lastInput.k){
+						this.kick(inp.svTime);
+					}
+					if(inp.d && this.lastInput != null && !this.lastInput.d){
+						this.up(inp.svTime);
+					}
+				}
+			}
+			this.lastInput = inp;
+			this.lowerStun();
+			this.physic();
+			//this.nbInputsToExecute--;
+		}else{
+			break;
+		}
 	}
 	if(isServer){
+		//this.inputs = this.inputs.slice(i);
 		this.inputs = [];
 	}
 }

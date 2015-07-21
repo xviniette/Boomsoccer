@@ -61,7 +61,7 @@ Display.prototype.draw = function(){
 			spectator = false;
 			if(map.tiles[players[i].cx] && map.tiles[players[i].cx][players[i].cy] && map.tiles[players[i].cx][players[i].cy][0] == "p"){
 				var infos = map.tiles[players[i].cx][players[i].cy].split(";");
-				this.helpPopup.text(infos[1]);
+				this.helpPopup.html(infos[1]);
 			}
 			break;
 		}
@@ -221,29 +221,29 @@ Display.prototype.initRoom = function(){
 }
 
 Display.prototype.displayRoomPlayers = function(){
-	var html = "<table>";
-	html += "<tr><th>Pseudo</th><th>Elo</th><th>Gagné</th><th>Joué</th><th>Ratio</th></tr>";
-	if(this.client.room){
-		var p = this.client.room.players;
-		for(var i in p){
-			var rank = getRank(p[i].elo, p[i].played);
-			html += "<tr><td><span class='pointer' onclick='profil("+p[i].id+")'>"+p[i].pseudo+"</span></td><td><img src='public/img/ranks/"+rank.rank+".png' height='25px'>+"+rank.points+"</td><td>"+p[i].won+"</td><td>"+p[i].played+"</td><td>"+(p[i].played == 0 ? 0 : Math.round(p[i].won/p[i].played*100))+"%</td></tr>";
-		}
+	var d = {};
+	d.players = this.client.room.players;
+	$("#nbRoomPlayer").html("Nombre de joueur : "+d.players.length);
+	for(var i in d.players){
+		d.players[i].rank = getRank(d.players[i].elo, d.players[i].played).rank;
 	}
-	html += "</table>";
-	$("#roomPlayers").html(html);
-	$("#nbRoomPlayer").html("Nombre de joueur : "+this.client.room.players.length);
+	var pattern = "{{#players}}<li><span class='pointer' onclick='profil({{id}})'>{{pseudo}}</span> <img src='public/img/ranks/{{rank}}.png' height='25px'></li>{{/players}}";
+	$("#roomPlayers").html(Mustache.render(pattern, this.client.room));
 }
 
 Display.prototype.ranking = function(data){
-	var html = "Classement des joueurs classés ("+NBGAMEPLACEMENT+" parties jouées).<table>";
-	html += "<tr><th>n°</th><th>Pseudo</th><th>Grade</th><th>Gagné</th><th>Joué</th><th>Ratio</th></tr>";
-	for(var i in data){
-		var rank = getRank(data[i].elo, data[i].played);
-		html += "<tr><td>"+(parseInt(i)+1)+"</td><td><span class='pointer' onclick='profil("+data[i].id+")'>"+data[i].pseudo+"</span></td><td><img src='public/img/ranks/"+rank.rank+".png' height='25px'>+"+rank.points+"</td><td>"+data[i].won+"</td><td>"+data[i].played+"</td><td>"+(data[i].played == 0 ? 0 : Math.round(data[i].won/data[i].played*100))+"%</td></tr>";
+	var pattern = "Classement des joueurs classés ("+NBGAMEPLACEMENT+" parties jouées)";
+	pattern += "<table><tr><th>#</th><th>Pseudonyme</th><th>Grade</th><th>Points</th><th>Parties</th></tr>"
+	pattern += "{{#players}}<tr><td>{{position}}</td><td>{{pseudo}}</td><td><img src='public/img/ranks/{{rank.rank}}.png' height='25px'></td><td>+{{rank.points}}</td><td>{{won}}/{{played}} - {{ratio}}%</td><td>{{#online}}Connecté{{/online}}</td></tr>{{/players}}</table>";
+
+	var d = {};
+	d.players = data;
+	for(var i in d.players){
+		d.players[i].position = parseInt(i)+1;
+		d.players[i].rank = getRank(d.players[i].elo);
+		d.players[i].ratio = (d.players[i].played == 0 ? 0 : Math.round(d.players[i].won/d.players[i].played*100));
 	}
-	html += "</table>";
-	this.showPopup(html);
+	this.showPopup(Mustache.render(pattern, d));
 }
 
 Display.prototype.profil = function(data){
@@ -252,15 +252,16 @@ Display.prototype.profil = function(data){
 	html += "<h2>"+data.won+"/"+data.played+" - "+(data.played == 0 ? 0 : Math.round(data.won/data.played*100))+"%</h2>";
 	html += "Les 50 derniers matchs<table>";
 	for(var i in data.games){
-		var color = "#FF3A3A";
-		if((data.games[i].user1 == data.id && data.games[i].score1 > data.games[i].score2) || (data.games[i].user2 == data.id && data.games[i].score2 > data.games[i].score1)){
-			color = "#2DC61F";
-		}
-		if(data.games[i].score1 == data.games[i].score2){
-			color = "#FFE800";
-		}
 		var g = data.games[i];
-		html += "<tr style=\"background-color:"+color+"\"><td>"+g.score1+"</td><td>"+g.name+"</td><td>"+g.score2+"</td></tr>";
+		var	color = "#FFE800";
+		if(g.winner != null){
+			if(g.winner == data.id){
+				color = "#2DC61F";
+			}else{
+				color = "#FF3A3A";
+			}
+		}
+		html += "<tr style=\"background-color:"+color+"\"><td>"+g.score1+"</td><td>"+g.name+"</td><td>"+g.score2+"</td><td>"+g.nameMap+"</td></tr>";
 	}
 	html += "</table>";
 	this.showPopup(html);
@@ -298,10 +299,20 @@ Display.prototype.gameCreation = function(data){
 	var choosenMaps = localStorage.getItem("choosenMaps");
 	for(var i in data.maps){
 		//checked ou pas
-		if(choosenMaps == null || choosenMaps.indexOf(data.maps[i].id) != -1){
-			html += ' <INPUT class="mapChoice" type="checkbox" name="choix1" value="'+data.maps[i].id+'" checked>'+data.maps[i].name;
-		}else{
-			html += ' <INPUT class="mapChoice" type="checkbox" name="choix1" value="'+data.maps[i].id+'">'+data.maps[i].name;
+		if(data.maps[i].type == "ranked"){
+			if(choosenMaps == null){
+				if(data.maps[i].difficulty <= 3){
+					html += ' <INPUT class="mapChoice" type="checkbox" name="choix1" value="'+data.maps[i].id+'" checked>'+data.maps[i].name;
+				}else{
+					html += ' <INPUT class="mapChoice" type="checkbox" name="choix1" value="'+data.maps[i].id+'">'+data.maps[i].name;
+				}
+			}else{
+				if(choosenMaps.indexOf(data.maps[i].id) != -1){
+					html += ' <INPUT class="mapChoice" type="checkbox" name="choix1" value="'+data.maps[i].id+'" checked>'+data.maps[i].name;
+				}else{
+					html += ' <INPUT class="mapChoice" type="checkbox" name="choix1" value="'+data.maps[i].id+'">'+data.maps[i].name;
+				}
+			}
 		}
 	}
 	html += '</br><button class="big" onclick="matchmaking();">JOUER !</button>';
@@ -309,9 +320,17 @@ Display.prototype.gameCreation = function(data){
 	html += "<h2>Match fun</h2>";
 	html += '<input type="text" id="creation_nom" placeholder="Nom partie"> ';
 	html += '<select id="creation_map">';
-	for(var i in data.maps){
-		html += '<option value="'+data.maps[i].id+'">'+data.maps[i].name+'</option>';
+	var modes = {"Compétitif":"ranked", "Entrainement":"training"};
+	for(var i in modes){
+		html += '<optgroup label="Map '+i+'">';
+		for(var j in data.maps){
+			if(data.maps[j].type == modes[i]){
+				html += '<option value="'+data.maps[j].id+'">'+data.maps[j].name+'</option>';
+			}
+		}
+		html += '</optgroup>';
 	}
+	
 	html += '</select> ';
 	html += '<input type="password" id="creation_password" placeholder="Mot de passe (Optionnel)"> ';
 	html += '<button onclick="createParty();">Créer</button>';

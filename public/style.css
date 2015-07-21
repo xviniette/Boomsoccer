@@ -114,6 +114,9 @@ body{
 }
 
 
+#messages a{
+	color:#FFBC21;
+}
 
 .menu{
 	position: absolute;
@@ -343,6 +346,7 @@ table, th, td {
 .nbPlayers{
 	color:white;
 	float: right;
+	text-align: right;
 }
 
 .pointer{

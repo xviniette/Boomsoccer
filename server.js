@@ -8,6 +8,7 @@ var crypto = require('crypto');
 
 //Inclde files
 eval(fs.readFileSync('./public/js/config.js')+'');
+eval(fs.readFileSync('./public/js/common.js')+'');
 eval(fs.readFileSync('./public/js/Matchmaking.js')+'');
 eval(fs.readFileSync('./public/js/Game.js')+'');
 eval(fs.readFileSync('./public/js/Map.js')+'');
@@ -61,7 +62,7 @@ setInterval(function(){
 io.on('connection', function(socket){
 	//On demande le pseudo au joueur
 	socket.emit("login", true);
-	socket.emit("nbPlayers", game.getNbPlayers());
+	Utils.onPlayersStats(null, socket);
 	socket.emit("nbGames", game.rooms.length);
 	//Reponse du pseudo
 	socket.on("login", function(data){

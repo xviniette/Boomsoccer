@@ -57,6 +57,7 @@ Ball.prototype.update = function(){
 	if(isServer){
 		var goal = this.hasGoalCollision(this.cx, this.cy);
 		if(goal){
+			this.room.snapshotToMerge["ball"] = this.getSnapshotInfo();
 			this.room.goal(goal);
 		}
 	}

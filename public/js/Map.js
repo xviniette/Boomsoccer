@@ -6,6 +6,9 @@ var Map = function(json){
 	this.balls;
 	this.player;
 
+	this.type;
+	this.difficulty;
+
 	this.init(json);
 }
 

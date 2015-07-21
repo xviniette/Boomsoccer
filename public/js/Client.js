@@ -176,7 +176,7 @@ Client.prototype.update = function(){
 				this.input_seq++;
 				input.seq = this.input_seq;
 				input.svTime = svTime;
-				socket.emit("keyboard", JSON.stringify(input));
+				socket.emit("keyboard", input);
 				var inputs = this.room.players[i].inputs;
 				this.room.players[i].inputs = [input];
 				this.room.players[i].update();
