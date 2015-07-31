@@ -215,6 +215,26 @@ Display.prototype.getRelativePosition = function(x, y){
 
 Display.prototype.initRoom = function(){
 	var room = this.client.room;
+	var map = room.map;
+	var tiles = map.tiles;
+	var tilesize = map.tilesize;
+
+	var xscale = this.canvas.width/(tiles.length*tilesize);
+	var yscale = this.canvas.height/(tiles[0].length*tilesize);
+	if(xscale > yscale){
+		this.scale = yscale;
+	}else{
+		this.scale = xscale;
+	}
+
+	var limits = {max:2, min:0.8};
+
+	if(this.scale > limits.max){
+		this.scale = limits.max;
+	}else if(this.scale < limits.min){
+		this.scale = limits.min;
+	}
+
 	$("#score1").text(room.score["1"]);
 	$("#score2").text(room.score["2"]);
 	$("#roomName").text(htmlEntities(room.name));

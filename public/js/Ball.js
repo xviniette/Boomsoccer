@@ -123,7 +123,6 @@ Ball.prototype.hasGoalCollision = function(cx, cy){
 	return false;
 }	
 
-
 Ball.prototype.getSnapshotInfo = function(){
 	return {
 		radius:this.radius,
