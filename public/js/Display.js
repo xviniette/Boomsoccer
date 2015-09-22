@@ -253,8 +253,8 @@ Display.prototype.displayRoomPlayers = function(){
 
 Display.prototype.ranking = function(data){
 	var pattern = "Classement des joueurs classés ("+NBGAMEPLACEMENT+" parties jouées)";
-	pattern += "<table><tr><th>#</th><th>Pseudonyme</th><th>Grade</th><th>Points</th><th>Parties</th></tr>"
-	pattern += "{{#players}}<tr><td>{{position}}</td><td>{{pseudo}}</td><td><img src='public/img/ranks/{{rank.rank}}.png' height='25px'></td><td>+{{rank.points}}</td><td>{{won}}/{{played}} - {{ratio}}%</td><td>{{#online}}Connecté{{/online}}</td></tr>{{/players}}</table>";
+	pattern += "<table><tr><th>#</th><th>Pseudonyme</th><th>Grade</th><th>Points</th><th>XP</th><th>Parties</th></tr>"
+	pattern += "{{#players}}<tr><td>{{position}}</td><td>{{pseudo}}</td><td><img src='public/img/ranks/{{rank.rank}}.png' height='25px'></td><td>+{{rank.points}}</td><td>{{xp}}</td><td>{{won}}/{{played}} - {{ratio}}%</td><td>{{#online}}Connecté{{/online}}</td></tr>{{/players}}</table>";
 
 	var d = {};
 	d.players = data;
