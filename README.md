@@ -1,70 +1,17 @@
-# soccerfest 
+# BoomSoccer ([Play](http://www.bazia.net:1321/))
 
-Todo : 
+BoomSoccer is a browser real-time multiplayer game. This is a game mixing 2d platform, soccer, and Bomberman.
 
-Network :
-- Delta snapshot => Plus tard
-- Empecher triche en envoyant +/- d'inputs
-- Mettre dans les snapshots, les étapes de déplacement d'un perso à chaque tick -> fluidifier !
+A french video game website (jeuxvideo.com) made a news on it : [here](http://www.jeuxvideo.com/news/431197/un-jeu-de-football-multijoueur-sur-le-web.htm).
 
+This game is no longer maintained for over a year.
 
-Graphisme :
-- Equipments
+![alt tag](https://github.com/xviniette/BoomSoccer/blob/gh-pages/docs/img/88a3f87c_787888.gif?raw=true)
 
-Fonctionnalités : 
-- Match "fun"
-
-- Match X vs X ?!
-- Systeme ami
-- Ignorer joueur
-- Systeme de skin + HDV skin + Monnaie via $$$$ => $$
-- Système de tournois automatique
-
-Corrections : 
-- Bug double connexion ?! => multiple suppression sur la déco
-- Nombre de joueur en ligne
-
-
-CLEAN LE CODE : FIN !
-
-Done :
-- Non-interpolation quand trop grande distance => OK
-- isMatching matchmaking => OK
-- Bon calcule elo => OK (peut être amélioré)
-- Message privé => OK peut être passé coté client, plutot qu'analyse coté serveur
-- Gestion déconnexion/Reconnexion + Connexion sur un compte déjà connecté => OK
-- Lag compensation => OK
-- Configuration Touches => OK, manque plus que le pannel de configuration
-- Classement => Manque affichage
-- Profil joueurs => Manque affichage
-- Spectater un Match => Manque juste les boutons
-- Quitter une partie => Manque le give up en ranked
-- Affichage scale, pour meilleur résolution en plus grand
-- Interface
-- Page accueil
-- Empecher faille (XSS, limitation pseudo, ...)
-- Commandes : /newball /respawn
-- Délai entre frappes/lever (100ms)
-- Bonne physique (Vitesse, rebond, friction, up, kick, Grosses Bombes, ...) => toujours améliorable
-- Client prediction reconciliation chelou ?! Voir soucis => Vraiment corrigé ? !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-- Correction bug matchmaking
-- Balle qui part trop vite, vitesse maximale
-- Tutoriel
-- Editeur de Map => Online ?
-- Bug physique descendre sous map ! => corrigé respawn
-- Leave une game en ranked
-- Terminer la game si les deux sont déco
-- Tchat visible par les specs, et tchat entre spectateur
-- Prise en charge scrolling non bugué => quand map plus petite et les séparations quans scrolling entre tiles
-- "Panneau" sur map qui donne indications (pour tutoriel, Pour les news, ...)
-
-
-
-
-
-
-
-
-
-
+## Tech
+* Javascript
+* Node.js
+* Websocket (socket.io)
+* MySQL
+* HTML5/CSS3
 
