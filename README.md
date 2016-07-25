@@ -1,6 +1,6 @@
 # BoomSoccer ([Play](http://www.bazia.net:1321/))
 
-BoomSoccer is a browser real-time multiplayer game. This is a game mixing 2d platform, soccer, and Bomberman.
+BoomSoccer is a browser real-time multiplayer game. This is a game mixing 2d platform, soccer, and Bomberman. It's based on a minigame of [Hammerfest](http://www.hfest.net/) (Soccerfest)
 
 A french video game website (jeuxvideo.com) made a news on it : [here](http://www.jeuxvideo.com/news/431197/un-jeu-de-football-multijoueur-sur-le-web.htm).
 
