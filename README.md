@@ -6,7 +6,7 @@ A french video game website (jeuxvideo.com) made a news on it : [here](http://ww
 
 This game is no longer maintained for over a year.
 
-![alt tag](http://github.com/xviniette/BoomSoccer/blob/master/docs/img/88a3f87c_787888.gif?raw=true)
+![alt tag](https://raw.githubusercontent.com/xviniette/BoomSoccer/master/docs/img/88a3f87c_787888.gif)
 
 ## Tech
 * Javascript
